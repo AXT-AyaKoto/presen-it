@@ -148,7 +148,8 @@ graph LR
 - `B`: blackout projection (opaque black overlay; syncs across tabs; `Esc` clears blackout first)
 - `T`: timer pause/resume (presenter)
 - `R`: timer reset (presenter)
+- `L`: laser pointer (red dot on current slide; presenter mouse syncs to projection)
 - URL hash `#N` (1-based) syncs the current page (kept across markdown reload in `dev`)
 - `?presenter` query: open presenter directly in that tab
-- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, and blackout)
+- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, blackout, and laser)
 - Sample gallery: `pnpm presenit dev kitchen-sink`

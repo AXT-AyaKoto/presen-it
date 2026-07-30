@@ -9,6 +9,7 @@
 - `presenit init <slug>` scaffolds `src/<slug>/slide.md` with a Japanese intro deck (frontmatter, directives, notes, Markdown extras, viewer keys, dev/build/export hints). Refuses overwrite unless `--force`.
 - Blackout (`B` / presenter toggle / `Esc` to clear): opaque overlay on projection, synced via `BroadcastChannel`
 - Frontmatter `title` and optional `description` inject `<title>`, Open Graph, and meta description tags into viewer HTML
+- Laser pointer (`L`): red dot on projection and presenter current slide; presenter mouse position syncs to projection via `BroadcastChannel`
 
 ## 0.8.0 — 2026-07-31
 
