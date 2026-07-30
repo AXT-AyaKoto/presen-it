@@ -1,17 +1,19 @@
 # Presen'it!
 
-Turn readable Markdown into beautiful presentation slides and PDFs — with as few declarations as possible.
+Markdown から美しいプレゼンスライドを作るツール。
 
-Package: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit) (**v0.1.0** prerelease)
+通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
+
+パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.1.0** プレリリース）
 
 [![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
 [![CI](https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/actions/workflows/ci.yml)
 
 ## Why
 
-- More careful typesetting than Marp defaults
-- Prefer “normal Markdown” over Slidev / Quarto-style project complexity
-- No extra config files or JSX required
+- Marp より組版を丁寧に
+- Slidev / Quarto より「普通の Markdown」を優先
+- 設定ファイルや JSX を増やさない
 
 ## Quick start
 
@@ -24,13 +26,13 @@ pnpm exec presenit build my-talk   # → dist/my-talk/view.html
 pnpm exec presenit export my-talk  # → dist/my-talk/resume.pdf
 ```
 
-### Try the bundled demo (this repo)
+### 同梱デモを試す（このリポジトリ）
 
 ```bash
 pnpm install
 pnpm build
 pnpm presenit dev demo
-# Presenter: open with ?presenter
+# Presenter: ?presenter を付けて開く
 pnpm presenit build demo
 pnpm presenit export demo
 ```
@@ -46,14 +48,14 @@ src/<slug>/assets/...
 
 ### Frontmatter
 
-| Key                         | Default                  | Notes                       |
-| --------------------------- | ------------------------ | --------------------------- |
-| `theme`                     | `light`                  | `light` \| `dark`           |
-| `hue`                       | `210`                    | accent hue, mod 360         |
-| `width` / `height`          | `1920` / `1080`          | slide size in px            |
-| `fontSize`                  | `32`                     | base font size              |
-| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code | CSS `font-family`           |
-| `rawHTML`                   | `false`                  | render raw HTML when `true` |
+| Key                         | Default                  | Notes                           |
+| --------------------------- | ------------------------ | ------------------------------- |
+| `theme`                     | `light`                  | `light` \| `dark`               |
+| `hue`                       | `210`                    | アクセント色相（mod 360）       |
+| `width` / `height`          | `1920` / `1080`          | スライドサイズ（px）            |
+| `fontSize`                  | `32`                     | 基準フォントサイズ              |
+| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code | CSS `font-family`               |
+| `rawHTML`                   | `false`                  | `true` のとき生 HTML を描画する |
 
 ### Directives
 
@@ -63,41 +65,41 @@ src/<slug>/assets/...
 <!-- presen-it! slide-break (center-x=true&center-y=false) -->
 ```
 
-- Leading `h2` after a slide-break → page header
-- A **leading** `slide-break` at the top of the file applies options to page 1 (no empty page)
-- Trailing HTML comment (not a directive) → speaker notes
-- Defaults: horizontal left, vertical center
+- スライド区切り直後の先頭 `h2` → ページヘッダー
+- ファイル先頭の **leading** `slide-break` は 1 ページ目にオプションを適用する（空ページは作らない）
+- ディレクティブでない末尾の HTML コメント → スピーカーノート
+- 既定の配置: 横は左寄せ、縦は中央
 
 ### Extras
 
-- **Shiki** for fenced code
-- **KaTeX** for `$...$` / `$$...$$`
-- **beautiful-mermaid** for ` ```mermaid `
+- フェンスコード → **Shiki**
+- `$...$` / `$$...$$` → **KaTeX**
+- ` ```mermaid ` → **beautiful-mermaid**
 
 ## Viewer shortcuts
 
-| Key                     | Action                  |
-| ----------------------- | ----------------------- |
-| `←` `→` / Space / Enter | Navigate                |
-| `Home` / `End`          | First / last            |
-| Click                   | Next (projection)       |
-| `O`                     | Overview grid           |
-| `F`                     | Fullscreen              |
-| `P`                     | Presenter mode          |
-| `T`                     | Timer pause (presenter) |
+| Key                     | Action                           |
+| ----------------------- | -------------------------------- |
+| `←` `→` / Space / Enter | 前後のスライド                   |
+| `Home` / `End`          | 最初 / 最後                      |
+| Click                   | 次へ（投影モード）               |
+| `O`                     | オーバービュー（グリッド）       |
+| `F`                     | フルスクリーン                   |
+| `P`                     | プレゼンターモード               |
+| `T`                     | タイマー一時停止（プレゼンター） |
 
-URL hash is 1-based (`#3` = slide 3). Presenter: append `?presenter`.
+URL ハッシュは 1 始まり（`#3` = 3 枚目）。プレゼンターは `?presenter` を付ける。
 
 ## Releasing
 
-1. Bump `package.json` and `src/pkg.ts` to the next version (keep them in sync)
-2. Update `CHANGELOG.md`
-3. Merge to `main`
-4. Create a GitHub Release tagged `vX.Y.Z` (must match `package.json`)
+1. `package.json` と `src/pkg.ts` を同じ次バージョンに上げる
+2. `CHANGELOG.md` を更新する
+3. `main` にマージする
+4. GitHub Release を作成し、タグを `vX.Y.Z` にする（`package.json` と一致必須）
 
-Publishing to npm runs automatically from [`.github/workflows/release.yml`](./.github/workflows/release.yml) when the Release is published. Requires the `NPM_TOKEN` repository secret — see [docs/publishing.md](./docs/publishing.md).
+Release 公開時、[`.github/workflows/release.yml`](./.github/workflows/release.yml) が自動で npm publish する。リポジトリシークレット `NPM_TOKEN` が必要 — 詳細は [docs/publishing.md](./docs/publishing.md)。
 
-## Development (this repo)
+## Development（このリポジトリ）
 
 ```bash
 pnpm install
@@ -107,7 +109,7 @@ pnpm build
 
 Stack: TypeScript, Node.js ≥22, pnpm, Vite, Preact + Signals, Oxfmt, Oxlint, Puppeteer.
 
-AI authoring guide: [llms.txt](./llms.txt)
+AI 向け作者ガイド: [llms.txt](./llms.txt)
 
 ## License
 
