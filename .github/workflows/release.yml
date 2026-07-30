@@ -49,7 +49,7 @@ jobs:
             - name: Check and build
               run: pnpm check && pnpm build
 
+            # Auth via npm Trusted Publishing (OIDC). Do not set NODE_AUTH_TOKEN —
+            # a token with 2FA would force OTP and skip the OIDC path.
             - name: Publish to npm
               run: pnpm publish --access public --no-git-checks --provenance
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
