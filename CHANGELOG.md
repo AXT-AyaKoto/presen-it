@@ -5,6 +5,7 @@
 ### Features
 
 - Presenter timer: Pause/Resume and Reset buttons (`T` / `R` shortcuts)
+- `presenit init <slug>` scaffolds `src/<slug>/slide.md` with a Japanese intro deck (frontmatter, directives, notes, Markdown extras, viewer keys, dev/build/export hints). Refuses overwrite unless `--force`.
 
 ## 0.8.0 — 2026-07-31
 

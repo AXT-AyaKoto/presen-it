@@ -1,6 +1,7 @@
 import { defineCommand, runMain } from "citty";
 import { runBuild, runDev } from "./commands/dev";
 import { runExport } from "./commands/export";
+import { runInit } from "./commands/init";
 import { version } from "./pkg";
 
 const main = defineCommand({
@@ -40,6 +41,28 @@ const main = defineCommand({
             },
             async run({ args }) {
                 await runBuild(args.slug);
+            },
+        }),
+        init: defineCommand({
+            meta: {
+                name: "init",
+                description: "Scaffold a starter slide deck with usage hints",
+            },
+            args: {
+                slug: {
+                    type: "positional",
+                    description: "Slide slug under src/",
+                    required: true,
+                },
+                force: {
+                    type: "boolean",
+                    description: "Overwrite an existing slide.md",
+                    default: false,
+                    alias: "f",
+                },
+            },
+            async run({ args }) {
+                await runInit(args.slug, { force: args.force });
             },
         }),
         export: defineCommand({
