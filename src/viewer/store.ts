@@ -1,7 +1,7 @@
-import { signal, computed } from "@preact/signals";
+import { signal, computed, effect } from "@preact/signals";
 import type { DeckClientData } from "../project/load";
 
-export type ViewerMode = "projection" | "presenter";
+export type ViewerMode = "projection" | "presenter" | "overview";
 
 export const deckData = signal<DeckClientData | null>(null);
 export const currentIndex = signal(0);
@@ -48,8 +48,18 @@ export function prev(): void {
     goTo(currentIndex.value - 1);
 }
 
-export function toggleMode(): void {
-    mode.value = mode.value === "projection" ? "presenter" : "projection";
+export function togglePresenter(): void {
+    mode.value = mode.value === "presenter" ? "projection" : "presenter";
+}
+
+export function toggleOverview(): void {
+    mode.value = mode.value === "overview" ? "projection" : "overview";
+}
+
+export function exitOverviewTo(index: number): void {
+    goTo(index);
+    mode.value = "projection";
+    broadcastIndex(index);
 }
 
 const CHANNEL = "presenit-sync";
@@ -77,3 +87,38 @@ export function listenSync(onIndex: (index: number) => void): () => void {
         return () => {};
     }
 }
+
+export function readHashIndex(): number | null {
+    const raw = window.location.hash.replace(/^#/, "");
+    if (!raw) {
+        return null;
+    }
+    const value = Number.parseInt(raw, 10);
+    if (!Number.isFinite(value) || value < 1) {
+        return null;
+    }
+    return value - 1;
+}
+
+export function writeHashIndex(index: number): void {
+    const nextHash = `#${index + 1}`;
+    if (window.location.hash === nextHash) {
+        return;
+    }
+    history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}${nextHash}`,
+    );
+}
+
+// Keep URL hash in sync with the current slide (1-based).
+effect(() => {
+    if (typeof window === "undefined") {
+        return;
+    }
+    if (!deckData.value) {
+        return;
+    }
+    writeHashIndex(currentIndex.value);
+});

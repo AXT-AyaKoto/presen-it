@@ -7,15 +7,18 @@ import {
     currentSlide,
     deckData,
     elapsedMs,
+    exitOverviewTo,
     goTo,
     listenSync,
     mode,
     next,
     nextSlide,
     prev,
+    readHashIndex,
     slideCount,
     timerRunning,
-    toggleMode,
+    toggleOverview,
+    togglePresenter,
 } from "./store";
 
 function formatTime(ms: number): string {
@@ -39,6 +42,37 @@ export function App(): JSX.Element {
         const onKey = (event: KeyboardEvent) => {
             const target = event.target as HTMLElement | null;
             if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+                return;
+            }
+
+            if (viewerMode === "overview") {
+                switch (event.key) {
+                    case "Escape":
+                    case "o":
+                    case "O":
+                        event.preventDefault();
+                        mode.value = "projection";
+                        break;
+                    case "ArrowRight":
+                    case "ArrowDown":
+                        event.preventDefault();
+                        next();
+                        broadcastIndex(currentIndex.value);
+                        break;
+                    case "ArrowLeft":
+                    case "ArrowUp":
+                        event.preventDefault();
+                        prev();
+                        broadcastIndex(currentIndex.value);
+                        break;
+                    case "Enter":
+                    case " ":
+                        event.preventDefault();
+                        exitOverviewTo(currentIndex.value);
+                        break;
+                    default:
+                        break;
+                }
                 return;
             }
 
@@ -80,12 +114,23 @@ export function App(): JSX.Element {
                 case "p":
                 case "P":
                     event.preventDefault();
-                    toggleMode();
+                    togglePresenter();
+                    break;
+                case "o":
+                case "O":
+                    event.preventDefault();
+                    toggleOverview();
                     break;
                 case "t":
                 case "T":
                     event.preventDefault();
                     timerRunning.value = !timerRunning.value;
+                    break;
+                case "Escape":
+                    if (viewerMode === "presenter") {
+                        event.preventDefault();
+                        mode.value = "projection";
+                    }
                     break;
                 default:
                     break;
@@ -94,7 +139,7 @@ export function App(): JSX.Element {
 
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
-    }, []);
+    }, [viewerMode]);
 
     useEffect(() => listenSync((nextIndex) => goTo(nextIndex)), []);
 
@@ -113,13 +158,25 @@ export function App(): JSX.Element {
         if (params.has("presenter")) {
             mode.value = "presenter";
         }
+        const hashIndex = readHashIndex();
+        if (hashIndex !== null) {
+            goTo(hashIndex);
+        }
+
+        const onHash = () => {
+            const nextIndex = readHashIndex();
+            if (nextIndex !== null) {
+                goTo(nextIndex);
+            }
+        };
+        window.addEventListener("hashchange", onHash);
+        return () => window.removeEventListener("hashchange", onHash);
     }, []);
 
     useEffect(() => {
         if (viewerMode !== "projection" || !slide) {
             return;
         }
-        // Soft overflow detection for authors (console only).
         const id = window.requestAnimationFrame(() => {
             const columns = document.querySelectorAll(".presenit-column");
             for (const column of columns) {
@@ -139,6 +196,34 @@ export function App(): JSX.Element {
     }
 
     const { width, height } = deck.config;
+
+    if (viewerMode === "overview") {
+        return (
+            <div class="overview">
+                <div class="overview__header">
+                    <span>Overview</span>
+                    <span>
+                        {index + 1} / {total} · Enter to open · Esc to close
+                    </span>
+                </div>
+                <div class="overview__grid">
+                    {deck.slides.map((entry, slideIndex) => (
+                        <button
+                            type="button"
+                            class={`overview__item${slideIndex === index ? " is-active" : ""}`}
+                            onClick={() => exitOverviewTo(slideIndex)}
+                        >
+                            <div class="overview__frame">
+                                <SlideFrame html={entry.html} width={width} height={height} />
+                            </div>
+                            <div class="overview__label">{slideIndex + 1}</div>
+                        </button>
+                    ))}
+                </div>
+                <style>{deck.css}</style>
+            </div>
+        );
+    }
 
     if (viewerMode === "presenter") {
         return (
@@ -164,7 +249,7 @@ export function App(): JSX.Element {
                     <div class="presenter__notes-label">Notes</div>
                     <div class="presenter__notes">{slide.notes ?? "—"}</div>
                     <div class="presenter__hint">
-                        ← → navigate · P projection · T timer · F fullscreen
+                        ← → navigate · O overview · P projection · T timer · F fullscreen
                     </div>
                 </aside>
                 <style>{deck.css}</style>

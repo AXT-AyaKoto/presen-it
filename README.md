@@ -80,11 +80,12 @@ src/<slug>/assets/...
 | `←` `→` / Space / Enter | Navigate                |
 | `Home` / `End`          | First / last            |
 | Click                   | Next (projection)       |
+| `O`                     | Overview grid           |
 | `F`                     | Fullscreen              |
 | `P`                     | Presenter mode          |
 | `T`                     | Timer pause (presenter) |
 
-Presenter URL: append `?presenter`
+URL hash is 1-based (`#3` = slide 3). Presenter: append `?presenter`.
 
 ## Development (this repo)
 

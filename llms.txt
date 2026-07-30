@@ -126,7 +126,9 @@ graph LR
 
 - `←` `→` / Space: navigate
 - `Home` `End`: first/last
+- `O`: overview grid
 - `F`: fullscreen
 - `P`: presenter mode
 - `T`: timer pause/resume (presenter)
+- URL hash `#N` (1-based) syncs the current page
 - `?presenter` query: open presenter directly
