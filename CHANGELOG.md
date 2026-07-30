@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.2 — 2026-07-31
+
+### Fixes
+
+- Task-list checkboxes: hide the UA widget and draw marks with `li::before` (input `em` sizing was wrong because checkbox font-size did not inherit)
+
 ## 0.7.1 — 2026-07-31
 
 ### Improvements

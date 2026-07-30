@@ -236,7 +236,6 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 }
 
 .presenit-column ul.contains-task-list {
-    /* Match ordinary ul so task text starts on the same left edge. */
     padding-left: 1.45em;
     list-style: none;
 }
@@ -247,45 +246,43 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     list-style: none;
 }
 
+/* Keep the native checkbox for semantics, but never show the UA widget. */
 .presenit-column li.task-list-item > input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
     position: absolute;
-    left: calc(-1.3em + 0.05em);
-    top: 0.32em;
-    box-sizing: border-box;
-    width: 0.82em;
-    height: 0.82em;
-    margin: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
     padding: 0;
-    border: 0.11em solid var(--presenit-accent);
-    border-radius: 0.18em;
-    background: color-mix(in oklch, var(--presenit-accent) 8%, var(--presenit-surface));
-    color: var(--presenit-surface);
-    cursor: default;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
     pointer-events: none;
 }
 
-.presenit-column li.task-list-item > input[type="checkbox"]::after {
+/* Custom mark sits in the same gutter as ul/ol markers. */
+.presenit-column li.task-list-item::before {
     content: "";
     position: absolute;
-    inset: 0;
-    opacity: 0;
-    background: currentColor;
-    /* Checkmark via mask so it scales cleanly with font-size. */
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E")
-        center / 0.72em 0.72em no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E")
-        center / 0.72em 0.72em no-repeat;
+    left: -1.02em;
+    top: 0.4em;
+    box-sizing: border-box;
+    width: 0.7em;
+    height: 0.7em;
+    border: 0.12em solid var(--presenit-accent);
+    border-radius: 0.15em;
+    background: color-mix(in oklch, var(--presenit-accent) 8%, var(--presenit-surface));
 }
 
-.presenit-column li.task-list-item > input[type="checkbox"]:checked {
+.presenit-column li.task-list-item:has(> input[type="checkbox"]:checked)::before {
     background: var(--presenit-accent);
     border-color: var(--presenit-accent);
-}
-
-.presenit-column li.task-list-item > input[type="checkbox"]:checked::after {
-    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 0.72em 0.72em;
 }
 
 .presenit-column li.task-list-item:has(> input[type="checkbox"]:checked) {
