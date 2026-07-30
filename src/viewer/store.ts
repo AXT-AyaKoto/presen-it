@@ -9,7 +9,14 @@ export const currentIndex = signal(readHashIndexOnBoot());
 export const mode = signal<ViewerMode>("projection");
 export const elapsedMs = signal(0);
 export const timerRunning = signal(true);
+<<<<<<< HEAD
 export const blackout = signal(false);
+=======
+export const laserOn = signal(false);
+export const laserDot = signal<{ x: number; y: number } | null>(null);
+
+export type LaserMessage = { on: boolean; x?: number; y?: number };
+>>>>>>> ab0f497 (feat: laser pointer (L) with presenter→projection sync)
 
 export function toggleTimer(): void {
     timerRunning.value = !timerRunning.value;
@@ -122,6 +129,55 @@ export function exitOverviewTo(index: number): void {
 
 const CHANNEL = "presenit-sync";
 
+<<<<<<< HEAD
+=======
+export function broadcastIndex(index: number): void {
+    postSyncMessage({ type: "index", index });
+}
+
+export function toggleLaser(): void {
+    laserOn.value = !laserOn.value;
+    if (!laserOn.value) {
+        laserDot.value = null;
+    }
+    broadcastLaser({ on: laserOn.value });
+}
+
+export function setLaserDot(x: number, y: number, broadcast: boolean): void {
+    if (!laserOn.value) {
+        return;
+    }
+    laserDot.value = { x, y };
+    if (broadcast) {
+        broadcastLaser({ on: true, x, y });
+    }
+}
+
+export function clearLaserDot(broadcast: boolean): void {
+    laserDot.value = null;
+    if (broadcast && laserOn.value) {
+        broadcastLaser({ on: true });
+    }
+}
+
+export function broadcastLaser(state: LaserMessage): void {
+    postSyncMessage({ type: "laser", ...state });
+}
+
+export function applyLaserMessage(msg: LaserMessage): void {
+    laserOn.value = msg.on;
+    if (!msg.on) {
+        laserDot.value = null;
+        return;
+    }
+    if (typeof msg.x === "number" && typeof msg.y === "number") {
+        laserDot.value = { x: msg.x, y: msg.y };
+    } else {
+        laserDot.value = null;
+    }
+}
+
+>>>>>>> ab0f497 (feat: laser pointer (L) with presenter→projection sync)
 function postSyncMessage(message: Record<string, unknown>): void {
     try {
         const channel = new BroadcastChannel(CHANNEL);
@@ -163,6 +219,9 @@ export function listenSync(
                 blackout.value = event.data.on;
                 handlers.onBlackout?.(event.data.on);
             }
+            if (event.data?.type === "laser" && typeof event.data.on === "boolean") {
+                applyLaserMessage(event.data as LaserMessage);
+            }
         };
         return () => channel.close();
     } catch {
@@ -193,6 +252,12 @@ export function writeHashIndex(index: number): void {
         `${window.location.pathname}${window.location.search}${nextHash}`,
     );
 }
+
+// Hide laser dot when the slide changes.
+effect(() => {
+    void currentIndex.value;
+    laserDot.value = null;
+});
 
 // Keep URL hash in sync with the current slide (1-based).
 effect(() => {
