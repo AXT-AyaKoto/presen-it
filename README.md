@@ -1,4 +1,4 @@
-# Presen'it!
+# AyaExpTech Presen'it!
 
 Markdown から美しいプレゼンスライドを作るツール。
 
@@ -49,7 +49,7 @@ src/<slug>/assets/...
 
 ```yaml
 ---
-title: My Talk # viewer HTML <title> / og:title（未設定時は Presen'it! — <slug>）
+title: My Talk # viewer HTML <title> / og:title（未設定時は AyaExpTech Presen'it! — <slug>）
 description: Short blurb # meta description / og:description（未設定時は省略）
 theme: light # light | dark（既定: light）
 hue: 210 # アクセント色相 0–359（既定: 210）

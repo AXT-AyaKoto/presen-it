@@ -96,7 +96,7 @@ function parseMarkdownRoot(body: string, breakMode: BreakMode): Root {
 }
 
 /**
- * Parse a Presen'it! Markdown source into a deck AST.
+ * Parse an AXT Presen'it! Markdown source into a deck AST.
  */
 export function parseSlideMarkdown(source: string): Deck {
     const { config, body, diagnostics: fmDiagnostics } = parseFrontmatter(source);

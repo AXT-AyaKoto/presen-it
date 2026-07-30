@@ -10,7 +10,7 @@ function escapeHtml(text: string): string {
 
 export function effectivePageTitle(config: DeckConfig, slug: string): string {
     const trimmed = config.title.trim();
-    return trimmed || `Presen'it! — ${slug}`;
+    return trimmed || `AyaExpTech Presen'it! — ${slug}`;
 }
 
 export function transformViewerIndexHtml(html: string, slug: string, config: DeckConfig): string {

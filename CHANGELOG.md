@@ -8,6 +8,7 @@
 - **Repository migration:** development moved to [`AXT-Studio/presen-it`](https://github.com/AXT-Studio/presen-it) (GitHub redirects from the former `AXT_AyaKoto/presen-it`)
 - Official site URL is now https://axt-studio.github.io/presen-it/
 - README, `llms.txt`, and publishing docs updated for the new package and repository names
+- User-facing product name is now **AyaExpTech Presen'it!** (short form **AXT Presen'it!** where brevity fits); CLI command and package name unchanged
 
 ## 1.0.0 — 2026-07-31
 

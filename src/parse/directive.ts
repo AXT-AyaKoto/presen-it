@@ -19,7 +19,7 @@ const KNOWN_COMMANDS = new Set<DirectiveCommand>(["slide-break", "column-break"]
 const KNOWN_OPTIONS = new Set(["center-x", "center-y"]);
 
 /**
- * Try to parse an HTML comment as a Presen'it! directive.
+ * Try to parse an HTML comment as an AXT Presen'it! directive.
  * Returns null when the comment is not a (valid) directive.
  */
 export function parseDirectiveComment(
@@ -41,7 +41,7 @@ export function parseDirectiveComment(
     if (!directiveMatch) {
         diagnostics.push({
             severity: "warning",
-            message: `Malformed Presen'it! directive: ${html.trim()}`,
+            message: `Malformed AXT Presen'it! directive: ${html.trim()}`,
             line,
         });
         return null;
@@ -53,7 +53,7 @@ export function parseDirectiveComment(
     if (!KNOWN_COMMANDS.has(command as DirectiveCommand)) {
         diagnostics.push({
             severity: "warning",
-            message: `Unknown Presen'it! command "${command}"; directive ignored`,
+            message: `Unknown AXT Presen'it! command "${command}"; directive ignored`,
             line,
         });
         return null;

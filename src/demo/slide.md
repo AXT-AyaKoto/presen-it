@@ -7,7 +7,7 @@ height: 1080
 
 <!-- presen-it! slide-break (center-x=true) -->
 
-# Presen'it!
+# AyaExpTech Presen'it!
 
 Markdown から、美しいスライドを。
 

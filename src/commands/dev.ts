@@ -48,7 +48,7 @@ export async function runDev(slug: string, cwd = process.cwd()): Promise<void> {
     const server = await createServer(config);
     await server.listen();
     const urls = server.resolvedUrls;
-    consola.success(`Presen'it! dev server ready for "${slug}"`);
+    consola.success(`AXT Presen'it! dev server ready for "${slug}"`);
     if (urls?.local[0]) {
         consola.info(urls.local[0]);
         consola.info(
