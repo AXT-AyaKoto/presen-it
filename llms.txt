@@ -137,7 +137,7 @@ graph LR
 
 - `←` `→` / Space: navigate
 - `Home` `End`: first/last
-- Projection short-press zones: left 10% = previous, right 10% = next (ignores drag / text selection; hover shows a chevron affordance)
+- Projection short-press zones: left/right slide-edge bands (padding width) = previous/next (ignores drag / text selection; hover shows a chevron affordance)
 - Bottom-left hover toolbar: Overview / Presenter / Fullscreen
 - `O`: overview grid
 - `F`: fullscreen

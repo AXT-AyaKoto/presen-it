@@ -53,7 +53,7 @@ export async function runDev(slug: string, cwd = process.cwd()): Promise<void> {
         consola.info(urls.local[0]);
         consola.info(`Presenter: ${urls.local[0]}?presenter`);
         consola.info(
-            "Keys: ← → · short-press L/R 10% · O overview · P presenter · F fullscreen · bottom-left toolbar",
+            "Keys: ← → · short-press L/R slide edges · O overview · P presenter · F fullscreen · bottom-left toolbar",
         );
     }
     server.printUrls();

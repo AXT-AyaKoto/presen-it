@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.5 — 2026-07-31
+
+### Improvements
+
+- Projection click zones match slide horizontal padding (slightly narrower); chevron affordance on hover unchanged
+- Remove `w-resize` / `e-resize` cursors from projection edge zones
+
 ## 0.7.4 — 2026-07-31
 
 ### Fixes

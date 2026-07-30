@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { ProjectionStage } from "./ProjectionStage";
 import { SlideFrame } from "./SlideFrame";
 import { ViewerNav } from "./ViewerNav";
+import { clickZoneWidthRatio } from "../render/slide-padding";
 import {
     broadcastIndex,
     currentIndex,
@@ -39,7 +40,6 @@ type PressOrigin = {
 
 type ClickZone = "prev" | "next";
 
-const CLICK_ZONE = 0.1;
 const MAX_PRESS_MS = 450;
 const MAX_MOVE_PX = 8;
 
@@ -54,16 +54,22 @@ function isEditableTarget(target: EventTarget | null): boolean {
     return el.tagName === "INPUT" || el.tagName === "TEXTAREA";
 }
 
-function zoneFromClientX(el: HTMLElement, clientX: number): ClickZone | null {
+function zoneFromClientX(
+    el: HTMLElement,
+    clientX: number,
+    deckWidth: number,
+    deckHeight: number,
+): ClickZone | null {
     const rect = el.getBoundingClientRect();
     if (rect.width <= 0) {
         return null;
     }
     const x = (clientX - rect.left) / rect.width;
-    if (x <= CLICK_ZONE) {
+    const zone = clickZoneWidthRatio(deckWidth, deckHeight);
+    if (x <= zone) {
         return "prev";
     }
-    if (x >= 1 - CLICK_ZONE) {
+    if (x >= 1 - zone) {
         return "next";
     }
     return null;
@@ -255,7 +261,7 @@ export function App(): JSX.Element {
 
     const onProjectionPointerMove = (event: PointerEvent) => {
         const el = event.currentTarget as HTMLElement;
-        setHoverZone(zoneFromClientX(el, event.clientX));
+        setHoverZone(zoneFromClientX(el, event.clientX, width, height));
     };
 
     const onProjectionPointerUp = (event: PointerEvent) => {
@@ -277,7 +283,7 @@ export function App(): JSX.Element {
             return;
         }
         const el = event.currentTarget as HTMLElement;
-        const zone = zoneFromClientX(el, event.clientX);
+        const zone = zoneFromClientX(el, event.clientX, width, height);
         if (zone === "prev") {
             prev();
             broadcastIndex(currentIndex.value);
@@ -365,9 +371,12 @@ export function App(): JSX.Element {
         );
     }
 
+    const clickZone = `${clickZoneWidthRatio(width, height) * 100}%`;
+
     return (
         <div
-            class={`projection${hoverZone ? ` is-zone-${hoverZone}` : ""}`}
+            class="projection"
+            style={{ "--presenit-click-zone": clickZone }}
             onPointerDown={onProjectionPointerDown}
             onPointerMove={onProjectionPointerMove}
             onPointerUp={onProjectionPointerUp}

@@ -4,7 +4,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 
 通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
 
-パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.7.4** プレリリース）
+パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.7.5** プレリリース）
 
 [![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
 [![CI](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml)
@@ -130,11 +130,11 @@ fontFamily:
 
 ## Viewer shortcuts
 
-| Key                     | Action                                            |
-| ----------------------- | ------------------------------------------------- |
-| `←` `→` / Space / Enter | 前後のスライド                                    |
-| `Home` / `End`          | 最初 / 最後                                       |
-| 左 10% / 右 10% 短押し  | 前へ / 次へ（投影・選択は無視。ホバーで矢印表示） |
+| Key                                  | Action                                            |
+| ------------------------------------ | ------------------------------------------------- |
+| `←` `→` / Space / Enter              | 前後のスライド                                    |
+| `Home` / `End`                       | 最初 / 最後                                       |
+| 左右スライド端（パディング幅）短押し | 前へ / 次へ（投影・選択は無視。ホバーで矢印表示） |
 
 | `O` | オーバービュー（グリッド） |
 | `F` | フルスクリーン |
