@@ -1,4 +1,11 @@
-import type { DeckConfig, Diagnostic, FontFamilyConfig, ThemeName } from "../types";
+import type {
+    DeckConfig,
+    Diagnostic,
+    FontFamilyConfig,
+    PageTransitionConfig,
+    PageTransitionType,
+    ThemeName,
+} from "../types";
 import { DEFAULT_CONFIG } from "../types";
 import { fontFamilyListToCss } from "../font-family";
 import { parse as parseYaml } from "yaml";
@@ -128,6 +135,49 @@ function normalizeFontFamilyEntry(
     return fallback;
 }
 
+function normalizePageTransition(value: unknown, diagnostics: Diagnostic[]): PageTransitionConfig {
+    if (value === undefined) {
+        return { ...DEFAULT_CONFIG.pageTransition };
+    }
+    if (!isPlainObject(value)) {
+        warn(
+            diagnostics,
+            `frontmatter.pageTransition must be an object, got ${JSON.stringify(value)}`,
+        );
+        return { ...DEFAULT_CONFIG.pageTransition };
+    }
+
+    let type: PageTransitionType = DEFAULT_CONFIG.pageTransition.type;
+    if (value.type !== undefined) {
+        if (value.type === "none" || value.type === "fade" || value.type === "scroll") {
+            type = value.type;
+        } else {
+            warn(
+                diagnostics,
+                `frontmatter.pageTransition.type must be "none" | "fade" | "scroll", got ${JSON.stringify(value.type)}`,
+            );
+        }
+    }
+
+    let duration = DEFAULT_CONFIG.pageTransition.duration;
+    if (value.duration !== undefined) {
+        if (
+            typeof value.duration === "number" &&
+            Number.isFinite(value.duration) &&
+            value.duration >= 0
+        ) {
+            duration = value.duration;
+        } else {
+            warn(
+                diagnostics,
+                `frontmatter.pageTransition.duration must be a non-negative number (seconds), got ${JSON.stringify(value.duration)}`,
+            );
+        }
+    }
+
+    return { type, duration };
+}
+
 function normalizeFontFamily(value: unknown, diagnostics: Diagnostic[]): FontFamilyConfig {
     if (value === undefined) {
         return { ...DEFAULT_CONFIG.fontFamily };
@@ -162,7 +212,11 @@ export function normalizeConfig(raw: unknown): {
     if (isPlainObject(raw) && raw.__parseError === true) {
         warn(diagnostics, "Failed to parse YAML frontmatter; using defaults");
         return {
-            config: { ...DEFAULT_CONFIG, fontFamily: { ...DEFAULT_CONFIG.fontFamily } },
+            config: {
+                ...DEFAULT_CONFIG,
+                fontFamily: { ...DEFAULT_CONFIG.fontFamily },
+                pageTransition: { ...DEFAULT_CONFIG.pageTransition },
+            },
             diagnostics,
         };
     }
@@ -170,7 +224,11 @@ export function normalizeConfig(raw: unknown): {
     if (!isPlainObject(raw)) {
         warn(diagnostics, "Frontmatter must be a YAML mapping; using defaults");
         return {
-            config: { ...DEFAULT_CONFIG, fontFamily: { ...DEFAULT_CONFIG.fontFamily } },
+            config: {
+                ...DEFAULT_CONFIG,
+                fontFamily: { ...DEFAULT_CONFIG.fontFamily },
+                pageTransition: { ...DEFAULT_CONFIG.pageTransition },
+            },
             diagnostics,
         };
     }
@@ -187,6 +245,7 @@ export function normalizeConfig(raw: unknown): {
             diagnostics,
         ),
         fontFamily: normalizeFontFamily(raw.fontFamily, diagnostics),
+        pageTransition: normalizePageTransition(raw.pageTransition, diagnostics),
         rawHTML: normalizeBoolean(raw.rawHTML, "rawHTML", DEFAULT_CONFIG.rawHTML, diagnostics),
     };
 

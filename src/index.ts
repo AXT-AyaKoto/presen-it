@@ -17,6 +17,8 @@ export type {
     DeckConfig,
     Diagnostic,
     FontFamilyConfig,
+    PageTransitionConfig,
+    PageTransitionType,
     Slide,
     ThemeName,
 } from "./types";

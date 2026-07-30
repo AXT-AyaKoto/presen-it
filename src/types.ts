@@ -5,6 +5,14 @@ export type FontFamilyConfig = {
     mono: string;
 };
 
+export type PageTransitionType = "none" | "fade" | "scroll";
+
+export type PageTransitionConfig = {
+    type: PageTransitionType;
+    /** Duration in seconds. */
+    duration: number;
+};
+
 export type DeckConfig = {
     theme: ThemeName;
     hue: number;
@@ -12,6 +20,7 @@ export type DeckConfig = {
     height: number;
     fontSize: number;
     fontFamily: FontFamilyConfig;
+    pageTransition: PageTransitionConfig;
     rawHTML: boolean;
 };
 
@@ -59,6 +68,10 @@ export const DEFAULT_CONFIG: DeckConfig = {
     fontFamily: {
         sans: '"M PLUS 1", system-ui, sans-serif',
         mono: '"M PLUS 1 Code", ui-monospace, monospace',
+    },
+    pageTransition: {
+        type: "fade",
+        duration: 0.2,
     },
     rawHTML: false,
 };
