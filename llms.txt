@@ -3,7 +3,9 @@
 > Turn a normal Markdown document into polished presentation slides and PDF with minimal directives.
 
 Package: `@axt_ayakoto/presenit` (npm)
+Site: https://axt-ayakoto.github.io/presen-it/
 CLI: `presenit`
+Human docs: README.md · Scope/SemVer: docs/1.0-scope.md
 
 ## Mental model
 
@@ -25,6 +27,7 @@ dist/<slug>/resume.pdf  # from `presenit export`
 
 ```bash
 pnpm add -D @axt_ayakoto/presenit
+pnpm exec presenit init <slug>   # writes src/<slug>/slide.md (starter deck); --force to overwrite
 pnpm exec presenit dev <slug>
 pnpm exec presenit build <slug>
 pnpm exec presenit export <slug>
@@ -82,7 +85,7 @@ Rules:
 ### Page structure
 
 - Content before the first `slide-break` is page 1
-- A leading `slide-break` at file top applies options to page 1 (no empty page)
+- A `slide-break` immediately after frontmatter applies options to page 1 (no empty page)
 - Leading `h2` after a slide-break becomes the page header
 - To keep an `h2` in the body, put `column-break` immediately after `slide-break`
 - Empty columns are removed
@@ -153,3 +156,8 @@ graph LR
 - `?presenter` query: open presenter directly in that tab
 - Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, blackout, and laser)
 - Sample gallery: `pnpm presenit dev kitchen-sink`
+
+## Compatibility (from 1.0)
+
+Treat CLI commands/flags, documented frontmatter, directives, and the Markdown dialect in this file as the SemVer public contract.
+See `docs/1.0-scope.md` for explicit non-goals (fragments, video embeds, PPTX, remotes, etc.).

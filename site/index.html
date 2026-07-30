@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Presen'it! — Markdown から美しいスライドへ</title>
+        <meta
+            name="description"
+            content="通常の Markdown を、少ない宣言だけで読みやすいプレゼンスライドと PDF に。npm の @axt_ayakoto/presenit。"
+        />
+        <meta property="og:title" content="Presen'it!" />
+        <meta property="og:description" content="Markdown から美しいプレゼンスライドと PDF を。" />
+        <meta property="og:type" content="website" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=M+PLUS+1:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="./styles.css" />
+    </head>
+    <body>
+        <div class="wash" aria-hidden="true"></div>
+
+        <header class="top">
+            <a class="top__brand" href="./">Presen'it!</a>
+            <nav class="top__nav" aria-label="外部リンク">
+                <a href="https://www.npmjs.com/package/@axt_ayakoto/presenit">npm</a>
+                <a href="https://github.com/AXT-AyaKoto/presen-it">GitHub</a>
+                <a href="https://github.com/AXT-AyaKoto/presen-it#readme">README</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <p class="hero__brand">Presen'it!</p>
+                <h1 class="hero__title">Markdown のまま、<br />登壇に耐えるスライドへ。</h1>
+                <p class="hero__lede">
+                    読み物として自然な単一ファイルを、少ない宣言だけで組版。投影・Presenter・PDF
+                    まで一つのツールで。
+                </p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary" href="#install">使い始める</a>
+                    <a class="btn btn--ghost" href="https://github.com/AXT-AyaKoto/presen-it"
+                        >GitHub リポジトリ</a
+                    >
+                </div>
+            </section>
+
+            <section class="install" id="install">
+                <h2>Install</h2>
+                <p class="install__note">Node.js ≥ 22 · プロジェクトに入れて使うだけ</p>
+                <pre class="code"><code>pnpm add -D @axt_ayakoto/presenit
+pnpm exec presenit init my-talk
+pnpm exec presenit dev my-talk</code></pre>
+                <p class="install__more">
+                    詳細な frontmatter・ディレクティブ・ショートカットは
+                    <a href="https://github.com/AXT-AyaKoto/presen-it#readme">README</a>
+                    が正本です。
+                </p>
+            </section>
+
+            <section class="keys">
+                <h2>投影の操作（要約）</h2>
+                <ul class="keys__list">
+                    <li>
+                        <kbd>←</kbd> <kbd>→</kbd> 前後 · <kbd>P</kbd> Presenter ·
+                        <kbd>O</kbd> Overview
+                    </li>
+                    <li>
+                        <kbd>B</kbd> ブラックアウト · <kbd>L</kbd> レーザー ·
+                        <kbd>F</kbd> フルスクリーン
+                    </li>
+                    <li>左下ホバーでツールバー（Presenter / Laser など）</li>
+                </ul>
+            </section>
+
+            <section class="links">
+                <h2>リンク</h2>
+                <ul class="links__list">
+                    <li>
+                        <a href="https://www.npmjs.com/package/@axt_ayakoto/presenit"
+                            >npm — @axt_ayakoto/presenit</a
+                        >
+                    </li>
+                    <li>
+                        <a href="https://github.com/AXT-AyaKoto/presen-it"
+                            >GitHub — AXT-AyaKoto/presen-it</a
+                        >
+                    </li>
+                    <li>
+                        <a href="https://github.com/AXT-AyaKoto/presen-it#readme"
+                            >README（フル仕様）</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="https://github.com/AXT-AyaKoto/presen-it/blob/main/docs/1.0-scope.md"
+                            >1.0 スコープ / SemVer</a
+                        >
+                    </li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="foot">
+            <p>Presen'it! · MIT · <a href="https://github.com/AXT-AyaKoto">@AXT_AyaKoto</a></p>
+        </footer>
+    </body>
+</html>
