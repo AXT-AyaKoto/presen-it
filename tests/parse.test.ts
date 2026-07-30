@@ -92,16 +92,24 @@ break: hard
         expect(hard.diagnostics).toEqual([]);
     });
 
+<<<<<<< HEAD
     it("parses footer with default empty string", () => {
         const defaults = parseFrontmatter("# Hi\n");
         expect(defaults.config.footer).toBe("");
 
         const custom = parseFrontmatter(`---
 footer: "© 2026 Example Co."
+=======
+    it("parses title and description", () => {
+        const result = parseFrontmatter(`---
+title: My Talk
+description: A short blurb
+>>>>>>> d90eda9 (feat: frontmatter title and OGP meta for viewer HTML)
 ---
 
 # Hi
 `);
+<<<<<<< HEAD
         expect(custom.config.footer).toBe("© 2026 Example Co.");
         expect(custom.diagnostics).toEqual([]);
     });
@@ -109,12 +117,33 @@ footer: "© 2026 Example Co."
     it("falls back and warns on invalid footer", () => {
         const result = parseFrontmatter(`---
 footer: 42
+=======
+        expect(result.config.title).toBe("My Talk");
+        expect(result.config.description).toBe("A short blurb");
+        expect(result.diagnostics).toEqual([]);
+    });
+
+    it("defaults title and description to empty strings", () => {
+        const result = parseFrontmatter("# Hi\n");
+        expect(result.config.title).toBe("");
+        expect(result.config.description).toBe("");
+    });
+
+    it("falls back and warns on invalid title", () => {
+        const result = parseFrontmatter(`---
+title: 42
+>>>>>>> d90eda9 (feat: frontmatter title and OGP meta for viewer HTML)
 ---
 
 body
 `);
+<<<<<<< HEAD
         expect(result.config.footer).toBe("");
         expect(messages(result.diagnostics).some((m) => m.includes("frontmatter.footer"))).toBe(
+=======
+        expect(result.config.title).toBe("");
+        expect(messages(result.diagnostics).some((m) => m.includes("frontmatter.title"))).toBe(
+>>>>>>> d90eda9 (feat: frontmatter title and OGP meta for viewer HTML)
             true,
         );
     });

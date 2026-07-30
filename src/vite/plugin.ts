@@ -2,6 +2,8 @@ import type { Plugin } from "vite";
 import path from "node:path";
 import fs from "node:fs";
 import { loadDeck, toClientData } from "../project/load";
+import type { DeckConfig } from "../types";
+import { transformViewerIndexHtml } from "./viewer-html";
 
 export const VIRTUAL_DECK_ID = "virtual:presenit-deck";
 const RESOLVED_VIRTUAL_DECK_ID = "\0" + VIRTUAL_DECK_ID;
@@ -30,7 +32,6 @@ async function copySlideMedia(slideDir: string, outDir: string): Promise<void> {
         }
         const src = path.join(slideDir, entry.name);
         const dest = path.join(outDir, entry.name);
-        // Do not clobber Vite viewer chunks.
         if (entry.name === "_viewer") {
             continue;
         }
@@ -40,7 +41,18 @@ async function copySlideMedia(slideDir: string, outDir: string): Promise<void> {
 
 export function presenitPlugin(options: PresenitPluginOptions): Plugin {
     let slideDir = path.resolve(options.cwd, "src", options.slug);
+    let deckConfig: DeckConfig | undefined;
     let command: "build" | "serve" = "serve";
+
+    async function ensureDeckConfig(): Promise<DeckConfig> {
+        if (deckConfig) {
+            return deckConfig;
+        }
+        const loaded = await loadDeck(options.cwd, options.slug);
+        slideDir = loaded.slideDir;
+        deckConfig = loaded.config;
+        return deckConfig;
+    }
 
     return {
         name: "presenit",
@@ -76,6 +88,7 @@ export function presenitPlugin(options: PresenitPluginOptions): Plugin {
                     file === path.join(slideDir, "slide.md") ||
                     file.startsWith(slideDir + path.sep)
                 ) {
+                    deckConfig = undefined;
                     const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_DECK_ID);
                     if (mod) {
                         server.moduleGraph.invalidateModule(mod);
@@ -99,6 +112,7 @@ export function presenitPlugin(options: PresenitPluginOptions): Plugin {
 
             const loaded = await loadDeck(options.cwd, options.slug);
             slideDir = loaded.slideDir;
+            deckConfig = loaded.config;
             const data = toClientData(loaded);
 
             if (command === "build") {
@@ -120,11 +134,9 @@ export function presenitPlugin(options: PresenitPluginOptions): Plugin {
             }
             await copySlideMedia(slideDir, outDir);
         },
-        transformIndexHtml(html) {
-            return html.replace(
-                /<title>.*?<\/title>/,
-                `<title>Presen'it! — ${options.slug}</title>`,
-            );
+        async transformIndexHtml(html) {
+            const config = await ensureDeckConfig();
+            return transformViewerIndexHtml(html, options.slug, config);
         },
     };
 }

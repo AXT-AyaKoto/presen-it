@@ -49,6 +49,8 @@ src/<slug>/assets/...
 
 ```yaml
 ---
+title: My Talk # viewer HTML <title> / og:title（未設定時は Presen'it! — <slug>）
+description: Short blurb # meta description / og:description（未設定時は省略）
 theme: light # light | dark（既定: light）
 hue: 210 # アクセント色相 0–359（既定: 210）
 width: 1920 # px（既定: 1920）
@@ -68,6 +70,8 @@ footer: "" # 全スライド左下に表示するテキスト（既定: 空 = �
 
 | Key                         | Default                                              | Notes                                          |
 | --------------------------- | ---------------------------------------------------- | ---------------------------------------------- |
+| `title`                     | `""`                                                 | viewer HTML の `<title>` / `og:title`          |
+| `description`               | `""`                                                 | 設定時のみ description / `og:description`      |
 | `theme`                     | `light`                                              | `light` \| `dark`                              |
 | `hue`                       | `210`                                                | アクセント色相（mod 360）                      |
 | `width` / `height`          | `1920` / `1080`                                      | スライドサイズ（px）                           |
