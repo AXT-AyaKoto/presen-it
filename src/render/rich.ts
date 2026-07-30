@@ -1,8 +1,6 @@
 import { renderMermaidSVG } from "beautiful-mermaid";
+import katex from "katex";
 import type { Code, Html, RootContent } from "mdast";
-import { unified } from "unified";
-import rehypeKatex from "rehype-katex";
-import type { Root as HastRoot } from "hast";
 import type { ThemeName } from "../types";
 import { highlightCode } from "./highlighter";
 
@@ -11,6 +9,10 @@ export type EnrichResult = {
     hasEnrichedHtml: boolean;
     hasMath: boolean;
 };
+
+/** Must match the `katex` package we depend on (not rehype-katex’s nested copy). */
+export const KATEX_VERSION = "0.18.1" as const;
+export const KATEX_CSS_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/katex.min.css`;
 
 function containsMath(nodes: RootContent[]): boolean {
     for (const node of nodes) {
@@ -24,6 +26,16 @@ function containsMath(nodes: RootContent[]): boolean {
         }
     }
     return false;
+}
+
+function renderMathHtml(node: Extract<RootContent, { type: "math" | "inlineMath" }>): Html {
+    const displayMode = node.type === "math";
+    const value = katex.renderToString(node.value, {
+        displayMode,
+        throwOnError: false,
+        strict: "ignore",
+    });
+    return { type: "html", value };
 }
 
 async function enrichCodeBlock(node: Code, theme: ThemeName): Promise<Html> {
@@ -56,6 +68,11 @@ async function enrichNodes(nodes: RootContent[], theme: ThemeName): Promise<Root
     const result: RootContent[] = [];
 
     for (const node of nodes) {
+        if (node.type === "math" || node.type === "inlineMath") {
+            result.push(renderMathHtml(node));
+            continue;
+        }
+
         if (node.type === "code") {
             result.push(await enrichCodeBlock(node, theme));
             continue;
@@ -79,16 +96,11 @@ export async function enrichRichContent(
     nodes: RootContent[],
     theme: ThemeName,
 ): Promise<EnrichResult> {
+    const hasMath = containsMath(nodes);
     const enriched = await enrichNodes(nodes, theme);
     return {
         nodes: enriched,
         hasEnrichedHtml: enriched.some((node) => node.type === "html"),
-        hasMath: containsMath(enriched),
+        hasMath,
     };
 }
-
-export function applyKatex(hast: HastRoot): HastRoot {
-    return unified().use(rehypeKatex).runSync(hast) as HastRoot;
-}
-
-export const KATEX_CSS_URL = "https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css";

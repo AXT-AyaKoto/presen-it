@@ -448,7 +448,9 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 .presenit-column .katex-display {
     margin: 0.55em 0;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;
+    padding-top: 0.15em;
+    padding-bottom: 0.15em;
 }
 `.trim();
 }

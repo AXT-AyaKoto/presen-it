@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.2 — 2026-07-30
+
+### Fixes
+
+- KaTeX script sizing for npm consumers: render with our direct `katex@0.18.1` dependency so HTML emits `katex-sizing` matching the CSS (workspace overrides never applied to downstream installs)
+- Soften `katex-display` overflow so limits are less likely to clip
+
 ## 0.3.1 — 2026-07-30
 
 ### Fixes
