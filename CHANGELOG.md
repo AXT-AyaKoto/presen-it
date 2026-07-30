@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.6 — 2026-07-31
+
+### Fixes
+
+- Publish `src/shared/` so the Vite viewer can resolve `slide-padding` (fixes `presenit dev` import error on npm installs)
+
 ## 0.7.5 — 2026-07-31
 
 ### Improvements
