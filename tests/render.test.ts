@@ -97,4 +97,48 @@ rawHTML: true
         );
         expect(raw.html).toContain('<div class="x">hi</div>');
     });
+
+    it("renders GitHub alert blockquotes as labelled asides", async () => {
+        const result = await renderDeckAsync(
+            parseSlideMarkdown(`> [!NOTE]
+> Useful context.
+
+> [!tip]
+> A helpful suggestion.
+
+> [!IMPORTANT]
+> Critical detail.
+
+> [!WARNING]
+> Take care.
+
+> [!CAUTION]
+> Irreversible action.`),
+        );
+
+        for (const [kind, label] of [
+            ["note", "Note"],
+            ["tip", "Tip"],
+            ["important", "Important"],
+            ["warning", "Warning"],
+            ["caution", "Caution"],
+        ]) {
+            expect(result.html).toContain(`class="presenit-alert presenit-alert--${kind}"`);
+            expect(result.html).toContain(`data-alert="${kind.toUpperCase()}"`);
+            expect(result.html).toContain(`<p class="presenit-alert__label">${label}</p>`);
+        }
+
+        expect(result.html).toContain("Useful context.");
+        expect(result.html).not.toContain("[!NOTE]");
+        expect(result.css).toContain(".presenit-column .presenit-alert");
+    });
+
+    it("keeps non-alert blockquotes unchanged", async () => {
+        const result = await renderDeckAsync(parseSlideMarkdown(`> A normal quote.`));
+        const slide = result.slides[0]!.html;
+
+        expect(slide).toContain("<blockquote>");
+        expect(slide).toContain("A normal quote.");
+        expect(slide).not.toContain("presenit-alert");
+    });
 });

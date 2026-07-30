@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0 — 2026-07-30
+
+### Features
+
+- Render GitHub alert blockquotes (`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`) as labelled, slide-friendly alerts
+
 ## 0.6.0 — 2026-07-30
 
 ### Features

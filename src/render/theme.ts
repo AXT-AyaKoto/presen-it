@@ -59,6 +59,7 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     ${paletteVars}
     --presenit-width: ${width}px;
     --presenit-height: ${height}px;
+    --presenit-hue: ${hue};
     --presenit-font-size: ${fontSize}px;
     --presenit-font-sans: ${fontFamily.sans};
     --presenit-font-mono: ${fontFamily.mono};
@@ -252,6 +253,50 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 }
 
 .presenit-column blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* GitHub-style Markdown alerts */
+.presenit-column .presenit-alert {
+    --presenit-alert-tone: var(--presenit-accent);
+    margin: 0.6em 0;
+    padding: 0.7em 1em 0.75em;
+    border-left: 0.3em solid var(--presenit-alert-tone);
+    border-radius: 5px;
+    background: color-mix(in oklch, var(--presenit-alert-tone) 10%, var(--presenit-surface));
+    color: var(--presenit-text);
+}
+
+.presenit-column .presenit-alert--tip {
+    --presenit-alert-tone: oklch(0.64 0.15 calc(var(--presenit-hue) + 105));
+}
+
+.presenit-column .presenit-alert--important {
+    --presenit-alert-tone: oklch(0.62 0.16 calc(var(--presenit-hue) + 35));
+}
+
+.presenit-column .presenit-alert--warning {
+    --presenit-alert-tone: oklch(0.7 0.15 calc(var(--presenit-hue) + 75));
+}
+
+.presenit-column .presenit-alert--caution {
+    --presenit-alert-tone: oklch(0.6 0.18 calc(var(--presenit-hue) - 25));
+}
+
+.presenit-column .presenit-alert__label {
+    margin: 0 0 0.2em;
+    color: var(--presenit-alert-tone);
+    font-size: 0.82em;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.presenit-column .presenit-alert p {
+    margin: 0.25em 0;
+}
+
+.presenit-column .presenit-alert p:last-child {
     margin-bottom: 0;
 }
 

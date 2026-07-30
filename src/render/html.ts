@@ -2,6 +2,7 @@ import type { Html, Root, RootContent } from "mdast";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
 import type { Column, Deck, DeckConfig, Slide } from "../types";
+import { transformAlertBlockquotes } from "./alert";
 import { enrichRichContent, KATEX_CSS_URL } from "./rich";
 
 export type RenderedSlide = {
@@ -62,7 +63,7 @@ async function mdastToHtml(
         mathState.hasMath = true;
     }
 
-    const root: Root = { type: "root", children: enriched.nodes };
+    const root: Root = { type: "root", children: transformAlertBlockquotes(enriched.nodes) };
     const allowDangerousHtml = rawHTML || enriched.hasEnrichedHtml || enriched.hasMath;
     const hast = toHast(root, {
         allowDangerousHtml,

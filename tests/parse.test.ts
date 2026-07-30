@@ -252,6 +252,22 @@ subtitle
         expect(deck.slides[0]!.columns[0]!.children[0]!.type).toBe("heading");
     });
 
+    it("parses GitHub alerts as ordinary Markdown blockquotes", () => {
+        const deck = parseSlideMarkdown(`> [!NOTE]
+> Useful context.`);
+        const blockquote = deck.slides[0]!.columns[0]!.children[0]!;
+
+        expect(blockquote.type).toBe("blockquote");
+        expect(blockquote).toMatchObject({
+            children: [
+                {
+                    type: "paragraph",
+                    children: [{ type: "text", value: "[!NOTE]\nUseful context." }],
+                },
+            ],
+        });
+    });
+
     it("lets column options override slide options", () => {
         const deck = parseSlideMarkdown(`# keep first
 
