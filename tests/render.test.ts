@@ -44,7 +44,7 @@ hue: 200
 hello
 `);
         const result = await renderDeckAsync(deck);
-        const slide = result.slides[1]!.html;
+        const slide = result.slides[0]!.html;
         expect(slide).toContain("presenit-column--center-x");
         expect(slide).not.toContain("presenit-column--center-y");
     });

@@ -205,19 +205,29 @@ d
         expect(messages(deck.diagnostics).some((m) => m.includes("4 columns"))).toBe(true);
     });
 
-    it("lets column options override slide options", () => {
+    it("applies a leading slide-break options to the first page", () => {
         const deck = parseSlideMarkdown(`<!-- presen-it! slide-break (center-x=true) -->
 
-left? no, centered by slide
+# Title
+
+subtitle
+`);
+        expect(deck.slides).toHaveLength(1);
+        expect(deck.slides[0]!.align.centerX).toBe(true);
+        expect(deck.slides[0]!.columns[0]!.children[0]!.type).toBe("heading");
+    });
+
+    it("lets column options override slide options", () => {
+        const deck = parseSlideMarkdown(`# keep first
+
+<!-- presen-it! slide-break (center-x=true) -->
+
+centered by slide
 
 <!-- presen-it! column-break (center-x=false) -->
 
 override left
 `);
-        // First slide-break starts slide 2 (slide 1 is empty before it)
-        // Actually: content before first slide-break is slide 0.
-        // Here the first node is slide-break, so slide 0 is empty, slide 1 has the content.
-        expect(deck.slides.length).toBeGreaterThanOrEqual(2);
         const slide = deck.slides[1]!;
         expect(slide.align.centerX).toBe(true);
         expect(slide.columns[0]!.align.centerX).toBe(true);
