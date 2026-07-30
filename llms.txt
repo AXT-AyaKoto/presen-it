@@ -70,6 +70,7 @@ Rules:
 ### Page structure
 
 - Content before the first `slide-break` is page 1
+- A leading `slide-break` at file top applies options to page 1 (no empty page)
 - Leading `h2` after a slide-break becomes the page header
 - To keep an `h2` in the body, put `column-break` immediately after `slide-break`
 - Empty columns are removed
