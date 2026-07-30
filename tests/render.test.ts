@@ -161,4 +161,33 @@ rawHTML: true
         expect(slide).toContain("A normal quote.");
         expect(slide).not.toContain("presenit-alert");
     });
+
+    it("renders soft breaks as <br> when break: soft", async () => {
+        const result = await renderDeckAsync(
+            parseSlideMarkdown(`---
+break: soft
+---
+
+line one
+line two
+`),
+        );
+        expect(result.slides[0]!.html).toContain("line one<br>");
+        expect(result.slides[0]!.html).toContain("line two");
+    });
+
+    it("does not render soft breaks when break: hard", async () => {
+        const result = await renderDeckAsync(
+            parseSlideMarkdown(`---
+break: hard
+---
+
+line one
+line two
+`),
+        );
+        const slide = result.slides[0]!.html;
+        expect(slide).toContain("line one\nline two");
+        expect(slide).not.toContain("<br>");
+    });
 });

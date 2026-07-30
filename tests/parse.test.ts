@@ -78,6 +78,33 @@ pageTransition:
         expect(custom.diagnostics).toEqual([]);
     });
 
+    it("parses break with default soft", () => {
+        const defaults = parseFrontmatter("# Hi\n");
+        expect(defaults.config.break).toBe("soft");
+
+        const hard = parseFrontmatter(`---
+break: hard
+---
+
+# Hi
+`);
+        expect(hard.config.break).toBe("hard");
+        expect(hard.diagnostics).toEqual([]);
+    });
+
+    it("falls back and warns on invalid break", () => {
+        const result = parseFrontmatter(`---
+break: newline
+---
+
+body
+`);
+        expect(result.config.break).toBe("soft");
+        expect(messages(result.diagnostics).some((m) => m.includes("frontmatter.break"))).toBe(
+            true,
+        );
+    });
+
     it("falls back and warns on type errors; ignores unknown keys", () => {
         const result = parseFrontmatter(`---
 theme: neon
@@ -262,7 +289,11 @@ subtitle
             children: [
                 {
                     type: "paragraph",
-                    children: [{ type: "text", value: "[!NOTE]\nUseful context." }],
+                    children: [
+                        { type: "text", value: "[!NOTE]" },
+                        { type: "break" },
+                        { type: "text", value: "Useful context." },
+                    ],
                 },
             ],
         });
@@ -283,5 +314,41 @@ override left
         expect(slide.align.centerX).toBe(true);
         expect(slide.columns[0]!.align.centerX).toBe(true);
         expect(slide.columns[1]!.align.centerX).toBe(false);
+    });
+
+    it("parses soft breaks as mdast break nodes when break: soft", () => {
+        const deck = parseSlideMarkdown(`---
+break: soft
+---
+
+line one
+line two
+`);
+        const node = deck.slides[0]!.columns[0]!.children[0]!;
+        expect(node.type).toBe("paragraph");
+        if (node.type !== "paragraph") {
+            throw new Error("expected paragraph");
+        }
+        expect(node.children).toEqual([
+            { type: "text", value: "line one" },
+            { type: "break" },
+            { type: "text", value: "line two" },
+        ]);
+    });
+
+    it("does not parse soft breaks when break: hard", () => {
+        const deck = parseSlideMarkdown(`---
+break: hard
+---
+
+line one
+line two
+`);
+        const node = deck.slides[0]!.columns[0]!.children[0]!;
+        expect(node.type).toBe("paragraph");
+        if (node.type !== "paragraph") {
+            throw new Error("expected paragraph");
+        }
+        expect(node.children).toMatchObject([{ type: "text", value: "line one\nline two" }]);
     });
 });

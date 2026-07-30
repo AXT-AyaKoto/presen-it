@@ -13,6 +13,8 @@ export type PageTransitionConfig = {
     duration: number;
 };
 
+export type BreakMode = "soft" | "hard";
+
 export type DeckConfig = {
     theme: ThemeName;
     hue: number;
@@ -22,6 +24,8 @@ export type DeckConfig = {
     fontFamily: FontFamilyConfig;
     pageTransition: PageTransitionConfig;
     rawHTML: boolean;
+    /** `soft`: single newlines become `<br>`; `hard`: CommonMark default. */
+    break: BreakMode;
 };
 
 export type AlignOptions = {
@@ -74,6 +78,7 @@ export const DEFAULT_CONFIG: DeckConfig = {
         duration: 0.2,
     },
     rawHTML: false,
+    break: "soft",
 };
 
 export const DEFAULT_SLIDE_ALIGN: AlignOptions = {

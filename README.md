@@ -4,7 +4,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 
 通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
 
-パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.7.2** プレリリース）
+パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.7.3** プレリリース）
 
 [![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
 [![CI](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml)
@@ -62,6 +62,7 @@ pageTransition:
     type: fade # none | fade | scroll（既定: fade）
     duration: 0.2 # 秒（既定: 0.2）。PDF export では無視
 rawHTML: false # true で生 HTML を描画（既定: false）
+break: soft # soft | hard（既定: soft）。soft で段落内の単改行を <br> に
 ---
 ```
 
@@ -75,6 +76,7 @@ rawHTML: false # true で生 HTML を描画（既定: false）
 | `pageTransition.type`       | `fade`                                               | `none` \| `fade` \| `scroll`（PDF では無視） |
 | `pageTransition.duration`   | `0.2`                                                | 秒。`0` で実質オフ                           |
 | `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する              |
+| `break`                     | `soft`                                               | `soft` \| `hard`（段落内の改行の扱い）       |
 
 `fontFamily` は通常の CSS 文字列のほか、**配列**でも書けます（空白入りの名前に便利）。
 

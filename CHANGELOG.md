@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.3 — 2026-07-31
+
+### Features
+
+- Frontmatter `break: soft | hard` (default `soft`): `soft` turns single newlines inside paragraphs into `<br>` (GFM-style); `hard` keeps CommonMark line breaks
+
+### Fixes
+
+- Task-list checkbox mark: nudge `::before` to `top: 0.5em` for better vertical alignment
+- KaTeX display math: fix stray vertical scrollbar — `overflow-x: auto` with `overflow-y: visible` computed as `auto` on both axes; set `overflow-y: hidden` and hide horizontal scrollbar chrome
+
 ## 0.7.2 — 2026-07-31
 
 ### Fixes
