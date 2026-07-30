@@ -119,6 +119,38 @@ body
         );
     });
 
+    it("parses title and description", () => {
+        const result = parseFrontmatter(`---
+title: My Talk
+description: A short blurb
+---
+
+# Hi
+`);
+        expect(result.config.title).toBe("My Talk");
+        expect(result.config.description).toBe("A short blurb");
+        expect(result.diagnostics).toEqual([]);
+    });
+
+    it("defaults title and description to empty strings", () => {
+        const result = parseFrontmatter("# Hi\n");
+        expect(result.config.title).toBe("");
+        expect(result.config.description).toBe("");
+    });
+
+    it("falls back and warns on invalid title", () => {
+        const result = parseFrontmatter(`---
+title: 42
+---
+
+body
+`);
+        expect(result.config.title).toBe("");
+        expect(messages(result.diagnostics).some((m) => m.includes("frontmatter.title"))).toBe(
+            true,
+        );
+    });
+
     it("falls back and warns on invalid break", () => {
         const result = parseFrontmatter(`---
 break: newline

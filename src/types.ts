@@ -16,6 +16,10 @@ export type PageTransitionConfig = {
 export type BreakMode = "soft" | "hard";
 
 export type DeckConfig = {
+    /** Document title for viewer HTML; empty falls back to `Presen'it! — <slug>`. */
+    title: string;
+    /** Optional blurb for `<meta name="description">` and `og:description`. */
+    description: string;
     theme: ThemeName;
     hue: number;
     width: number;
@@ -66,6 +70,8 @@ export type Deck = {
 };
 
 export const DEFAULT_CONFIG: DeckConfig = {
+    title: "",
+    description: "",
     theme: "light",
     hue: 210,
     width: 1920,

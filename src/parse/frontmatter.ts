@@ -262,6 +262,13 @@ export function normalizeConfig(raw: unknown): {
     }
 
     const config: DeckConfig = {
+        title: normalizeString(raw.title, "title", DEFAULT_CONFIG.title, diagnostics),
+        description: normalizeString(
+            raw.description,
+            "description",
+            DEFAULT_CONFIG.description,
+            diagnostics,
+        ),
         theme: normalizeTheme(raw.theme, diagnostics),
         hue: normalizeHue(raw.hue, diagnostics),
         width: normalizePositiveNumber(raw.width, "width", DEFAULT_CONFIG.width, diagnostics),
