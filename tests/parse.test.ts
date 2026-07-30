@@ -92,6 +92,33 @@ break: hard
         expect(hard.diagnostics).toEqual([]);
     });
 
+    it("parses footer with default empty string", () => {
+        const defaults = parseFrontmatter("# Hi\n");
+        expect(defaults.config.footer).toBe("");
+
+        const custom = parseFrontmatter(`---
+footer: "© 2026 Example Co."
+---
+
+# Hi
+`);
+        expect(custom.config.footer).toBe("© 2026 Example Co.");
+        expect(custom.diagnostics).toEqual([]);
+    });
+
+    it("falls back and warns on invalid footer", () => {
+        const result = parseFrontmatter(`---
+footer: 42
+---
+
+body
+`);
+        expect(result.config.footer).toBe("");
+        expect(messages(result.diagnostics).some((m) => m.includes("frontmatter.footer"))).toBe(
+            true,
+        );
+    });
+
     it("falls back and warns on invalid break", () => {
         const result = parseFrontmatter(`---
 break: newline

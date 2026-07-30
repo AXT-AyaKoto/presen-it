@@ -26,6 +26,8 @@ export type DeckConfig = {
     rawHTML: boolean;
     /** `soft`: single newlines become `<br>`; `hard`: CommonMark default. */
     break: BreakMode;
+    /** Bottom-left footer text on every slide. */
+    footer: string;
 };
 
 export type AlignOptions = {
@@ -79,6 +81,7 @@ export const DEFAULT_CONFIG: DeckConfig = {
     },
     rawHTML: false,
     break: "soft",
+    footer: "",
 };
 
 export const DEFAULT_SLIDE_ALIGN: AlignOptions = {

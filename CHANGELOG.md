@@ -4,6 +4,7 @@
 
 ### Features
 
+- Frontmatter `footer` string (default `""`) renders escaped text at the bottom-left of every slide
 - Presenter timer: Pause/Resume and Reset buttons (`T` / `R` shortcuts)
   <<<<<<< HEAD
 - `presenit init <slug>` scaffolds `src/<slug>/slide.md` with a Japanese intro deck (frontmatter, directives, notes, Markdown extras, viewer keys, dev/build/export hints). Refuses overwrite unless `--force`.

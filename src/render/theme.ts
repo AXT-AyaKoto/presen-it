@@ -162,6 +162,17 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     line-height: 1;
 }
 
+.presenit-slide-footer {
+    position: absolute;
+    bottom: calc(var(--presenit-slide-height) * 0.028);
+    left: calc(var(--presenit-slide-width) * 0.028);
+    font-size: 0.625em;
+    font-weight: 500;
+    color: var(--presenit-text-muted);
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
 .presenit-column h1 {
     margin: 0 0 0.45em;
     font-size: 2.2em;
