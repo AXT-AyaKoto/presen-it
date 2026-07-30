@@ -45,7 +45,8 @@
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
         "test:watch": "vitest",
-        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+        "postinstall": "puppeteer browsers install chrome"
     },
     "dependencies": {
         "@preact/preset-vite": "^2.10.6",
@@ -58,6 +59,7 @@
         "mdast-util-to-hast": "^13.2.1",
         "mdast-util-to-string": "^4.0.0",
         "preact": "^10.29.7",
+        "puppeteer": "^25.4.0",
         "rehype-katex": "^7.0.1",
         "rehype-stringify": "^10.0.1",
         "remark-gfm": "^4.0.1",

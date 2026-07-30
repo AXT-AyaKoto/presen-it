@@ -1,6 +1,6 @@
 import { defineCommand, runMain } from "citty";
-import { consola } from "consola";
 import { runBuild, runDev } from "./commands/dev";
+import { runExport } from "./commands/export";
 
 const main = defineCommand({
     meta: {
@@ -54,7 +54,7 @@ const main = defineCommand({
                 },
             },
             async run({ args }) {
-                consola.info(`\`presenit export ${args.slug}\` is not implemented yet.`);
+                await runExport(args.slug);
             },
         }),
     },

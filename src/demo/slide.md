@@ -17,7 +17,7 @@ Markdown から、美しいスライドを。
 
 - ほぼ普通の Markdown を書くだけ
 - 少ないディレクティブでページとカラムを分割
-- 投影ビュー + プレゼンターモード + PDF（予定）
+- 投影ビュー + プレゼンターモード + PDF
 
 <!-- this is a speaker note: keep it short and useful -->
 
@@ -31,11 +31,11 @@ Markdown から、美しいスライドを。
 
 ## ディレクティブ
 
-```md
-<!-- presen-it! slide-break -->
-<!-- presen-it! column-break -->
-<!-- presen-it! slide-break (center-x=true) -->
+```ts
+const tip = "slide-break でページ分割";
 ```
+
+<!-- press P for presenter mode -->
 
 <!-- presen-it! column-break -->
 
@@ -44,6 +44,25 @@ Markdown から、美しいスライドを。
 - `center-x` / `center-y` で揃え
 
 <!-- press P for presenter mode -->
+
+<!-- presen-it! slide-break -->
+
+## Mermaid & Math
+
+```mermaid
+graph LR
+    Markdown --> Presenit
+    Presenit --> View
+    Presenit --> PDF
+```
+
+<!-- presen-it! column-break -->
+
+数式も書けます: $E = mc^2$
+
+$$
+\int_0^1 x^2 \, dx = \frac{1}{3}
+$$
 
 <!-- presen-it! slide-break (center-x=true) -->
 
