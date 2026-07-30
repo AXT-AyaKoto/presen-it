@@ -1,0 +1,66 @@
+{
+    "name": "@axt_ayakoto/presenit",
+    "version": "0.0.0",
+    "description": "Turn readable Markdown into beautiful presentation slides and PDFs.",
+    "keywords": [
+        "markdown",
+        "pdf",
+        "presenit",
+        "presentation",
+        "slides"
+    ],
+    "homepage": "https://github.com/AXT-AyaKoto/experiment-md-slide-vibed#readme",
+    "bugs": {
+        "url": "https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/issues"
+    },
+    "license": "MIT",
+    "author": "Ayasaka-Koto (@AXT_AyaKoto)",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AXT-AyaKoto/experiment-md-slide-vibed.git"
+    },
+    "bin": {
+        "presenit": "./dist/cli.js"
+    },
+    "files": [
+        "dist",
+        "LICENSE",
+        "README.md"
+    ],
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsup",
+        "dev:cli": "tsx src/cli.ts",
+        "presenit": "node ./dist/cli.js",
+        "format": "oxfmt .",
+        "format:check": "oxfmt --check .",
+        "lint": "oxlint .",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
+    },
+    "dependencies": {
+        "citty": "^0.2.2",
+        "consola": "^3.4.2"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.0",
+        "oxfmt": "^0.61.0",
+        "oxlint": "^1.0.0",
+        "tsup": "^8.5.0",
+        "tsx": "^4.20.0",
+        "typescript": "^5.8.0",
+        "vitest": "^3.2.0"
+    },
+    "engines": {
+        "node": ">=22"
+    },
+    "packageManager": "pnpm@11.11.0"
+}
