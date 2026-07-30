@@ -11,15 +11,15 @@
         "slides",
         "slidev"
     ],
-    "homepage": "https://github.com/AXT-AyaKoto/experiment-md-slide-vibed#readme",
+    "homepage": "https://github.com/AXT-AyaKoto/presen-it#readme",
     "bugs": {
-        "url": "https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/issues"
+        "url": "https://github.com/AXT-AyaKoto/presen-it/issues"
     },
     "license": "MIT",
     "author": "Ayasaka-Koto (@AXT_AyaKoto)",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/AXT-AyaKoto/experiment-md-slide-vibed.git"
+        "url": "git+https://github.com/AXT-AyaKoto/presen-it.git"
     },
     "bin": {
         "presenit": "./dist/cli.js"

@@ -7,7 +7,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.2.0** プレリリース）
 
 [![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
-[![CI](https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/actions/workflows/ci.yml)
+[![CI](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml)
 
 ## Why
 
@@ -97,7 +97,7 @@ URL ハッシュは 1 始まり（`#3` = 3 枚目）。プレゼンターは `?p
 3. `main` にマージする
 4. GitHub Release を作成し、タグを `vX.Y.Z` にする（`package.json` と一致必須）
 
-Release 公開時、[`.github/workflows/release.yml`](./.github/workflows/release.yml) が自動で npm publish する。リポジトリシークレット `NPM_TOKEN` が必要 — 詳細は [docs/publishing.md](./docs/publishing.md)。
+Release 公開時、[`.github/workflows/release.yml`](./.github/workflows/release.yml) が npm Trusted Publishing（OIDC）で自動 publish する。詳細は [docs/publishing.md](./docs/publishing.md)。
 
 ## Development（このリポジトリ）
 

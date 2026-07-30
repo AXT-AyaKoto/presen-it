@@ -1,17 +1,16 @@
 # 公開チェックリスト（メンテナ向け）
 
-## 初回セットアップ: `NPM_TOKEN` シークレット
+## 初回セットアップ: npm Trusted Publishing
 
-1. [npm Access Tokens](https://www.npmjs.com/settings/~/tokens)（または org のトークンページ）を開く
-2. `@axt_ayakoto/presenit` を publish できるトークンを作る:
-    - **Granular Access Token**（推奨）: パッケージ（または `@axt_ayakoto` スコープ）の read/write
-    - または classic の **Automation** トークン（publish 時の 2FA を回避。厳重に保管すること）
-3. この GitHub リポジトリで:
-    - **Settings → Secrets and variables → Actions → New repository secret**
-    - Name: `NPM_TOKEN`
-    - Value: 上で作った npm トークン
+1. npm の [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit) → **Settings → Trusted Publisher**
+2. GitHub Actions を追加:
+    - Organization or user: `AXT-AyaKoto`
+    - Repository: `presen-it`
+    - Workflow filename: `release.yml`
+    - Environment: （未使用なら空）
+3. このリポジトリの Release workflow は `id-token: write` + `pnpm publish --provenance` で OIDC 認証する（`NPM_TOKEN` は不要）
 
-Trusted Publishing / OIDC は後から足せる。現状の workflow は `NPM_TOKEN` + npm provenance（`id-token: write`）を使う。
+フォールバックとして Automation トークンを `NPM_TOKEN` に置くやり方もあるが、2FA 付きアカウントでは OTP エラーになりやすい。Trusted Publishing を優先する。
 
 ## 毎回のリリース手順
 
