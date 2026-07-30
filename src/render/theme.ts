@@ -234,6 +234,30 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     font-weight: 600;
 }
 
+.presenit-column ul.contains-task-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.presenit-column li.task-list-item {
+    padding-left: 0;
+    list-style: none;
+}
+
+.presenit-column li.task-list-item input[type="checkbox"] {
+    width: 0.9em;
+    height: 0.9em;
+    margin: 0 0.45em 0 0;
+    vertical-align: -0.08em;
+    accent-color: var(--presenit-accent);
+    opacity: 1;
+    cursor: default;
+}
+
+.presenit-column li.task-list-item:has(input[type="checkbox"]:checked) {
+    color: var(--presenit-text-muted);
+}
+
 .presenit-column blockquote {
     margin: 0.55em 0;
     padding: 0.7em 1em;

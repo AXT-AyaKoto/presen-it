@@ -86,7 +86,7 @@ Rules:
 
 ## Supported Markdown extras
 
-- GFM (tables, strikethrough, task lists, etc.)
+- GFM (tables, strikethrough, task lists, etc.); task lists (`- [ ]` / `- [x]`) render as read-only checkboxes
 - Code fences → Shiki highlight
 - ` ```mermaid ` → SVG via beautiful-mermaid
 - `$inline$` and `$$ block $$` math → KaTeX
