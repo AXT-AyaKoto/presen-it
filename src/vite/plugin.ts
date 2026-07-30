@@ -1,7 +1,7 @@
 import type { Plugin } from "vite";
 import path from "node:path";
 import fs from "node:fs";
-import { loadDeck, toClientData, rewriteAssetUrls } from "../project/load";
+import { loadDeck, toClientData } from "../project/load";
 
 export const VIRTUAL_DECK_ID = "virtual:presenit-deck";
 const RESOLVED_VIRTUAL_DECK_ID = "\0" + VIRTUAL_DECK_ID;
@@ -11,11 +11,31 @@ export type PresenitPluginOptions = {
     slug: string;
 };
 
+/**
+ * Dev uses `/__presenit_assets__/...`.
+ * Build rewrites to paths relative to the slide directory root.
+ */
 function rewriteAssetUrlsForBuild(html: string): string {
     return html.replace(
         /\b(src|href)=["']\/__presenit_assets__\/([^"']+)["']/g,
-        (_match, attr: string, url: string) => `${attr}="./assets/${url}"`,
+        (_match, attr: string, url: string) => `${attr}="./${url}"`,
     );
+}
+
+async function copySlideMedia(slideDir: string, outDir: string): Promise<void> {
+    const entries = await fs.promises.readdir(slideDir, { withFileTypes: true });
+    for (const entry of entries) {
+        if (entry.name === "slide.md" || entry.name.startsWith(".")) {
+            continue;
+        }
+        const src = path.join(slideDir, entry.name);
+        const dest = path.join(outDir, entry.name);
+        // Do not clobber Vite viewer chunks.
+        if (entry.name === "_viewer") {
+            continue;
+        }
+        await fs.promises.cp(src, dest, { recursive: true });
+    }
 }
 
 export function presenitPlugin(options: PresenitPluginOptions): Plugin {
@@ -98,16 +118,7 @@ export function presenitPlugin(options: PresenitPluginOptions): Plugin {
             if (!outDir) {
                 return;
             }
-
-            const assetsSrc = path.join(slideDir, "assets");
-            const assetsDest = path.join(outDir, "assets");
-            if (fs.existsSync(assetsSrc)) {
-                await fs.promises.cp(assetsSrc, assetsDest, { recursive: true });
-            }
-
-            // Also copy any top-level referenced files that live beside slide.md
-            // (best-effort; paths already rewritten under ./assets/ for nested assets).
-            void rewriteAssetUrls;
+            await copySlideMedia(slideDir, outDir);
         },
         transformIndexHtml(html) {
             return html.replace(
