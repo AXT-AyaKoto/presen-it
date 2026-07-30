@@ -1,10 +1,6 @@
 import { defineCommand, runMain } from "citty";
 import { consola } from "consola";
-
-const stub = (command: string) => {
-    consola.info(`\`${command}\` is not implemented yet.`);
-    consola.info("See https://github.com/AXT-AyaKoto/experiment-md-slide-vibed for progress.");
-};
+import { runBuild, runDev } from "./commands/dev";
 
 const main = defineCommand({
     meta: {
@@ -25,8 +21,8 @@ const main = defineCommand({
                     required: true,
                 },
             },
-            run({ args }) {
-                stub(`presenit dev ${args.slug}`);
+            async run({ args }) {
+                await runDev(args.slug);
             },
         }),
         build: defineCommand({
@@ -41,8 +37,8 @@ const main = defineCommand({
                     required: true,
                 },
             },
-            run({ args }) {
-                stub(`presenit build ${args.slug}`);
+            async run({ args }) {
+                await runBuild(args.slug);
             },
         }),
         export: defineCommand({
@@ -57,8 +53,8 @@ const main = defineCommand({
                     required: true,
                 },
             },
-            run({ args }) {
-                stub(`presenit export ${args.slug}`);
+            async run({ args }) {
+                consola.info(`\`presenit export ${args.slug}\` is not implemented yet.`);
             },
         }),
     },
