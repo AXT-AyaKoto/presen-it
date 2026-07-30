@@ -59,8 +59,7 @@
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
         "test:watch": "vitest",
-        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
-        "postinstall": "puppeteer browsers install chrome"
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
     },
     "dependencies": {
         "@preact/preset-vite": "^2.10.6",

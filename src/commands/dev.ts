@@ -1,28 +1,33 @@
 import path from "node:path";
 import { access } from "node:fs/promises";
 import { consola } from "consola";
-import puppeteer from "puppeteer";
 import { createServer, build as viteBuild } from "vite";
 import { createViteConfig } from "../vite/config";
 import { loadDeck, resolveSlidePath } from "../project/load";
 import { detectOverflow, logOverflowWarnings } from "../project/overflow";
+import { launchPresenitBrowser } from "../project/chrome";
 
 async function assertSlideExists(cwd: string, slug: string): Promise<void> {
     const { slidePath } = resolveSlidePath(cwd, slug);
     try {
         await access(slidePath);
     } catch {
-        throw new Error(`Slide not found: ${slidePath}\nExpected src/${slug}/slide.md`);
+        throw new Error(
+            [
+                `Slide not found: ${slidePath}`,
+                `Expected: src/${slug}/slide.md`,
+                `Create it, for example:`,
+                ``,
+                `  mkdir -p src/${slug}`,
+                `  printf '%s\\n' '---' 'theme: dark' '---' '' '# Title' > src/${slug}/slide.md`,
+            ].join("\n"),
+        );
     }
 }
 
 async function warnOverflow(cwd: string, slug: string): Promise<void> {
     const loaded = await loadDeck(cwd, slug);
-    const browser = await puppeteer.launch({
-        headless: true,
-        executablePath: await puppeteer.executablePath(),
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    const browser = await launchPresenitBrowser();
     try {
         const page = await browser.newPage();
         await page.setViewport({
@@ -47,6 +52,7 @@ export async function runDev(slug: string, cwd = process.cwd()): Promise<void> {
     if (urls?.local[0]) {
         consola.info(urls.local[0]);
         consola.info(`Presenter: ${urls.local[0]}?presenter`);
+        consola.info("Keys: ← → navigate · O overview · P presenter · F fullscreen");
     }
     server.printUrls();
 }
@@ -57,7 +63,6 @@ export async function runBuild(slug: string, cwd = process.cwd()): Promise<void>
     const config = createViteConfig({ cwd, slug, outDir, command: "build" });
     await viteBuild(config);
 
-    // Rename index.html → view.html per concept doc.
     const fs = await import("node:fs/promises");
     const from = path.join(outDir, "index.html");
     const to = path.join(outDir, "view.html");

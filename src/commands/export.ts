@@ -2,9 +2,9 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { mkdir, writeFile } from "node:fs/promises";
 import { consola } from "consola";
-import puppeteer from "puppeteer";
 import { loadDeck } from "../project/load";
 import { detectOverflow, logOverflowWarnings } from "../project/overflow";
+import { launchPresenitBrowser } from "../project/chrome";
 
 function absolutizeAssets(html: string, slideDir: string): string {
     return html.replace(
@@ -78,11 +78,7 @@ export async function runExport(slug: string, cwd = process.cwd()): Promise<stri
     await mkdir(outDir, { recursive: true });
     const outPath = path.join(outDir, "resume.pdf");
 
-    const browser = await puppeteer.launch({
-        headless: true,
-        executablePath: await puppeteer.executablePath(),
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    const browser = await launchPresenitBrowser();
 
     try {
         const page = await browser.newPage();
