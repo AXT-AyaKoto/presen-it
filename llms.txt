@@ -1,0 +1,131 @@
+# Presen'it! — guide for LLMs
+
+> Turn a normal Markdown document into polished presentation slides and PDF with minimal directives.
+
+Package: `@axt_ayakoto/presenit` (npm)
+CLI: `presenit`
+
+## Mental model
+
+1. Author **one** Markdown file: `src/<slug>/slide.md`
+2. It should remain readable as a normal Markdown document
+3. Split pages/columns with HTML comment directives only
+4. Do **not** invent JSX, custom HTML layouts, or extra config files
+
+## Project layout
+
+```text
+src/<slug>/slide.md
+src/<slug>/assets/...   # optional images
+dist/<slug>/view.html   # from `presenit build`
+dist/<slug>/resume.pdf  # from `presenit export`
+```
+
+## Commands
+
+```bash
+pnpm add -D @axt_ayakoto/presenit
+pnpm exec presenit dev <slug>
+pnpm exec presenit build <slug>
+pnpm exec presenit export <slug>
+```
+
+## Frontmatter (YAML)
+
+```yaml
+---
+theme: dark          # light | dark (default: light)
+hue: 210             # number, mod 360 (default: 210)
+width: 1920          # px (default: 1920)
+height: 1080         # px (default: 1080)
+fontSize: 32         # px
+fontFamily:
+  sans: '"M PLUS 1", system-ui, sans-serif'
+  mono: '"M PLUS 1 Code", ui-monospace, monospace'
+rawHTML: false       # true only if you intentionally embed HTML
+---
+```
+
+Unknown keys are ignored. Wrong types fall back to defaults with warnings.
+
+## Directives
+
+Only these HTML comments, alone between blocks:
+
+```html
+<!-- presen-it! slide-break -->
+<!-- presen-it! column-break -->
+<!-- presen-it! slide-break (center-x=true) -->
+<!-- presen-it! column-break (center-x=true&center-y=false) -->
+```
+
+Rules:
+- Commands: `slide-break`, `column-break`
+- Options: `center-x=true|false`, `center-y=true|false`
+- No spaces around `=` or `&`
+- Defaults: `center-x=false`, `center-y=true`
+- Column options override slide options
+- Unknown command/option → warning and ignore directive
+
+### Page structure
+
+- Content before the first `slide-break` is page 1
+- Leading `h2` after a slide-break becomes the page header
+- To keep an `h2` in the body, put `column-break` immediately after `slide-break`
+- Empty columns are removed
+- Trailing non-directive HTML comment = speaker notes (presenter only)
+
+## Supported Markdown extras
+
+- GFM (tables, strikethrough, task lists, etc.)
+- Code fences → Shiki highlight
+- ` ```mermaid ` → SVG via beautiful-mermaid
+- `$inline$` and `$$ block $$` math → KaTeX
+
+## Writing tips for high-quality slides
+
+- Prefer short bullets; one idea per slide
+- Use `center-x=true` for title / quote / single figure slides
+- Use columns for text + figure
+- Keep speaker notes factual and short
+- Avoid raw HTML unless `rawHTML: true` is intentional
+
+## Example
+
+```md
+---
+theme: dark
+hue: 210
+---
+
+# Title
+
+Subtitle
+
+<!-- presen-it! slide-break -->
+
+## Section
+
+- Point A
+- Point B
+
+<!-- note for the speaker -->
+
+<!-- presen-it! slide-break (center-x=true) -->
+
+## Diagram
+
+\`\`\`mermaid
+graph LR
+  A --> B
+\`\`\`
+```
+
+## Viewer keys
+
+- `←` `→` / Space: navigate
+- `Home` `End`: first/last
+- `F`: fullscreen
+- `P`: presenter mode
+- `T`: timer pause/resume (presenter)
+- `?presenter` query: open presenter directly
