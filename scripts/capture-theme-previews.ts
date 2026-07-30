@@ -8,7 +8,9 @@ import puppeteer from "puppeteer";
 import { parseSlideMarkdown } from "../src/parse/index";
 import { renderDeckAsync } from "../src/render/index";
 
-const SAMPLE = `# Presen'it!
+const SAMPLE = `<!-- presen-it! slide-break (center-x=true) -->
+
+# Presen'it!
 
 美しいスライドを、普通の Markdown から。
 
