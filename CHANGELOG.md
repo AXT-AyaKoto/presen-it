@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.4 — 2026-07-31
+
+### Fixes
+
+- Soft breaks no longer leave a blank line between GitHub alert labels and body text
+
 ## 0.7.3 — 2026-07-31
 
 ### Features

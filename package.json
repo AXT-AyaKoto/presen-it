@@ -1,6 +1,6 @@
 {
     "name": "@axt_ayakoto/presenit",
-    "version": "0.7.3",
+    "version": "0.7.4",
     "description": "Turn readable Markdown into beautiful presentation slides and PDFs.",
     "keywords": [
         "markdown",

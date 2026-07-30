@@ -153,6 +153,27 @@ rawHTML: true
         expect(result.css).toContain(".presenit-alert__label::before");
     });
 
+    it("does not insert a blank line after alert labels when break is soft", async () => {
+        const soft = await renderDeckAsync(
+            parseSlideMarkdown(`> [!NOTE]
+> Useful information that users should know, even when skimming content.`),
+        );
+        const hard = await renderDeckAsync(
+            parseSlideMarkdown(`---
+break: hard
+---
+
+> [!NOTE]
+> Useful information that users should know, even when skimming content.`),
+        );
+
+        const pattern =
+            /<p class="presenit-alert__label">Note<\/p>\s*<p>Useful information that users should know, even when skimming content\.<\/p>/;
+        expect(soft.html).toMatch(pattern);
+        expect(soft.html).not.toMatch(/presenit-alert__label[\s\S]*?<p>\s*<br\s*\/?>\s*Useful/);
+        expect(hard.html).toMatch(pattern);
+    });
+
     it("keeps non-alert blockquotes unchanged", async () => {
         const result = await renderDeckAsync(parseSlideMarkdown(`> A normal quote.`));
         const slide = result.slides[0]!.html;
