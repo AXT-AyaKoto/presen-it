@@ -2,7 +2,7 @@ import type { Html, Root, RootContent } from "mdast";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
 import type { Column, Deck, DeckConfig, Slide } from "../types";
-import { applyKatex, enrichRichContent, KATEX_CSS_URL } from "./rich";
+import { enrichRichContent, KATEX_CSS_URL } from "./rich";
 
 export type RenderedSlide = {
     html: string;
@@ -69,10 +69,6 @@ async function mdastToHtml(
     });
     if (!hast || hast.type !== "root") {
         return "";
-    }
-
-    if (enriched.hasMath) {
-        applyKatex(hast);
     }
 
     return toHtml(hast, {
