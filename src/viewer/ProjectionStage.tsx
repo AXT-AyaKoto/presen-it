@@ -1,6 +1,7 @@
 import type { JSX } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { PageTransitionType } from "../types";
+import type { SlideFrameLaser } from "./SlideFrame";
 import { SlideFrame } from "./SlideFrame";
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
     transitionType: PageTransitionType;
     /** Seconds */
     duration: number;
+    laser?: SlideFrameLaser;
 };
 
 type ActiveTransition = {
@@ -30,6 +32,7 @@ export function ProjectionStage({
     index,
     transitionType,
     duration,
+    laser,
 }: Props): JSX.Element {
     const previousIndexRef = useRef(index);
     const previousHtmlRef = useRef(html);
@@ -82,6 +85,7 @@ export function ProjectionStage({
                         width={width}
                         height={height}
                         className="projection__slide"
+                        laser={laser}
                     />
                 </div>
             </div>
@@ -109,6 +113,7 @@ export function ProjectionStage({
                     width={width}
                     height={height}
                     className="projection__slide"
+                    laser={laser}
                 />
             </div>
         </div>

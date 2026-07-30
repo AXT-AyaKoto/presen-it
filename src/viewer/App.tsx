@@ -7,12 +7,15 @@ import { clickZoneWidthRatio } from "../shared/slide-padding";
 import {
     blackout,
     broadcastIndex,
+    clearLaserDot,
     currentIndex,
     currentSlide,
     deckData,
     elapsedMs,
     exitOverviewTo,
     goTo,
+    laserDot,
+    laserOn,
     listenSync,
     mode,
     next,
@@ -21,12 +24,14 @@ import {
     readHashIndex,
     resetTimer,
     setBlackout,
+    setLaserDot,
     slideCount,
     timerRunning,
     toggleBlackout,
     toggleTimer,
     leavePresenter,
     openPresenterWindow,
+    toggleLaser,
     toggleOverview,
 } from "./store";
 
@@ -91,6 +96,8 @@ export function App(): JSX.Element {
     const elapsed = elapsedMs.value;
     const upcoming = nextSlide.value;
     const isBlackout = blackout.value;
+    const isLaserOn = laserOn.value;
+    const laserPosition = laserDot.value;
     const pressRef = useRef<PressOrigin | null>(null);
     const [hoverZone, setHoverZone] = useState<ClickZone | null>(null);
 
@@ -209,6 +216,11 @@ export function App(): JSX.Element {
                         event.preventDefault();
                         resetTimer();
                     }
+                    break;
+                case "l":
+                case "L":
+                    event.preventDefault();
+                    toggleLaser();
                     break;
                 case "Escape":
                     if (viewerMode === "presenter") {
@@ -337,6 +349,22 @@ export function App(): JSX.Element {
 
     const { width, height } = deck.config;
 
+    const projectionLaser = {
+        active: isLaserOn,
+        dot: laserPosition,
+        onMove: (x: number, y: number) => setLaserDot(x, y, false),
+        onLeave: () => clearLaserDot(false),
+        hideCursor: true,
+    };
+
+    const presenterLaser = {
+        active: isLaserOn,
+        dot: laserPosition,
+        onMove: (x: number, y: number) => setLaserDot(x, y, true),
+        onLeave: () => clearLaserDot(true),
+        hideCursor: true,
+    };
+
     if (viewerMode === "overview") {
         return (
             <div class="overview">
@@ -370,7 +398,12 @@ export function App(): JSX.Element {
         return (
             <div class="presenter">
                 <div class="presenter__main">
-                    <SlideFrame html={slide.html} width={width} height={height} />
+                    <SlideFrame
+                        html={slide.html}
+                        width={width}
+                        height={height}
+                        laser={presenterLaser}
+                    />
                 </div>
                 <aside class="presenter__side">
                     <div class="presenter__meta">
@@ -416,8 +449,8 @@ export function App(): JSX.Element {
                         Blackout
                     </button>
                     <div class="presenter__hint">
-                        ← → navigate · B blackout · O overview · P projection · T pause/resume · R
-                        reset · F fullscreen · or use the bottom-left toolbar
+                        ← → navigate · B blackout · L laser · O overview · P projection · T
+                        pause/resume · R reset · F fullscreen · or use the bottom-left toolbar
                     </div>
                 </aside>
                 <ViewerNav />
@@ -445,6 +478,7 @@ export function App(): JSX.Element {
                 index={index}
                 transitionType={deck.config.pageTransition.type}
                 duration={deck.config.pageTransition.duration}
+                laser={projectionLaser}
             />
             <div
                 class={`projection__affordance projection__affordance--prev${hoverZone === "prev" ? " is-visible" : ""}`}
