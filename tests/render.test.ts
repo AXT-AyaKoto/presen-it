@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { parseSlideMarkdown } from "../src/parse/index";
-import { renderDeck } from "../src/render/index";
+import { renderDeckAsync } from "../src/render/index";
 
 describe("renderDeck", () => {
-    it("renders slides with theme css and slide numbers", () => {
+    it("renders slides with theme css and slide numbers", async () => {
         const deck = parseSlideMarkdown(`---
 theme: dark
 hue: 200
@@ -23,7 +23,7 @@ hue: 200
 ![alt](./pic.png)
 `);
 
-        const result = renderDeck(deck);
+        const result = await renderDeckAsync(deck);
         expect(result.css).toContain("--presenit-accent");
         expect(result.css).toContain("M+PLUS+1");
         expect(result.html).toContain('data-theme="dark"');
@@ -35,7 +35,7 @@ hue: 200
         expect(result.slides).toHaveLength(2);
     });
 
-    it("applies center alignment classes", () => {
+    it("applies center alignment classes", async () => {
         const deck =
             parseSlideMarkdown(`<!-- presen-it! slide-break (center-x=true&center-y=false) -->
 
@@ -43,19 +43,19 @@ hue: 200
 
 hello
 `);
-        const result = renderDeck(deck);
+        const result = await renderDeckAsync(deck);
         const slide = result.slides[1]!.html;
         expect(slide).toContain("presenit-column--center-x");
         expect(slide).not.toContain("presenit-column--center-y");
     });
 
-    it("escapes HTML by default and allows rawHTML when enabled", () => {
-        const escaped = renderDeck(parseSlideMarkdown(`<div class="x">hi</div>`));
+    it("escapes HTML by default and allows rawHTML when enabled", async () => {
+        const escaped = await renderDeckAsync(parseSlideMarkdown(`<div class="x">hi</div>`));
         // hast-util-to-html may emit &#x3C; or &lt;
         expect(escaped.html).toMatch(/&lt;div|&#x3C;div/);
         expect(escaped.html).not.toContain('<div class="x">');
 
-        const raw = renderDeck(
+        const raw = await renderDeckAsync(
             parseSlideMarkdown(`---
 rawHTML: true
 ---

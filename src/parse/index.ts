@@ -1,5 +1,6 @@
 import type { Heading, Root, RootContent } from "mdast";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import type { AlignOptions, Column, Deck, Diagnostic, Slide } from "../types";
@@ -86,7 +87,7 @@ function finalizeSlide(slide: MutableSlide, diagnostics: Diagnostic[]): Slide {
 }
 
 function parseMarkdownRoot(body: string): Root {
-    return unified().use(remarkParse).use(remarkGfm).parse(body) as Root;
+    return unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(body) as Root;
 }
 
 /**

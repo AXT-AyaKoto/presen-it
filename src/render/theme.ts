@@ -360,5 +360,63 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     font-style: italic;
     color: var(--presenit-text-muted);
 }
+
+.presenit-mermaid {
+    margin: 0.55em 0;
+    max-width: 100%;
+    overflow: auto;
+}
+
+.presenit-mermaid:first-child {
+    margin-top: 0;
+}
+
+.presenit-mermaid:last-child {
+    margin-bottom: 0;
+}
+
+.presenit-mermaid svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.presenit-column--center-x .presenit-mermaid svg {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.presenit-column pre.shiki {
+    margin: 0.55em 0;
+    padding: 0.8em 1em;
+    overflow: auto;
+    font-family: var(--presenit-font-mono);
+    font-size: 0.84em;
+    line-height: 1.45;
+    border: 1px solid var(--presenit-border);
+    border-radius: 5px;
+}
+
+.presenit-column pre.shiki:first-child {
+    margin-top: 0;
+}
+
+.presenit-column pre.shiki:last-child {
+    margin-bottom: 0;
+}
+
+.presenit-column pre.shiki code {
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+.presenit-column .katex-display {
+    margin: 0.55em 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 `.trim();
 }

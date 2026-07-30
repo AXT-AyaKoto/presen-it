@@ -8,19 +8,27 @@ export type RenderDeckResult = {
     /** Theme CSS alone (for injection into a host document). */
     css: string;
     slides: RenderedSlide[];
+    /** Whether KaTeX styles were included for math content. */
+    hasMath: boolean;
 };
 
 /**
  * Render a parsed deck into HTML + CSS.
  */
-export function renderDeck(deck: Deck): RenderDeckResult {
+export async function renderDeckAsync(deck: Deck): Promise<RenderDeckResult> {
     const css = buildThemeCss(deck.config);
+    const { slides, hasMath } = await renderDeckSlides(deck);
+    const slidesHtml = slides.map((slide) => slide.html).join("\n");
     return {
-        html: renderDeckHtml(deck, css),
+        html: renderDeckHtml(deck, css, slidesHtml, hasMath),
         css,
-        slides: renderDeckSlides(deck),
+        slides,
+        hasMath,
     };
 }
+
+/** @alias renderDeckAsync */
+export const renderDeck = renderDeckAsync;
 
 export { buildThemeCss } from "./theme";
 export { renderDeckHtml, renderDeckSlides, renderSlideHtml } from "./html";
