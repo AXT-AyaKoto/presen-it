@@ -2,12 +2,14 @@ import type { JSX } from "preact";
 import {
     broadcastIndex,
     currentIndex,
+    laserOn,
     leavePresenter,
     mode,
     next,
     openPresenterWindow,
     prev,
     slideCount,
+    toggleLaser,
     toggleOverview,
 } from "./store";
 
@@ -23,6 +25,7 @@ export function ViewerNav(): JSX.Element {
     const index = currentIndex.value;
     const total = slideCount.value;
     const viewerMode = mode.value;
+    const isLaserOn = laserOn.value;
 
     return (
         <div class="viewer-nav" onClick={(event) => event.stopPropagation()}>
@@ -79,6 +82,14 @@ export function ViewerNav(): JSX.Element {
                 </button>
                 <button type="button" class="viewer-nav__btn" onClick={() => toggleFullscreen()}>
                     Fullscreen
+                </button>
+                <button
+                    type="button"
+                    class={`viewer-nav__btn${isLaserOn ? " is-active" : ""}`}
+                    aria-pressed={isLaserOn}
+                    onClick={() => toggleLaser()}
+                >
+                    Laser
                 </button>
             </div>
         </div>

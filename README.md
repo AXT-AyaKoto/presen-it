@@ -149,7 +149,7 @@ fontFamily:
 | `R` | タイマーリセット（プレゼンター） |
 | `L` | レーザーポインター（投影・プレゼンター。プレゼンターから投影へ同期） |
 
-左下にマウスを置くと、前後移動・Overview・Presenter・Fullscreen のツールバーが出ます。Presenter は別タブで開き、投影タブとスライド位置・レーザーは BroadcastChannel で同期します。
+左下にマウスを置くと、前後移動・Overview・Presenter・Fullscreen・Laser のツールバーが出ます。Presenter は別タブで開き、投影タブとスライド位置・レーザーは BroadcastChannel で同期します。
 
 URL ハッシュは 1 始まり（`#3` = 3 枚目）。`?presenter` を付けて直接プレゼンターを開くこともできます。機能一覧サンプルは `pnpm presenit dev kitchen-sink`。
 

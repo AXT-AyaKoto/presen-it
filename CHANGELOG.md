@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.1 — 2026-07-31
+
+### Improvements
+
+- Init template: clearer slide-break and NOTE alert copy
+- Bottom-left toolbar: Laser toggle (`L`), matching Overview active state
+- Fade page transition uses linear timing to avoid black flash mid-crossfade
+
 ## 0.9.0 — 2026-07-31
 
 ### Features
