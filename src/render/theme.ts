@@ -267,7 +267,7 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     content: "";
     position: absolute;
     left: -1.02em;
-    top: 0.4em;
+    top: 0.5em;
     box-sizing: border-box;
     width: 0.7em;
     height: 0.7em;
@@ -561,10 +561,16 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 
 .presenit-column .katex-display {
     margin: 0.55em 0;
+    /* overflow-x: auto forces overflow-y off visible (spec); hidden avoids stray vertical scroll */
     overflow-x: auto;
-    overflow-y: visible;
+    overflow-y: hidden;
     padding-top: 0.15em;
     padding-bottom: 0.15em;
+    scrollbar-width: none;
+}
+
+.presenit-column .katex-display::-webkit-scrollbar {
+    display: none;
 }
 `.trim();
 }

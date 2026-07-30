@@ -12,6 +12,7 @@ export {
 export type { RenderedSlide, RenderDeckResult } from "./render/index";
 export type {
     AlignOptions,
+    BreakMode,
     Column,
     Deck,
     DeckConfig,

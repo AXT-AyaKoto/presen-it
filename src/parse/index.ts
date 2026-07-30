@@ -1,9 +1,10 @@
 import type { Heading, Root, RootContent } from "mdast";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
-import type { AlignOptions, Column, Deck, Diagnostic, Slide } from "../types";
+import type { AlignOptions, BreakMode, Column, Deck, Diagnostic, Slide } from "../types";
 import { DEFAULT_SLIDE_ALIGN } from "../types";
 import {
     alignFromDirective,
@@ -86,8 +87,12 @@ function finalizeSlide(slide: MutableSlide, diagnostics: Diagnostic[]): Slide {
     };
 }
 
-function parseMarkdownRoot(body: string): Root {
-    return unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(body) as Root;
+function parseMarkdownRoot(body: string, breakMode: BreakMode): Root {
+    const processor = unified().use(remarkParse).use(remarkGfm).use(remarkMath);
+    if (breakMode === "soft") {
+        processor.use(remarkBreaks);
+    }
+    return processor.runSync(processor.parse(body)) as Root;
 }
 
 /**
@@ -96,7 +101,7 @@ function parseMarkdownRoot(body: string): Root {
 export function parseSlideMarkdown(source: string): Deck {
     const { config, body, diagnostics: fmDiagnostics } = parseFrontmatter(source);
     const diagnostics: Diagnostic[] = [...fmDiagnostics];
-    const root = parseMarkdownRoot(body);
+    const root = parseMarkdownRoot(body, config.break);
 
     const slides: MutableSlide[] = [createSlide()];
     let current = slides[0]!;

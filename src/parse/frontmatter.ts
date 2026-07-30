@@ -1,4 +1,5 @@
 import type {
+    BreakMode,
     DeckConfig,
     Diagnostic,
     FontFamilyConfig,
@@ -38,6 +39,17 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 function warn(diagnostics: Diagnostic[], message: string): void {
     diagnostics.push({ severity: "warning", message });
+}
+
+function normalizeBreak(value: unknown, diagnostics: Diagnostic[]): BreakMode {
+    if (value === undefined) {
+        return DEFAULT_CONFIG.break;
+    }
+    if (value === "soft" || value === "hard") {
+        return value;
+    }
+    warn(diagnostics, `frontmatter.break must be "soft" | "hard", got ${JSON.stringify(value)}`);
+    return DEFAULT_CONFIG.break;
 }
 
 function normalizeTheme(value: unknown, diagnostics: Diagnostic[]): ThemeName {
@@ -247,6 +259,7 @@ export function normalizeConfig(raw: unknown): {
         fontFamily: normalizeFontFamily(raw.fontFamily, diagnostics),
         pageTransition: normalizePageTransition(raw.pageTransition, diagnostics),
         rawHTML: normalizeBoolean(raw.rawHTML, "rawHTML", DEFAULT_CONFIG.rawHTML, diagnostics),
+        break: normalizeBreak(raw.break, diagnostics),
     };
 
     return { config, diagnostics };

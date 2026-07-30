@@ -46,6 +46,7 @@ pageTransition:
   type: fade             # none | fade | scroll (default: fade; ignored in PDF)
   duration: 0.2          # seconds (default: 0.2)
 rawHTML: false       # true only if you intentionally embed HTML
+break: soft          # soft | hard (default: soft). soft turns single newlines into <br>
 ---
 ```
 
