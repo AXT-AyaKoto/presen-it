@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { ProjectionStage } from "./ProjectionStage";
 import { SlideFrame } from "./SlideFrame";
 import { ViewerNav } from "./ViewerNav";
-import { clickZoneWidthRatio } from "../render/slide-padding";
+import { clickZoneWidthRatio } from "../shared/slide-padding";
 import {
     broadcastIndex,
     currentIndex,

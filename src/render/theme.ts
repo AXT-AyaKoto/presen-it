@@ -1,5 +1,5 @@
 import { buildGoogleFontsImports, namedFontFamilies } from "../font-family";
-import { SLIDE_PADDING_RATIO } from "./slide-padding";
+import { SLIDE_PADDING_RATIO } from "../shared/slide-padding";
 
 type ThemeBuildConfig = {
     theme: "light" | "dark";

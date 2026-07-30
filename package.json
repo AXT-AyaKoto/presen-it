@@ -1,6 +1,6 @@
 {
     "name": "@axt_ayakoto/presenit",
-    "version": "0.7.5",
+    "version": "0.7.6",
     "description": "Turn readable Markdown into beautiful presentation slides and PDFs.",
     "keywords": [
         "markdown",
@@ -31,6 +31,7 @@
         "dist/index.js.map",
         "dist/index.d.ts",
         "src/viewer",
+        "src/shared",
         "llms.txt",
         "LICENSE",
         "README.md",
