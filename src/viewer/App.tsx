@@ -1,5 +1,5 @@
 import type { JSX } from "preact";
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import { SlideFrame } from "./SlideFrame";
 import { ViewerNav } from "./ViewerNav";
 import {
@@ -29,6 +29,28 @@ function formatTime(ms: number): string {
     return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+type PressOrigin = {
+    x: number;
+    y: number;
+    t: number;
+    pointerId: number;
+};
+
+const CLICK_ZONE = 0.1;
+const MAX_PRESS_MS = 450;
+const MAX_MOVE_PX = 8;
+
+function isEditableTarget(target: EventTarget | null): boolean {
+    const el = target as HTMLElement | null;
+    if (!el) {
+        return false;
+    }
+    if (el.closest("a, button, input, textarea, select, [contenteditable=true]")) {
+        return true;
+    }
+    return el.tagName === "INPUT" || el.tagName === "TEXTAREA";
+}
+
 export function App(): JSX.Element {
     const deck = deckData.value;
     const slide = currentSlide.value;
@@ -38,6 +60,7 @@ export function App(): JSX.Element {
     const running = timerRunning.value;
     const elapsed = elapsedMs.value;
     const upcoming = nextSlide.value;
+    const pressRef = useRef<PressOrigin | null>(null);
 
     useEffect(() => {
         const onKey = (event: KeyboardEvent) => {
@@ -192,6 +215,56 @@ export function App(): JSX.Element {
         return () => window.cancelAnimationFrame(id);
     }, [viewerMode, slide, index]);
 
+    const onProjectionPointerDown = (event: PointerEvent) => {
+        if (event.button !== 0 || isEditableTarget(event.target)) {
+            pressRef.current = null;
+            return;
+        }
+        pressRef.current = {
+            x: event.clientX,
+            y: event.clientY,
+            t: Date.now(),
+            pointerId: event.pointerId,
+        };
+    };
+
+    const onProjectionPointerUp = (event: PointerEvent) => {
+        const origin = pressRef.current;
+        pressRef.current = null;
+        if (!origin || origin.pointerId !== event.pointerId || event.button !== 0) {
+            return;
+        }
+        if (isEditableTarget(event.target)) {
+            return;
+        }
+        const selection = window.getSelection()?.toString() ?? "";
+        if (selection.length > 0) {
+            return;
+        }
+        const dt = Date.now() - origin.t;
+        const dist = Math.hypot(event.clientX - origin.x, event.clientY - origin.y);
+        if (dt > MAX_PRESS_MS || dist > MAX_MOVE_PX) {
+            return;
+        }
+        const el = event.currentTarget as HTMLElement;
+        const rect = el.getBoundingClientRect();
+        if (rect.width <= 0) {
+            return;
+        }
+        const x = (event.clientX - rect.left) / rect.width;
+        if (x <= CLICK_ZONE) {
+            prev();
+            broadcastIndex(currentIndex.value);
+        } else if (x >= 1 - CLICK_ZONE) {
+            next();
+            broadcastIndex(currentIndex.value);
+        }
+    };
+
+    const onProjectionPointerCancel = () => {
+        pressRef.current = null;
+    };
+
     if (!deck || !slide) {
         return <div class="viewer-loading">Loading…</div>;
     }
@@ -262,32 +335,17 @@ export function App(): JSX.Element {
     }
 
     return (
-        <div class="projection">
+        <div
+            class="projection"
+            onPointerDown={onProjectionPointerDown}
+            onPointerUp={onProjectionPointerUp}
+            onPointerCancel={onProjectionPointerCancel}
+        >
             <SlideFrame
                 html={slide.html}
                 width={width}
                 height={height}
                 className="projection__slide"
-            />
-            <button
-                type="button"
-                class="projection__zone projection__zone--prev"
-                aria-label="Previous slide"
-                disabled={index <= 0}
-                onClick={() => {
-                    prev();
-                    broadcastIndex(currentIndex.value);
-                }}
-            />
-            <button
-                type="button"
-                class="projection__zone projection__zone--next"
-                aria-label="Next slide"
-                disabled={index >= total - 1}
-                onClick={() => {
-                    next();
-                    broadcastIndex(currentIndex.value);
-                }}
             />
             <ViewerNav />
             <style>{deck.css}</style>

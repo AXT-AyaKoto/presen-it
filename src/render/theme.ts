@@ -18,10 +18,10 @@ function buildPaletteVars(theme: "light" | "dark", hue: number): string {
     if (theme === "light") {
         return `
         --presenit-bg: oklch(0.97 0.006 ${hue});
-        --presenit-slide-bg: oklch(0.995 0.004 ${hue});
-        --presenit-slide-bg-top: oklch(1 0.002 ${hue});
-        --presenit-slide-bg-bottom: oklch(0.975 0.014 ${hue});
-        --presenit-slide-wash: oklch(0.92 0.045 ${hue} / 0.22);
+        --presenit-slide-bg: oklch(0.99 0.006 ${hue});
+        --presenit-slide-bg-top: oklch(1 0.004 ${hue});
+        --presenit-slide-bg-bottom: oklch(0.955 0.022 ${hue});
+        --presenit-slide-wash: oklch(0.9 0.06 ${hue} / 0.32);
         --presenit-surface: oklch(0.955 0.01 ${hue});
         --presenit-text: oklch(0.24 0.025 ${hue});
         --presenit-text-muted: oklch(0.5 0.03 ${hue});
@@ -35,10 +35,10 @@ function buildPaletteVars(theme: "light" | "dark", hue: number): string {
 
     return `
         --presenit-bg: oklch(0.16 0.008 ${hue});
-        --presenit-slide-bg: oklch(0.2 0.01 ${hue});
-        --presenit-slide-bg-top: oklch(0.235 0.014 ${hue});
-        --presenit-slide-bg-bottom: oklch(0.175 0.01 ${hue});
-        --presenit-slide-wash: oklch(0.45 0.08 ${hue} / 0.18);
+        --presenit-slide-bg: oklch(0.2 0.012 ${hue});
+        --presenit-slide-bg-top: oklch(0.255 0.02 ${hue});
+        --presenit-slide-bg-bottom: oklch(0.16 0.01 ${hue});
+        --presenit-slide-wash: oklch(0.48 0.1 ${hue} / 0.28);
         --presenit-surface: oklch(0.25 0.012 ${hue});
         --presenit-text: oklch(0.94 0.008 ${hue});
         --presenit-text-muted: oklch(0.66 0.012 ${hue});
@@ -269,6 +269,15 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     border: 1px solid var(--presenit-border);
     border-radius: 5px;
     color: var(--presenit-text);
+    text-align: left;
+}
+
+.presenit-column--center-x pre,
+.presenit-column--center-x pre.shiki {
+    align-self: center;
+    width: fit-content;
+    max-width: 100%;
+    text-align: left;
 }
 
 .presenit-column pre:first-child {
@@ -348,7 +357,7 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 .presenit-column img {
     display: block;
     max-width: 100%;
-    max-height: calc(var(--presenit-slide-height) * 2 / 3);
+    max-height: calc(var(--presenit-slide-height) * 0.75);
     width: auto;
     height: auto;
     object-fit: contain;
@@ -374,13 +383,17 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 
 .presenit-column em {
     font-style: italic;
-    color: var(--presenit-text-muted);
 }
 
 .presenit-mermaid {
     margin: 0.55em 0;
+    width: 100%;
     max-width: 100%;
-    overflow: auto;
+    max-height: calc(var(--presenit-slide-height) * 2 / 3);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .presenit-mermaid:first-child {
@@ -393,8 +406,10 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 
 .presenit-mermaid svg {
     display: block;
+    width: auto;
+    height: calc(var(--presenit-slide-height) * 2 / 3);
     max-width: 100%;
-    height: auto;
+    max-height: calc(var(--presenit-slide-height) * 2 / 3);
 }
 
 .presenit-column--center-x .presenit-mermaid svg {
@@ -411,6 +426,7 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     line-height: 1.45;
     border: 1px solid var(--presenit-border);
     border-radius: 5px;
+    text-align: left;
 }
 
 .presenit-column pre.shiki:first-child {
