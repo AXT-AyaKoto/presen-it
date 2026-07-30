@@ -63,20 +63,22 @@ pageTransition:
     duration: 0.2 # 秒（既定: 0.2）。PDF export では無視
 rawHTML: false # true で生 HTML を描画（既定: false）
 break: soft # soft | hard（既定: soft）。soft で段落内の単改行を <br> に
+footer: "" # 全スライド左下に表示するテキスト（既定: 空 = 非表示）
 ---
 ```
 
-| Key                         | Default                                              | Notes                                        |
-| --------------------------- | ---------------------------------------------------- | -------------------------------------------- |
-| `theme`                     | `light`                                              | `light` \| `dark`                            |
-| `hue`                       | `210`                                                | アクセント色相（mod 360）                    |
-| `width` / `height`          | `1920` / `1080`                                      | スライドサイズ（px）                         |
-| `fontSize`                  | `32`                                                 | 基準フォントサイズ                           |
-| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code（上記 YAML の既定スタック） | CSS 文字列、またはフォント名の配列           |
-| `pageTransition.type`       | `fade`                                               | `none` \| `fade` \| `scroll`（PDF では無視） |
-| `pageTransition.duration`   | `0.2`                                                | 秒。`0` で実質オフ                           |
-| `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する              |
-| `break`                     | `soft`                                               | `soft` \| `hard`（段落内の改行の扱い）       |
+| Key                         | Default                                              | Notes                                          |
+| --------------------------- | ---------------------------------------------------- | ---------------------------------------------- |
+| `theme`                     | `light`                                              | `light` \| `dark`                              |
+| `hue`                       | `210`                                                | アクセント色相（mod 360）                      |
+| `width` / `height`          | `1920` / `1080`                                      | スライドサイズ（px）                           |
+| `fontSize`                  | `32`                                                 | 基準フォントサイズ                             |
+| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code（上記 YAML の既定スタック） | CSS 文字列、またはフォント名の配列             |
+| `pageTransition.type`       | `fade`                                               | `none` \| `fade` \| `scroll`（PDF では無視）   |
+| `pageTransition.duration`   | `0.2`                                                | 秒。`0` で実質オフ                             |
+| `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する                |
+| `break`                     | `soft`                                               | `soft` \| `hard`（段落内の改行の扱い）         |
+| `footer`                    | `""`                                                 | 全スライド左下に表示するテキスト（空で非表示） |
 
 `fontFamily` は通常の CSS 文字列のほか、**配列**でも書けます（空白入りの名前に便利）。
 

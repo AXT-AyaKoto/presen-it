@@ -90,6 +90,22 @@ function normalizePositiveNumber(
     return fallback;
 }
 
+function normalizeString(
+    value: unknown,
+    key: string,
+    fallback: string,
+    diagnostics: Diagnostic[],
+): string {
+    if (value === undefined) {
+        return fallback;
+    }
+    if (typeof value === "string") {
+        return value;
+    }
+    warn(diagnostics, `frontmatter.${key} must be a string, got ${JSON.stringify(value)}`);
+    return fallback;
+}
+
 function normalizeBoolean(
     value: unknown,
     key: string,
@@ -260,6 +276,7 @@ export function normalizeConfig(raw: unknown): {
         pageTransition: normalizePageTransition(raw.pageTransition, diagnostics),
         rawHTML: normalizeBoolean(raw.rawHTML, "rawHTML", DEFAULT_CONFIG.rawHTML, diagnostics),
         break: normalizeBreak(raw.break, diagnostics),
+        footer: normalizeString(raw.footer, "footer", DEFAULT_CONFIG.footer, diagnostics),
     };
 
     return { config, diagnostics };

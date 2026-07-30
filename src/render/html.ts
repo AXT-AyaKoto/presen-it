@@ -114,6 +114,7 @@ export async function renderSlideHtml(
     total: number,
     rawHTML: boolean,
     theme: DeckConfig["theme"],
+    footer: string,
     mathState: { hasMath: boolean },
 ): Promise<string> {
     const header = await renderHeader(slide, rawHTML, theme, mathState);
@@ -123,11 +124,15 @@ export async function renderSlideHtml(
         )
     ).join("");
     const number = `<div class="presenit-slide-number">${index + 1} / ${total}</div>`;
+    const footerHtml = footer
+        ? `<div class="presenit-slide-footer">${escapeHtml(footer)}</div>`
+        : "";
 
     return [
         `<section class="presenit-slide" data-slide-index="${index}" aria-label="Slide ${index + 1} of ${total}">`,
         header,
         `<div class="presenit-slide-body">${columns}</div>`,
+        footerHtml,
         number,
         `</section>`,
     ].join("");
@@ -165,6 +170,7 @@ export async function renderDeckSlides(deck: Deck): Promise<{
                 deck.slides.length,
                 deck.config.rawHTML,
                 deck.config.theme,
+                deck.config.footer,
                 mathState,
             ),
             notes: slide.notes,

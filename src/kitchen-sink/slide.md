@@ -3,6 +3,7 @@ theme: light
 hue: 210
 width: 1920
 height: 1080
+footer: "presen-it! kitchen sink"
 ---
 
 <!-- presen-it! slide-break (center-x=true) -->

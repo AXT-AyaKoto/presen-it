@@ -4,6 +4,7 @@
 
 ### Features
 
+- Frontmatter `footer` string (default `""`) renders escaped text at the bottom-left of every slide
 - Presenter timer: Pause/Resume and Reset buttons (`T` / `R` shortcuts)
 
 ## 0.8.0 — 2026-07-31

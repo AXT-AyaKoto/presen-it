@@ -211,4 +211,34 @@ line two
         expect(slide).toContain("line one\nline two");
         expect(slide).not.toContain("<br>");
     });
+    it("renders footer on every slide when set and omits when empty", async () => {
+        const without = await renderDeckAsync(
+            parseSlideMarkdown(`# Title
+
+<!-- presen-it! slide-break -->
+
+## Section
+`),
+        );
+        expect(without.html).not.toContain('class="presenit-slide-footer"');
+
+        const withFooter = await renderDeckAsync(
+            parseSlideMarkdown(`---
+footer: "© 2026 Example Co. <internal>"
+---
+
+# Title
+
+<!-- presen-it! slide-break -->
+
+## Section
+`),
+        );
+        expect(withFooter.css).toContain(".presenit-slide-footer");
+        expect(withFooter.html).toContain('class="presenit-slide-footer"');
+        expect(withFooter.html).toContain("© 2026 Example Co. &lt;internal&gt;");
+        expect(withFooter.html).not.toContain("<internal>");
+        expect(withFooter.slides).toHaveLength(2);
+        expect(withFooter.slides.every((s) => s.html.includes("presenit-slide-footer"))).toBe(true);
+    });
 });
