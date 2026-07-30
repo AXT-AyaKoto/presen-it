@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0 — 2026-07-30
+
+### Features
+
+- Projection click zones: hover shows a translucent edge affordance with `w-resize` / `e-resize` cursors
+- Load named `fontFamily` stacks from Google Fonts (generics skipped; local fonts still preferred by the browser)
+
+### Changes
+
+- h1 `letter-spacing` 0.03em → 0.01em
+- README / llms.txt: clearer frontmatter defaults and `fontFamily` examples
+
 ## 0.3.2 — 2026-07-30
 
 ### Fixes

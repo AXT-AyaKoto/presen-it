@@ -59,6 +59,49 @@ body,
     background: #000;
 }
 
+.projection.is-zone-prev {
+    cursor: w-resize;
+}
+
+.projection.is-zone-next {
+    cursor: e-resize;
+}
+
+.projection__affordance {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10%;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    transition: opacity 140ms ease;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.16),
+        rgba(255, 255, 255, 0.02) 70%,
+        transparent
+    );
+}
+
+.projection__affordance--next {
+    right: 0;
+    background: linear-gradient(
+        to left,
+        rgba(255, 255, 255, 0.16),
+        rgba(255, 255, 255, 0.02) 70%,
+        transparent
+    );
+}
+
+.projection__affordance--prev {
+    left: 0;
+}
+
+.projection__affordance.is-visible {
+    opacity: 1;
+}
+
 .viewer-nav {
     position: fixed;
     left: 0;

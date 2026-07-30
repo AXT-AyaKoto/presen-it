@@ -1,5 +1,5 @@
 import type { JSX } from "preact";
-import { useEffect, useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { SlideFrame } from "./SlideFrame";
 import { ViewerNav } from "./ViewerNav";
 import {
@@ -36,6 +36,8 @@ type PressOrigin = {
     pointerId: number;
 };
 
+type ClickZone = "prev" | "next";
+
 const CLICK_ZONE = 0.1;
 const MAX_PRESS_MS = 450;
 const MAX_MOVE_PX = 8;
@@ -51,6 +53,21 @@ function isEditableTarget(target: EventTarget | null): boolean {
     return el.tagName === "INPUT" || el.tagName === "TEXTAREA";
 }
 
+function zoneFromClientX(el: HTMLElement, clientX: number): ClickZone | null {
+    const rect = el.getBoundingClientRect();
+    if (rect.width <= 0) {
+        return null;
+    }
+    const x = (clientX - rect.left) / rect.width;
+    if (x <= CLICK_ZONE) {
+        return "prev";
+    }
+    if (x >= 1 - CLICK_ZONE) {
+        return "next";
+    }
+    return null;
+}
+
 export function App(): JSX.Element {
     const deck = deckData.value;
     const slide = currentSlide.value;
@@ -61,6 +78,7 @@ export function App(): JSX.Element {
     const elapsed = elapsedMs.value;
     const upcoming = nextSlide.value;
     const pressRef = useRef<PressOrigin | null>(null);
+    const [hoverZone, setHoverZone] = useState<ClickZone | null>(null);
 
     useEffect(() => {
         const onKey = (event: KeyboardEvent) => {
@@ -228,6 +246,11 @@ export function App(): JSX.Element {
         };
     };
 
+    const onProjectionPointerMove = (event: PointerEvent) => {
+        const el = event.currentTarget as HTMLElement;
+        setHoverZone(zoneFromClientX(el, event.clientX));
+    };
+
     const onProjectionPointerUp = (event: PointerEvent) => {
         const origin = pressRef.current;
         pressRef.current = null;
@@ -247,15 +270,11 @@ export function App(): JSX.Element {
             return;
         }
         const el = event.currentTarget as HTMLElement;
-        const rect = el.getBoundingClientRect();
-        if (rect.width <= 0) {
-            return;
-        }
-        const x = (event.clientX - rect.left) / rect.width;
-        if (x <= CLICK_ZONE) {
+        const zone = zoneFromClientX(el, event.clientX);
+        if (zone === "prev") {
             prev();
             broadcastIndex(currentIndex.value);
-        } else if (x >= 1 - CLICK_ZONE) {
+        } else if (zone === "next") {
             next();
             broadcastIndex(currentIndex.value);
         }
@@ -263,6 +282,11 @@ export function App(): JSX.Element {
 
     const onProjectionPointerCancel = () => {
         pressRef.current = null;
+    };
+
+    const onProjectionPointerLeave = () => {
+        pressRef.current = null;
+        setHoverZone(null);
     };
 
     if (!deck || !slide) {
@@ -336,16 +360,26 @@ export function App(): JSX.Element {
 
     return (
         <div
-            class="projection"
+            class={`projection${hoverZone ? ` is-zone-${hoverZone}` : ""}`}
             onPointerDown={onProjectionPointerDown}
+            onPointerMove={onProjectionPointerMove}
             onPointerUp={onProjectionPointerUp}
             onPointerCancel={onProjectionPointerCancel}
+            onPointerLeave={onProjectionPointerLeave}
         >
             <SlideFrame
                 html={slide.html}
                 width={width}
                 height={height}
                 className="projection__slide"
+            />
+            <div
+                class={`projection__affordance projection__affordance--prev${hoverZone === "prev" ? " is-visible" : ""}`}
+                aria-hidden="true"
+            />
+            <div
+                class={`projection__affordance projection__affordance--next${hoverZone === "next" ? " is-visible" : ""}`}
+                aria-hidden="true"
             />
             <ViewerNav />
             <style>{deck.css}</style>

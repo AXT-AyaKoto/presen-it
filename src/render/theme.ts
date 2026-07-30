@@ -1,5 +1,4 @@
-export const GOOGLE_FONTS_MPLUS_IMPORT =
-    '@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;500;600;700&family=M+PLUS+1+Code:wght@400;500;600;700&display=swap");';
+import { buildGoogleFontsImports, namedFontFamilies } from "./fonts";
 
 type ThemeBuildConfig = {
     theme: "light" | "dark";
@@ -9,10 +8,6 @@ type ThemeBuildConfig = {
     fontSize: number;
     fontFamily: { sans: string; mono: string };
 };
-
-function needsMPlusImport(fontFamily: { sans: string; mono: string }): boolean {
-    return fontFamily.sans.includes("M PLUS 1") || fontFamily.mono.includes("M PLUS 1");
-}
 
 function buildPaletteVars(theme: "light" | "dark", hue: number): string {
     if (theme === "light") {
@@ -54,9 +49,11 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     const { theme, hue, width, height, fontSize, fontFamily } = config;
     const slidePadding = height * 0.045;
     const paletteVars = buildPaletteVars(theme, hue);
-    const fontImport = needsMPlusImport(fontFamily) ? `${GOOGLE_FONTS_MPLUS_IMPORT}\n` : "";
+    const fontFamilies = namedFontFamilies(fontFamily.sans, fontFamily.mono);
+    const fontImport = buildGoogleFontsImports(fontFamilies);
+    const fontImportBlock = fontImport ? `${fontImport}\n` : "";
 
-    return `${fontImport}
+    return `${fontImportBlock}
 .presenit-deck,
 .presenit-slide {
     ${paletteVars}
@@ -168,7 +165,7 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     font-size: 2.2em;
     font-weight: 700;
     line-height: 1.12;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.01em;
     color: var(--presenit-text);
 }
 
