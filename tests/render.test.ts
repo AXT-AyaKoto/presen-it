@@ -94,9 +94,10 @@ fontFamily:
         expect(result.html).toContain("disabled");
         expect(result.html).toContain("checked");
         expect(result.css).toContain("ul.contains-task-list");
+        expect(result.css).toContain("li.task-list-item::before");
         expect(result.css).toContain('li.task-list-item > input[type="checkbox"]');
         expect(result.css).toContain("appearance: none");
-        expect(result.css).toContain("pointer-events: none");
+        expect(result.css).toContain("clip: rect(0 0 0 0)");
     });
 
     it("escapes HTML by default and allows rawHTML when enabled", async () => {
