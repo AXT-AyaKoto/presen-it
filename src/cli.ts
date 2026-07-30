@@ -1,11 +1,12 @@
 import { defineCommand, runMain } from "citty";
 import { runBuild, runDev } from "./commands/dev";
 import { runExport } from "./commands/export";
+import { version } from "./pkg";
 
 const main = defineCommand({
     meta: {
         name: "presenit",
-        version: "0.0.0",
+        version,
         description: "Turn readable Markdown into beautiful presentation slides and PDFs.",
     },
     subCommands: {

@@ -49,9 +49,21 @@ hello
         expect(slide).not.toContain("presenit-column--center-y");
     });
 
+    it("uses positive letter-spacing on h1 and a low-chroma dark palette", async () => {
+        const dark = await renderDeckAsync(
+            parseSlideMarkdown(`---
+theme: dark
+---
+
+# Title
+`),
+        );
+        expect(dark.css).toContain("letter-spacing: 0.03em");
+        expect(dark.css).toMatch(/--presenit-slide-bg:\s*oklch\(0\.2 0\.01 /);
+    });
+
     it("escapes HTML by default and allows rawHTML when enabled", async () => {
         const escaped = await renderDeckAsync(parseSlideMarkdown(`<div class="x">hi</div>`));
-        // hast-util-to-html may emit &#x3C; or &lt;
         expect(escaped.html).toMatch(/&lt;div|&#x3C;div/);
         expect(escaped.html).not.toContain('<div class="x">');
 

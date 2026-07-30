@@ -1,9 +1,11 @@
 import path from "node:path";
 import { access } from "node:fs/promises";
 import { consola } from "consola";
+import puppeteer from "puppeteer";
 import { createServer, build as viteBuild } from "vite";
 import { createViteConfig } from "../vite/config";
-import { resolveSlidePath } from "../project/load";
+import { loadDeck, resolveSlidePath } from "../project/load";
+import { detectOverflow, logOverflowWarnings } from "../project/overflow";
 
 async function assertSlideExists(cwd: string, slug: string): Promise<void> {
     const { slidePath } = resolveSlidePath(cwd, slug);
@@ -11,6 +13,27 @@ async function assertSlideExists(cwd: string, slug: string): Promise<void> {
         await access(slidePath);
     } catch {
         throw new Error(`Slide not found: ${slidePath}\nExpected src/${slug}/slide.md`);
+    }
+}
+
+async function warnOverflow(cwd: string, slug: string): Promise<void> {
+    const loaded = await loadDeck(cwd, slug);
+    const browser = await puppeteer.launch({
+        headless: true,
+        executablePath: await puppeteer.executablePath(),
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    try {
+        const page = await browser.newPage();
+        await page.setViewport({
+            width: loaded.config.width,
+            height: loaded.config.height,
+            deviceScaleFactor: 1,
+        });
+        const hits = await detectOverflow(page, loaded);
+        logOverflowWarnings(hits);
+    } finally {
+        await browser.close();
     }
 }
 
@@ -39,5 +62,12 @@ export async function runBuild(slug: string, cwd = process.cwd()): Promise<void>
     const from = path.join(outDir, "index.html");
     const to = path.join(outDir, "view.html");
     await fs.rename(from, to);
+
+    try {
+        await warnOverflow(cwd, slug);
+    } catch (error) {
+        consola.warn("Overflow check skipped:", error);
+    }
+
     consola.success(`Built ${path.relative(cwd, to)}`);
 }
