@@ -14,6 +14,12 @@ importers:
       consola:
         specifier: ^3.4.2
         version: 3.4.2
+      hast-util-to-html:
+        specifier: ^9.0.5
+        version: 9.0.5
+      mdast-util-to-hast:
+        specifier: ^13.2.1
+        version: 13.2.1
       mdast-util-to-string:
         specifier: ^4.0.0
         version: 4.0.0
