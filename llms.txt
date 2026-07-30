@@ -90,6 +90,8 @@ Rules:
 - Code fences → Shiki highlight
 - ` ```mermaid ` → SVG via beautiful-mermaid
 - `$inline$` and `$$ block $$` math → KaTeX
+- GitHub alerts use blockquotes: `> [!NOTE]`, `TIP`, `IMPORTANT`, `WARNING`, or `CAUTION`;
+  they render as labelled, slide-friendly alert asides
 
 ## Writing tips for high-quality slides
 
