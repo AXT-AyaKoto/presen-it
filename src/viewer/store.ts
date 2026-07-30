@@ -9,6 +9,7 @@ export const currentIndex = signal(readHashIndexOnBoot());
 export const mode = signal<ViewerMode>("projection");
 export const elapsedMs = signal(0);
 export const timerRunning = signal(true);
+export const blackout = signal(false);
 
 export function toggleTimer(): void {
     timerRunning.value = !timerRunning.value;
@@ -17,6 +18,18 @@ export function toggleTimer(): void {
 /** Clear elapsed time; running state is unchanged. */
 export function resetTimer(): void {
     elapsedMs.value = 0;
+}
+
+export function setBlackout(on: boolean): void {
+    if (blackout.value === on) {
+        return;
+    }
+    blackout.value = on;
+    broadcastBlackout(on);
+}
+
+export function toggleBlackout(): void {
+    setBlackout(!blackout.value);
 }
 
 function readHashIndexOnBoot(): number {
@@ -109,22 +122,46 @@ export function exitOverviewTo(index: number): void {
 
 const CHANNEL = "presenit-sync";
 
-export function broadcastIndex(index: number): void {
+function postSyncMessage(message: Record<string, unknown>): void {
     try {
         const channel = new BroadcastChannel(CHANNEL);
-        channel.postMessage({ type: "index", index });
+        channel.postMessage(message);
         channel.close();
     } catch {
         // BroadcastChannel may be unavailable in some contexts.
     }
 }
 
-export function listenSync(onIndex: (index: number) => void): () => void {
+export function broadcastIndex(index: number): void {
+    postSyncMessage({ type: "index", index });
+}
+
+export function broadcastBlackout(on: boolean): void {
+    postSyncMessage({ type: "blackout", on });
+}
+
+export type SyncHandlers = {
+    onIndex?: (index: number) => void;
+    onBlackout?: (on: boolean) => void;
+};
+
+/** Accepts either a legacy index callback or a handlers object. */
+export function listenSync(
+    onIndexOrHandlers: ((index: number) => void) | SyncHandlers,
+): () => void {
+    const handlers: SyncHandlers =
+        typeof onIndexOrHandlers === "function"
+            ? { onIndex: onIndexOrHandlers }
+            : onIndexOrHandlers;
     try {
         const channel = new BroadcastChannel(CHANNEL);
         channel.onmessage = (event: MessageEvent) => {
             if (event.data?.type === "index" && typeof event.data.index === "number") {
-                onIndex(event.data.index);
+                handlers.onIndex?.(event.data.index);
+            }
+            if (event.data?.type === "blackout" && typeof event.data.on === "boolean") {
+                blackout.value = event.data.on;
+                handlers.onBlackout?.(event.data.on);
             }
         };
         return () => channel.close();
