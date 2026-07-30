@@ -34,6 +34,9 @@ height: 1080
 1. 順序付き
 2. リストも OK
 
+- [ ] 未着手のタスク
+- [x] 完了したタスク（読み取り専用）
+
 <!-- keep notes short -->
 
 <!-- presen-it! slide-break -->

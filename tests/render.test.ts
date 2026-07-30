@@ -82,6 +82,22 @@ fontFamily:
         expect(result.css).toContain("family=Ubuntu+Mono");
     });
 
+    it("renders read-only GFM task lists with task-list styles", async () => {
+        const result = await renderDeckAsync(
+            parseSlideMarkdown(`- [ ] open
+- [x] done`),
+        );
+
+        expect(result.html).toContain('class="contains-task-list"');
+        expect(result.html).toContain('class="task-list-item"');
+        expect(result.html).toContain('type="checkbox"');
+        expect(result.html).toContain("disabled");
+        expect(result.html).toContain("checked");
+        expect(result.css).toContain("ul.contains-task-list");
+        expect(result.css).toContain('li.task-list-item input[type="checkbox"]');
+        expect(result.css).toContain("accent-color: var(--presenit-accent)");
+    });
+
     it("escapes HTML by default and allows rawHTML when enabled", async () => {
         const escaped = await renderDeckAsync(parseSlideMarkdown(`<div class="x">hi</div>`));
         expect(escaped.html).toMatch(/&lt;div|&#x3C;div/);

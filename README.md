@@ -112,10 +112,10 @@ fontFamily:
 
 ### Extras
 
+- GFM タスクリスト（`- [ ]` / `- [x]`）→ 読み取り専用のチェックボックス
 - フェンスコード → **Shiki**
 - `$...$` / `$$...$$` → **KaTeX**
 - ` ```mermaid ` → **beautiful-mermaid**
-
 - GitHub alerts → スライド向けの `aside`（`NOTE` / `TIP` / `IMPORTANT` / `WARNING` / `CAUTION`）
 
 ```md
