@@ -9,14 +9,11 @@ export const currentIndex = signal(readHashIndexOnBoot());
 export const mode = signal<ViewerMode>("projection");
 export const elapsedMs = signal(0);
 export const timerRunning = signal(true);
-<<<<<<< HEAD
 export const blackout = signal(false);
-=======
 export const laserOn = signal(false);
 export const laserDot = signal<{ x: number; y: number } | null>(null);
 
 export type LaserMessage = { on: boolean; x?: number; y?: number };
->>>>>>> ab0f497 (feat: laser pointer (L) with presenter→projection sync)
 
 export function toggleTimer(): void {
     timerRunning.value = !timerRunning.value;
@@ -129,10 +126,22 @@ export function exitOverviewTo(index: number): void {
 
 const CHANNEL = "presenit-sync";
 
-<<<<<<< HEAD
-=======
+function postSyncMessage(message: Record<string, unknown>): void {
+    try {
+        const channel = new BroadcastChannel(CHANNEL);
+        channel.postMessage(message);
+        channel.close();
+    } catch {
+        // BroadcastChannel may be unavailable in some contexts.
+    }
+}
+
 export function broadcastIndex(index: number): void {
     postSyncMessage({ type: "index", index });
+}
+
+export function broadcastBlackout(on: boolean): void {
+    postSyncMessage({ type: "blackout", on });
 }
 
 export function toggleLaser(): void {
@@ -175,25 +184,6 @@ export function applyLaserMessage(msg: LaserMessage): void {
     } else {
         laserDot.value = null;
     }
-}
-
->>>>>>> ab0f497 (feat: laser pointer (L) with presenter→projection sync)
-function postSyncMessage(message: Record<string, unknown>): void {
-    try {
-        const channel = new BroadcastChannel(CHANNEL);
-        channel.postMessage(message);
-        channel.close();
-    } catch {
-        // BroadcastChannel may be unavailable in some contexts.
-    }
-}
-
-export function broadcastIndex(index: number): void {
-    postSyncMessage({ type: "index", index });
-}
-
-export function broadcastBlackout(on: boolean): void {
-    postSyncMessage({ type: "blackout", on });
 }
 
 export type SyncHandlers = {

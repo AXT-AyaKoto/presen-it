@@ -151,9 +151,5 @@ graph LR
 - `L`: laser pointer (red dot on current slide; presenter mouse syncs to projection)
 - URL hash `#N` (1-based) syncs the current page (kept across markdown reload in `dev`)
 - `?presenter` query: open presenter directly in that tab
-<<<<<<< HEAD
-- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, and blackout)
-=======
-- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, and laser)
->>>>>>> 26e6194 (feat: laser overlay UI, docs, and tests)
+- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, blackout, and laser)
 - Sample gallery: `pnpm presenit dev kitchen-sink`
