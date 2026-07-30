@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0 — 2026-07-30
+
+### Features
+
+- Lazy Chrome install: download only when needed for `export` / overflow checks (no postinstall Chrome download)
+- Sync slide position with the URL hash (`#N`, 1-based)
+- Overview mode (`O`) — grid of all slides
+
+### Notes
+
+- Publishing to npm now runs from GitHub Actions when a GitHub Release is published
+
 ## 0.1.0 — 2026-07-30
 
 First public prerelease of `@axt_ayakoto/presenit`.
