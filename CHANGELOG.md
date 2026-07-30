@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 — 2026-07-31
+
+### Changed
+
+- User-facing product name is now **AyaExpTech Presen'it!** (short form **AXT Presen'it!** in compact UI such as the nav brand, footer, and CLI startup message). CLI command (`presenit`), npm package (`@ayaexptech/presenit`), and `<!-- presen-it! ... -->` directive syntax are unchanged.
+
 ## 1.0.1 — 2026-07-31
 
 ### Changed
@@ -8,7 +14,6 @@
 - **Repository migration:** development moved to [`AXT-Studio/presen-it`](https://github.com/AXT-Studio/presen-it) (GitHub redirects from the former `AXT_AyaKoto/presen-it`)
 - Official site URL is now https://axt-studio.github.io/presen-it/
 - README, `llms.txt`, and publishing docs updated for the new package and repository names
-- User-facing product name is now **AyaExpTech Presen'it!** (short form **AXT Presen'it!** where brevity fits); CLI command and package name unchanged
 
 ## 1.0.0 — 2026-07-31
 
