@@ -166,4 +166,4 @@ pnpm presenit dev kitchen-sink
 pnpm presenit export kitchen-sink
 ```
 
-投影ビューは **左 10% / 右 10%** の短押しで前後移動（ドラッグ選択はページ送りしない）
+投影ビューは **左右スライド端（パディング幅）** の短押しで前後移動（ドラッグ選択はページ送りしない）

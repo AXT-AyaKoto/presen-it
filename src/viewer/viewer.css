@@ -59,16 +59,13 @@ body,
     background: #000;
 }
 
-/*
- * Zone hit targets sit above the slide so the browser picks *this* element's
- * cursor (w/e-resize). Opacity only hides the chevron; hit-testing stays on.
- */
+/* Chevron affordance only — clicks are handled on `.projection`. */
 .projection__affordance {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 10%;
-    pointer-events: auto;
+    width: var(--presenit-click-zone);
+    pointer-events: none;
     z-index: 4;
     display: flex;
     align-items: center;
@@ -81,14 +78,12 @@ body,
     left: 0;
     justify-content: center;
     padding-left: 2%;
-    cursor: w-resize;
 }
 
 .projection__affordance--next {
     right: 0;
     justify-content: center;
     padding-right: 2%;
-    cursor: e-resize;
 }
 
 .projection__affordance::after {

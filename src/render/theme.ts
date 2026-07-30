@@ -1,4 +1,5 @@
 import { buildGoogleFontsImports, namedFontFamilies } from "../font-family";
+import { SLIDE_PADDING_RATIO } from "./slide-padding";
 
 type ThemeBuildConfig = {
     theme: "light" | "dark";
@@ -47,7 +48,7 @@ function buildPaletteVars(theme: "light" | "dark", hue: number): string {
 
 export function buildThemeCss(config: ThemeBuildConfig): string {
     const { theme, hue, width, height, fontSize, fontFamily } = config;
-    const slidePadding = height * 0.045;
+    const slidePadding = height * SLIDE_PADDING_RATIO;
     const paletteVars = buildPaletteVars(theme, hue);
     const fontFamilies = namedFontFamilies(fontFamily.sans, fontFamily.mono);
     const fontImport = buildGoogleFontsImports(fontFamilies);
