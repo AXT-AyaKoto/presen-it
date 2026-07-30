@@ -4,10 +4,10 @@ Markdown から美しいプレゼンスライドを作るツール。
 
 通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
 
-パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit) · サイト: [axt-ayakoto.github.io/presen-it](https://axt-ayakoto.github.io/presen-it/)
+パッケージ: [`@ayaexptech/presenit`](https://www.npmjs.com/package/@ayaexptech/presenit) · サイト: [axt-studio.github.io/presen-it](https://axt-studio.github.io/presen-it/)
 
-[![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
-[![CI](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@ayaexptech/presenit)](https://www.npmjs.com/package/@ayaexptech/presenit)
+[![CI](https://github.com/AXT-Studio/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-Studio/presen-it/actions/workflows/ci.yml)
 
 ## Why
 
@@ -18,7 +18,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 ## Quick start
 
 ```bash
-pnpm add -D @axt_ayakoto/presenit
+pnpm add -D @ayaexptech/presenit
 pnpm exec presenit init my-talk   # → src/my-talk/slide.md（使い方入りスタート用デッキ）
 pnpm exec presenit dev my-talk
 pnpm exec presenit build my-talk   # → dist/my-talk/view.html

@@ -63,7 +63,7 @@ src/<slug>/assets/...
 ## Markdown の基本
 
 - **強調**、_斜体_、`inline code`
-- [リンク](https://github.com/AXT-AyaKoto/presen-it)
+- [リンク](https://github.com/AXT-Studio/presen-it)
 - 箇条書きと順序付きリスト
 
 1. まず `slide.md` を書く

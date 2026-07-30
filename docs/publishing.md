@@ -2,9 +2,9 @@
 
 ## 初回セットアップ: npm Trusted Publishing
 
-1. npm の [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit) → **Settings → Trusted Publisher**
+1. npm の [`@ayaexptech/presenit`](https://www.npmjs.com/package/@ayaexptech/presenit) → **Settings → Trusted Publisher**
 2. GitHub Actions を追加:
-    - Organization or user: `AXT-AyaKoto`
+    - Organization or user: `AXT-Studio`
     - Repository: `presen-it`
     - Workflow filename: `release.yml`
     - Environment: （未使用なら空）
@@ -24,4 +24,4 @@
 
 1.0.0 以降は、明示的なリリース依頼があるまでエージェントが勝手にタグ／Release を切らない（`.cursor/rules/release-policy.mdc`）。
 
-公式サイトは `site/` を **Actions → GitHub Pages** workflow がデプロイする（https://axt-ayakoto.github.io/presen-it/）。
+公式サイトは `site/` を **Actions → GitHub Pages** workflow がデプロイする（https://axt-studio.github.io/presen-it/）。

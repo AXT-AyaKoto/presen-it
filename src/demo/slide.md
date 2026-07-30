@@ -11,7 +11,7 @@ height: 1080
 
 Markdown から、美しいスライドを。
 
-2026-07-30 ― Ayasaka-Koto (@AXT_AyaKoto)
+2026-07-30 ― AyaExpTech (@AyaExpTech)
 
 <!-- presen-it! slide-break -->
 

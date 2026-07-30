@@ -14,7 +14,7 @@ export function getPackageRoot(importMetaUrl = import.meta.url): string {
         if (fs.existsSync(pkgPath)) {
             try {
                 const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8")) as { name?: string };
-                if (pkg.name === "@axt_ayakoto/presenit") {
+                if (pkg.name === "@ayaexptech/presenit") {
                     return dir;
                 }
             } catch {
@@ -29,5 +29,5 @@ export function getPackageRoot(importMetaUrl = import.meta.url): string {
         dir = parent;
     }
 
-    throw new Error("Unable to locate @axt_ayakoto/presenit package root");
+    throw new Error("Unable to locate @ayaexptech/presenit package root");
 }
