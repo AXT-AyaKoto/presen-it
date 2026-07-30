@@ -25,6 +25,7 @@
     "files": [
         "dist",
         "src/viewer",
+        "llms.txt",
         "LICENSE",
         "README.md"
     ],

@@ -115,6 +115,25 @@ export function App(): JSX.Element {
         }
     }, []);
 
+    useEffect(() => {
+        if (viewerMode !== "projection" || !slide) {
+            return;
+        }
+        // Soft overflow detection for authors (console only).
+        const id = window.requestAnimationFrame(() => {
+            const columns = document.querySelectorAll(".presenit-column");
+            for (const column of columns) {
+                if (column.scrollHeight > column.clientHeight + 1) {
+                    console.warn(
+                        `[presenit] Slide ${index + 1}: content overflows a column (overflow is clipped).`,
+                    );
+                    break;
+                }
+            }
+        });
+        return () => window.cancelAnimationFrame(id);
+    }, [viewerMode, slide, index]);
+
     if (!deck || !slide) {
         return <div class="viewer-loading">Loading…</div>;
     }
@@ -154,7 +173,13 @@ export function App(): JSX.Element {
     }
 
     return (
-        <div class="projection">
+        <div
+            class="projection"
+            onClick={() => {
+                next();
+                broadcastIndex(currentIndex.value);
+            }}
+        >
             <SlideFrame
                 html={slide.html}
                 width={width}
