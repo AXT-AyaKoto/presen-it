@@ -19,6 +19,31 @@ const GENERIC_FAMILIES = new Set([
     "revert-layer",
 ]);
 
+export function isGenericFontFamily(name: string): boolean {
+    return GENERIC_FAMILIES.has(name.trim().toLowerCase());
+}
+
+/**
+ * Format one family name for a CSS `font-family` list.
+ */
+export function formatCssFontFamilyName(name: string): string {
+    const trimmed = name.trim();
+    if (!trimmed) {
+        return "";
+    }
+    if (isGenericFontFamily(trimmed) || /^[a-zA-Z][\w-]*$/.test(trimmed)) {
+        return trimmed;
+    }
+    return `"${trimmed.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
+}
+
+/**
+ * Join family names into a CSS `font-family` value (quotes added when needed).
+ */
+export function fontFamilyListToCss(names: string[]): string {
+    return names.map(formatCssFontFamilyName).filter(Boolean).join(", ");
+}
+
 /**
  * Split a CSS `font-family` list into individual family names (quotes stripped).
  */
@@ -64,7 +89,7 @@ export function namedFontFamilies(...stacks: string[]): string[] {
     for (const stack of stacks) {
         for (const family of parseFontFamilyList(stack)) {
             const key = family.toLowerCase();
-            if (GENERIC_FAMILIES.has(key) || seen.has(key)) {
+            if (isGenericFontFamily(family) || seen.has(key)) {
                 continue;
             }
             seen.add(key);

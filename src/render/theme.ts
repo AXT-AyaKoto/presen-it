@@ -1,4 +1,4 @@
-import { buildGoogleFontsImports, namedFontFamilies } from "./fonts";
+import { buildGoogleFontsImports, namedFontFamilies } from "../font-family";
 
 type ThemeBuildConfig = {
     theme: "light" | "dark";

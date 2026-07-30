@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
     buildGoogleFontsImports,
+    fontFamilyListToCss,
     namedFontFamilies,
     parseFontFamilyList,
-} from "../src/render/fonts";
+} from "../src/font-family";
 
 describe("font family helpers", () => {
     it("parses quoted and unquoted CSS font-family lists", () => {
@@ -29,5 +30,12 @@ describe("font family helpers", () => {
         expect(css).toContain("family=Libertinus+Serif:wght@400;500;600;700");
         expect(css).toContain("family=Ubuntu:wght@400;500;600;700");
         expect(css.split("@import").length - 1).toBe(2);
+    });
+
+    it("formats CSS font-family lists with quotes when needed", () => {
+        expect(fontFamilyListToCss(["Edu VIC WA NT Hand", "Zen Kurenaido", "cursive"])).toBe(
+            '"Edu VIC WA NT Hand", "Zen Kurenaido", cursive',
+        );
+        expect(fontFamilyListToCss(["Ubuntu", "sans-serif"])).toBe("Ubuntu, sans-serif");
     });
 });
