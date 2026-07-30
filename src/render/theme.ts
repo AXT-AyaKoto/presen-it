@@ -18,7 +18,10 @@ function buildPaletteVars(theme: "light" | "dark", hue: number): string {
     if (theme === "light") {
         return `
         --presenit-bg: oklch(0.97 0.006 ${hue});
-        --presenit-slide-bg: oklch(1 0 0);
+        --presenit-slide-bg: oklch(0.995 0.004 ${hue});
+        --presenit-slide-bg-top: oklch(1 0.002 ${hue});
+        --presenit-slide-bg-bottom: oklch(0.975 0.014 ${hue});
+        --presenit-slide-wash: oklch(0.92 0.045 ${hue} / 0.22);
         --presenit-surface: oklch(0.955 0.01 ${hue});
         --presenit-text: oklch(0.24 0.025 ${hue});
         --presenit-text-muted: oklch(0.5 0.03 ${hue});
@@ -33,6 +36,9 @@ function buildPaletteVars(theme: "light" | "dark", hue: number): string {
     return `
         --presenit-bg: oklch(0.16 0.008 ${hue});
         --presenit-slide-bg: oklch(0.2 0.01 ${hue});
+        --presenit-slide-bg-top: oklch(0.235 0.014 ${hue});
+        --presenit-slide-bg-bottom: oklch(0.175 0.01 ${hue});
+        --presenit-slide-wash: oklch(0.45 0.08 ${hue} / 0.18);
         --presenit-surface: oklch(0.25 0.012 ${hue});
         --presenit-text: oklch(0.94 0.008 ${hue});
         --presenit-text-muted: oklch(0.66 0.012 ${hue});
@@ -92,7 +98,10 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     display: flex;
     flex-direction: column;
     padding: var(--presenit-slide-padding);
-    background: var(--presenit-slide-bg);
+    background-color: var(--presenit-slide-bg);
+    background-image:
+        radial-gradient(ellipse 90% 70% at 100% -10%, var(--presenit-slide-wash), transparent 58%),
+        linear-gradient(165deg, var(--presenit-slide-bg-top) 0%, var(--presenit-slide-bg-bottom) 100%);
     border: 1px solid var(--presenit-border);
 
     color: var(--presenit-text);
