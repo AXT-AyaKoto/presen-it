@@ -1,0 +1,148 @@
+import type { Heading, Root, RootContent } from "mdast";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import { unified } from "unified";
+import type { AlignOptions, Column, Deck, Diagnostic, Slide } from "../types";
+import { DEFAULT_SLIDE_ALIGN } from "../types";
+import {
+    alignFromDirective,
+    extractCommentText,
+    isHtmlComment,
+    mergeAlign,
+    parseDirectiveComment,
+    type DirectiveOptions,
+} from "./directive";
+import { parseFrontmatter } from "./frontmatter";
+
+type MutableColumn = {
+    optionOverride: DirectiveOptions;
+    children: RootContent[];
+};
+
+type MutableSlide = {
+    align: AlignOptions;
+    header: Heading | null;
+    columns: MutableColumn[];
+    notes: string | null;
+    awaitingHeader: boolean;
+};
+
+function positionLine(node: RootContent): number | undefined {
+    return node.position?.start.line;
+}
+
+function createSlide(optionOverride: DirectiveOptions = {}): MutableSlide {
+    return {
+        align: alignFromDirective(optionOverride),
+        header: null,
+        columns: [{ optionOverride: {}, children: [] }],
+        notes: null,
+        awaitingHeader: true,
+    };
+}
+
+function finalizeSlide(slide: MutableSlide, diagnostics: Diagnostic[]): Slide {
+    const lastColumn = slide.columns[slide.columns.length - 1];
+    if (lastColumn && lastColumn.children.length > 0) {
+        const last = lastColumn.children[lastColumn.children.length - 1];
+        if (last && last.type === "html" && isHtmlComment(last.value)) {
+            const body = extractCommentText(last.value);
+            // Trailing non-directive HTML comment → speaker notes.
+            if (!body.startsWith("presen-it!")) {
+                slide.notes = body;
+                lastColumn.children.pop();
+            }
+        }
+    }
+
+    const columns: Column[] = slide.columns
+        .filter((column) => column.children.length > 0)
+        .map((column) => ({
+            align: mergeAlign(slide.align, column.optionOverride),
+            children: column.children,
+        }));
+
+    // Empty pages are allowed; always keep one column for layout.
+    if (columns.length === 0) {
+        columns.push({
+            align: { ...slide.align },
+            children: [],
+        });
+    }
+
+    if (columns.length >= 4) {
+        diagnostics.push({
+            severity: "warning",
+            message: `Slide has ${columns.length} columns (4+ is unusual)`,
+        });
+    }
+
+    return {
+        align: slide.align,
+        header: slide.header,
+        columns,
+        notes: slide.notes,
+    };
+}
+
+function parseMarkdownRoot(body: string): Root {
+    return unified().use(remarkParse).use(remarkGfm).parse(body) as Root;
+}
+
+/**
+ * Parse a Presen'it! Markdown source into a deck AST.
+ */
+export function parseSlideMarkdown(source: string): Deck {
+    const { config, body, diagnostics: fmDiagnostics } = parseFrontmatter(source);
+    const diagnostics: Diagnostic[] = [...fmDiagnostics];
+    const root = parseMarkdownRoot(body);
+
+    const slides: MutableSlide[] = [createSlide()];
+    let current = slides[0]!;
+
+    for (const node of root.children) {
+        if (node.type === "html" && isHtmlComment(node.value)) {
+            const directive = parseDirectiveComment(node.value, diagnostics, positionLine(node));
+
+            if (directive?.command === "slide-break") {
+                slides.push(createSlide(directive.options));
+                current = slides[slides.length - 1]!;
+                continue;
+            }
+
+            if (directive?.command === "column-break") {
+                current.awaitingHeader = false;
+                current.columns.push({
+                    optionOverride: directive.options,
+                    children: [],
+                });
+                continue;
+            }
+        }
+
+        if (
+            current.awaitingHeader &&
+            node.type === "heading" &&
+            node.depth === 2 &&
+            current.columns.length === 1 &&
+            current.columns[0]!.children.length === 0
+        ) {
+            current.header = node;
+            current.awaitingHeader = false;
+            continue;
+        }
+
+        current.awaitingHeader = false;
+        const column = current.columns[current.columns.length - 1]!;
+        column.children.push(node);
+    }
+
+    return {
+        config,
+        slides: slides.map((slide) => finalizeSlide(slide, diagnostics)),
+        diagnostics,
+    };
+}
+
+// Re-export DEFAULT_SLIDE_ALIGN for tests / consumers that need defaults.
+export { DEFAULT_SLIDE_ALIGN };
