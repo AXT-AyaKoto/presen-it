@@ -31,16 +31,16 @@ function buildPaletteVars(theme: "light" | "dark", hue: number): string {
     }
 
     return `
-        --presenit-bg: oklch(0.17 0.018 ${hue});
-        --presenit-slide-bg: oklch(0.21 0.022 ${hue});
-        --presenit-surface: oklch(0.26 0.028 ${hue});
-        --presenit-text: oklch(0.94 0.012 ${hue});
-        --presenit-text-muted: oklch(0.66 0.025 ${hue});
-        --presenit-border: oklch(0.34 0.028 ${hue});
+        --presenit-bg: oklch(0.16 0.008 ${hue});
+        --presenit-slide-bg: oklch(0.2 0.01 ${hue});
+        --presenit-surface: oklch(0.25 0.012 ${hue});
+        --presenit-text: oklch(0.94 0.008 ${hue});
+        --presenit-text-muted: oklch(0.66 0.012 ${hue});
+        --presenit-border: oklch(0.34 0.014 ${hue});
         --presenit-accent: oklch(0.74 0.14 ${hue});
         --presenit-accent-hover: oklch(0.8 0.15 ${hue});
-        --presenit-code-bg: oklch(0.24 0.022 ${hue});
-        --presenit-blockquote-bg: oklch(0.23 0.024 ${hue});
+        --presenit-code-bg: oklch(0.23 0.01 ${hue});
+        --presenit-blockquote-bg: oklch(0.22 0.011 ${hue});
     `.trim();
 }
 
@@ -159,7 +159,7 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     font-size: 2.2em;
     font-weight: 700;
     line-height: 1.12;
-    letter-spacing: -0.035em;
+    letter-spacing: 0.03em;
     color: var(--presenit-text);
 }
 

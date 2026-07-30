@@ -4,6 +4,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { consola } from "consola";
 import puppeteer from "puppeteer";
 import { loadDeck } from "../project/load";
+import { detectOverflow, logOverflowWarnings } from "../project/overflow";
 
 function absolutizeAssets(html: string, slideDir: string): string {
     return html.replace(
@@ -86,6 +87,10 @@ export async function runExport(slug: string, cwd = process.cwd()): Promise<stri
     try {
         const page = await browser.newPage();
         await page.setViewport({ width, height, deviceScaleFactor: 1 });
+
+        const overflows = await detectOverflow(page, loaded);
+        logOverflowWarnings(overflows);
+
         await page.setContent(documentHtml, {
             waitUntil: "load",
         });

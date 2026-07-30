@@ -1,13 +1,15 @@
 {
     "name": "@axt_ayakoto/presenit",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "Turn readable Markdown into beautiful presentation slides and PDFs.",
     "keywords": [
         "markdown",
+        "marp",
         "pdf",
         "presenit",
         "presentation",
-        "slides"
+        "slides",
+        "slidev"
     ],
     "homepage": "https://github.com/AXT-AyaKoto/experiment-md-slide-vibed#readme",
     "bugs": {
@@ -23,23 +25,34 @@
         "presenit": "./dist/cli.js"
     },
     "files": [
-        "dist",
+        "dist/cli.js",
+        "dist/cli.js.map",
+        "dist/index.js",
+        "dist/index.js.map",
+        "dist/index.d.ts",
         "src/viewer",
         "llms.txt",
         "LICENSE",
-        "README.md"
+        "README.md",
+        "CHANGELOG.md"
     ],
     "type": "module",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
             "import": "./dist/index.js"
-        }
+        },
+        "./package.json": "./package.json"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
     },
     "scripts": {
         "build": "tsup",
         "dev:cli": "tsx src/cli.ts",
         "presenit": "node ./dist/cli.js",
+        "prepublishOnly": "pnpm check && pnpm build",
         "format": "oxfmt .",
         "format:check": "oxfmt --check .",
         "lint": "oxlint .",
