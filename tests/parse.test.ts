@@ -62,6 +62,22 @@ fontFamily:
         expect(result.diagnostics).toEqual([]);
     });
 
+    it("parses pageTransition with defaults", () => {
+        const defaults = parseFrontmatter("# Hi\n");
+        expect(defaults.config.pageTransition).toEqual({ type: "fade", duration: 0.2 });
+
+        const custom = parseFrontmatter(`---
+pageTransition:
+  type: scroll
+  duration: 0.35
+---
+
+# Hi
+`);
+        expect(custom.config.pageTransition).toEqual({ type: "scroll", duration: 0.35 });
+        expect(custom.diagnostics).toEqual([]);
+    });
+
     it("falls back and warns on type errors; ignores unknown keys", () => {
         const result = parseFrontmatter(`---
 theme: neon

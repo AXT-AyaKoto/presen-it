@@ -4,7 +4,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 
 通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
 
-パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.5.0** プレリリース）
+パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.6.0** プレリリース）
 
 [![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
 [![CI](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml)
@@ -58,18 +58,23 @@ fontSize: 32 # 基準フォントサイズ px（既定: 32）
 fontFamily:
     sans: '"M PLUS 1", system-ui, sans-serif' # CSS font-family（既定この値）
     mono: '"M PLUS 1 Code", ui-monospace, monospace'
+pageTransition:
+    type: fade # none | fade | scroll（既定: fade）
+    duration: 0.2 # 秒（既定: 0.2）。PDF export では無視
 rawHTML: false # true で生 HTML を描画（既定: false）
 ---
 ```
 
-| Key                         | Default                                              | Notes                              |
-| --------------------------- | ---------------------------------------------------- | ---------------------------------- |
-| `theme`                     | `light`                                              | `light` \| `dark`                  |
-| `hue`                       | `210`                                                | アクセント色相（mod 360）          |
-| `width` / `height`          | `1920` / `1080`                                      | スライドサイズ（px）               |
-| `fontSize`                  | `32`                                                 | 基準フォントサイズ                 |
-| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code（上記 YAML の既定スタック） | CSS 文字列、またはフォント名の配列 |
-| `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する    |
+| Key                         | Default                                              | Notes                                        |
+| --------------------------- | ---------------------------------------------------- | -------------------------------------------- |
+| `theme`                     | `light`                                              | `light` \| `dark`                            |
+| `hue`                       | `210`                                                | アクセント色相（mod 360）                    |
+| `width` / `height`          | `1920` / `1080`                                      | スライドサイズ（px）                         |
+| `fontSize`                  | `32`                                                 | 基準フォントサイズ                           |
+| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code（上記 YAML の既定スタック） | CSS 文字列、またはフォント名の配列           |
+| `pageTransition.type`       | `fade`                                               | `none` \| `fade` \| `scroll`（PDF では無視） |
+| `pageTransition.duration`   | `0.2`                                                | 秒。`0` で実質オフ                           |
+| `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する              |
 
 `fontFamily` は通常の CSS 文字列のほか、**配列**でも書けます（空白入りの名前に便利）。
 

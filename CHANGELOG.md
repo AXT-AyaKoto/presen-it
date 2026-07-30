@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 — 2026-07-30
+
+### Features
+
+- `pageTransition.type` (`none` \| `fade` \| `scroll`, default `fade`) and `pageTransition.duration` (seconds, default `0.2`) in frontmatter; PDF export ignores transitions
+
+### Fixes
+
+- Soften click-zone chevron shadow (lighter, wider)
+- Zone `w-resize` / `e-resize` cursors via hit-target overlays above slide content
+
 ## 0.5.0 — 2026-07-30
 
 ### Features

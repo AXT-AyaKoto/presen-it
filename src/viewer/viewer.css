@@ -59,25 +59,16 @@ body,
     background: #000;
 }
 
-/* Descendants otherwise keep text/default cursors and hide the zone cursor. */
-.projection.is-zone-prev,
-.projection.is-zone-prev .projection__slide,
-.projection.is-zone-prev .projection__slide * {
-    cursor: w-resize !important;
-}
-
-.projection.is-zone-next,
-.projection.is-zone-next .projection__slide,
-.projection.is-zone-next .projection__slide * {
-    cursor: e-resize !important;
-}
-
+/*
+ * Zone hit targets sit above the slide so the browser picks *this* element's
+ * cursor (w/e-resize). Opacity only hides the chevron; hit-testing stays on.
+ */
 .projection__affordance {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 10%;
-    pointer-events: none;
+    pointer-events: auto;
     z-index: 4;
     display: flex;
     align-items: center;
@@ -90,12 +81,14 @@ body,
     left: 0;
     justify-content: center;
     padding-left: 2%;
+    cursor: w-resize;
 }
 
 .projection__affordance--next {
     right: 0;
     justify-content: center;
     padding-right: 2%;
+    cursor: e-resize;
 }
 
 .projection__affordance::after {
@@ -103,8 +96,7 @@ body,
     width: 0;
     height: 0;
     border-style: solid;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.75))
-        drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+    filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.12)) drop-shadow(0 1px 5px rgba(0, 0, 0, 0.06));
 }
 
 .projection__affordance--prev::after {
@@ -119,6 +111,114 @@ body,
 
 .projection__affordance.is-visible {
     opacity: 1;
+}
+
+.projection__stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.projection__layer {
+    position: absolute;
+    inset: 0;
+}
+
+.projection__layer--out {
+    z-index: 1;
+}
+
+.projection__layer--in {
+    z-index: 2;
+}
+
+@keyframes presenit-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes presenit-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes presenit-scroll-out-forward {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-18%);
+    }
+}
+
+@keyframes presenit-scroll-in-forward {
+    from {
+        opacity: 0;
+        transform: translateX(18%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes presenit-scroll-out-back {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(18%);
+    }
+}
+
+@keyframes presenit-scroll-in-back {
+    from {
+        opacity: 0;
+        transform: translateX(-18%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.projection__layer.is-fade-out-forward,
+.projection__layer.is-fade-out-back {
+    animation: presenit-fade-out var(--presenit-page-duration, 0.2s) ease both;
+}
+
+.projection__layer.is-fade-in-forward,
+.projection__layer.is-fade-in-back {
+    animation: presenit-fade-in var(--presenit-page-duration, 0.2s) ease both;
+}
+
+.projection__layer.is-scroll-out-forward {
+    animation: presenit-scroll-out-forward var(--presenit-page-duration, 0.2s) ease both;
+}
+
+.projection__layer.is-scroll-in-forward {
+    animation: presenit-scroll-in-forward var(--presenit-page-duration, 0.2s) ease both;
+}
+
+.projection__layer.is-scroll-out-back {
+    animation: presenit-scroll-out-back var(--presenit-page-duration, 0.2s) ease both;
+}
+
+.projection__layer.is-scroll-in-back {
+    animation: presenit-scroll-in-back var(--presenit-page-duration, 0.2s) ease both;
 }
 
 .viewer-nav {

@@ -1,5 +1,6 @@
 import type { JSX } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
+import { ProjectionStage } from "./ProjectionStage";
 import { SlideFrame } from "./SlideFrame";
 import { ViewerNav } from "./ViewerNav";
 import {
@@ -79,6 +80,12 @@ export function App(): JSX.Element {
     const upcoming = nextSlide.value;
     const pressRef = useRef<PressOrigin | null>(null);
     const [hoverZone, setHoverZone] = useState<ClickZone | null>(null);
+
+    useEffect(() => {
+        if (viewerMode !== "projection") {
+            setHoverZone(null);
+        }
+    }, [viewerMode]);
 
     useEffect(() => {
         const onKey = (event: KeyboardEvent) => {
@@ -367,11 +374,13 @@ export function App(): JSX.Element {
             onPointerCancel={onProjectionPointerCancel}
             onPointerLeave={onProjectionPointerLeave}
         >
-            <SlideFrame
+            <ProjectionStage
                 html={slide.html}
                 width={width}
                 height={height}
-                className="projection__slide"
+                index={index}
+                transitionType={deck.config.pageTransition.type}
+                duration={deck.config.pageTransition.duration}
             />
             <div
                 class={`projection__affordance projection__affordance--prev${hoverZone === "prev" ? " is-visible" : ""}`}
