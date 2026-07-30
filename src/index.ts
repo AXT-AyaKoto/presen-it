@@ -1,5 +1,5 @@
 /**
- * Presen'it! — turn readable Markdown into beautiful presentation slides.
+ * AyaExpTech Presen'it! — turn readable Markdown into beautiful presentation slides.
  */
 export { parseSlideMarkdown } from "./parse/index";
 export {

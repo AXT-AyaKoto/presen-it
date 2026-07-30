@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * Resolve the installed/source package root for Presen'it!
+ * Resolve the installed/source package root for AXT Presen'it!
  * (works for both `tsx src/...` and bundled `dist/cli.js`).
  */
 export function getPackageRoot(importMetaUrl = import.meta.url): string {

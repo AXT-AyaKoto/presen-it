@@ -7,7 +7,7 @@ const INDEX_HTML = readFileSync(new URL("../src/viewer/index.html", import.meta.
 
 describe("effectivePageTitle", () => {
     it("falls back to slug when title is empty", () => {
-        expect(effectivePageTitle(DEFAULT_CONFIG, "demo")).toBe("Presen'it! — demo");
+        expect(effectivePageTitle(DEFAULT_CONFIG, "demo")).toBe("AyaExpTech Presen'it! — demo");
     });
 
     it("uses trimmed frontmatter title when set", () => {
@@ -23,8 +23,8 @@ describe("effectivePageTitle", () => {
 describe("transformViewerIndexHtml", () => {
     it("injects slug-based title and og tags without description", () => {
         const out = transformViewerIndexHtml(INDEX_HTML, "demo", DEFAULT_CONFIG);
-        expect(out).toContain("<title>Presen'it! — demo</title>");
-        expect(out).toContain('<meta property="og:title" content="Presen\'it! — demo">');
+        expect(out).toContain("<title>AyaExpTech Presen'it! — demo</title>");
+        expect(out).toContain('<meta property="og:title" content="AyaExpTech Presen\'it! — demo">');
         expect(out).toContain('<meta property="og:type" content="website">');
         expect(out).not.toContain("og:description");
         expect(out).not.toContain('name="description"');

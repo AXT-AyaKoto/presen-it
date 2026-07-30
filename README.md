@@ -1,13 +1,17 @@
-# Presen'it!
+# AyaExpTech Presen'it!
 
-Markdown から美しいプレゼンスライドを作るツール。
-
+Markdown から美しいプレゼンスライドを作るツール。  
 通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
 
 パッケージ: [`@ayaexptech/presenit`](https://www.npmjs.com/package/@ayaexptech/presenit) · サイト: [axt-studio.github.io/presen-it](https://axt-studio.github.io/presen-it/)
 
 [![npm](https://img.shields.io/npm/v/@ayaexptech/presenit)](https://www.npmjs.com/package/@ayaexptech/presenit)
 [![CI](https://github.com/AXT-Studio/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-Studio/presen-it/actions/workflows/ci.yml)
+
+> [!INFO]
+> このツールは、そのほとんどがAIによって実装された、いわゆるVibe-Codingプロダクトです。
+> AIへの指示を行った私(綾坂こと)がDogfoodingを行っているためある程度品質については保証しますが、Vibe-Codingによるプロダクトであることには留意してください。
+> なお、使用したモデルはGrok 4.5 High・Composer 2.5で、いずれもCursorから使用しています。
 
 ## Why
 
@@ -49,7 +53,7 @@ src/<slug>/assets/...
 
 ```yaml
 ---
-title: My Talk # viewer HTML <title> / og:title（未設定時は Presen'it! — <slug>）
+title: My Talk # viewer HTML <title> / og:title（未設定時は AyaExpTech Presen'it! — <slug>）
 description: Short blurb # meta description / og:description（未設定時は省略）
 theme: light # light | dark（既定: light）
 hue: 210 # アクセント色相 0–359（既定: 210）

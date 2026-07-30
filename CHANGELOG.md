@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 — 2026-07-31
+
+### Changed
+
+- User-facing product name is now **AyaExpTech Presen'it!** (short form **AXT Presen'it!** in compact UI such as the nav brand, footer, and CLI startup message). CLI command (`presenit`), npm package (`@ayaexptech/presenit`), and `<!-- presen-it! ... -->` directive syntax are unchanged.
+
 ## 1.0.1 — 2026-07-31
 
 ### Changed

@@ -10,7 +10,7 @@ import { renderDeckAsync } from "../src/render/index";
 
 const SAMPLE = `<!-- presen-it! slide-break (center-x=true) -->
 
-# Presen'it!
+# AyaExpTech Presen'it!
 
 美しいスライドを、普通の Markdown から。
 
