@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.1 — 2026-07-30
+
+### Fixes
+
+- Italic text keeps the normal text color (no muted gray)
+- KaTeX script/limit sizing: align renderer + CSS on KaTeX 0.18 (`katex-sizing`)
+- Scale Mermaid diagrams up to 2/3 of slide height (was intrinsic SVG size, not the image cap)
+- Centered columns: code blocks stay centered, lines are left-aligned
+- Projection zones: 10% edges, short-press only so text selection/copy works
+- Slightly stronger slide background gradient; image max-height relaxed to 75%
+
 ## 0.3.0 — 2026-07-30
 
 ### Features
