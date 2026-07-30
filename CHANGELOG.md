@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 — 2026-07-30
+
+### Features
+
+- Keep the current slide across Vite full-reload when editing Markdown (`#N` hash)
+- Projection click zones: left 20% previous, right 20% next (center does nothing)
+- Bottom-left hover toolbar for Overview / Presenter / Fullscreen
+- Subtle lightness gradient + corner wash on slide backgrounds
+- Expanded `kitchen-sink` gallery for layouts and features
+
+### Changes
+
+- Removed the projection hover page-number HUD (slide chrome already shows it)
+
 ## 0.2.0 — 2026-07-30
 
 ### Features
