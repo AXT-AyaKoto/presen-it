@@ -58,12 +58,28 @@ theme: dark
 # Title
 `),
         );
-        expect(dark.css).toContain("letter-spacing: 0.03em");
+        expect(dark.css).toContain("letter-spacing: 0.01em");
         expect(dark.css).toMatch(/--presenit-slide-bg:\s*oklch\(0\.2 0\.012 /);
         expect(dark.css).toContain("--presenit-slide-bg-top:");
         expect(dark.css).toContain("linear-gradient(165deg");
         expect(dark.css).toContain(".presenit-column em");
         expect(dark.css).not.toMatch(/\.presenit-column em \{[^}]*text-muted/);
+        expect(dark.css).toContain("fonts.googleapis.com/css2?family=M+PLUS+1");
+    });
+
+    it("requests Google Fonts for custom fontFamily names", async () => {
+        const result = await renderDeckAsync(
+            parseSlideMarkdown(`---
+fontFamily:
+  sans: '"Libertinus Serif", serif'
+  mono: Ubuntu Mono, monospace
+---
+
+# Title
+`),
+        );
+        expect(result.css).toContain("family=Libertinus+Serif");
+        expect(result.css).toContain("family=Ubuntu+Mono");
     });
 
     it("escapes HTML by default and allows rawHTML when enabled", async () => {

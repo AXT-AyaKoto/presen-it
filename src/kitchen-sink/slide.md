@@ -62,7 +62,7 @@ export function greet(name: string): string {
 
 ```css
 .hero {
-    letter-spacing: 0.03em;
+    letter-spacing: 0.01em;
 }
 ```
 
