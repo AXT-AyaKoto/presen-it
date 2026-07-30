@@ -18,8 +18,10 @@ import {
     nextSlide,
     prev,
     readHashIndex,
+    resetTimer,
     slideCount,
     timerRunning,
+    toggleTimer,
     leavePresenter,
     openPresenterWindow,
     toggleOverview,
@@ -184,7 +186,14 @@ export function App(): JSX.Element {
                 case "t":
                 case "T":
                     event.preventDefault();
-                    timerRunning.value = !timerRunning.value;
+                    toggleTimer();
+                    break;
+                case "r":
+                case "R":
+                    if (viewerMode === "presenter") {
+                        event.preventDefault();
+                        resetTimer();
+                    }
                     break;
                 case "Escape":
                     if (viewerMode === "presenter") {
@@ -353,7 +362,25 @@ export function App(): JSX.Element {
                         <span>
                             {index + 1} / {total}
                         </span>
-                        <span class="presenter__timer">{formatTime(elapsed)}</span>
+                        <div class="presenter__timer-row">
+                            <span class="presenter__timer">{formatTime(elapsed)}</span>
+                            <div class="presenter__timer-controls">
+                                <button
+                                    type="button"
+                                    class="presenter__timer-btn"
+                                    onClick={toggleTimer}
+                                >
+                                    {running ? "Pause" : "Resume"}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="presenter__timer-btn"
+                                    onClick={resetTimer}
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div class="presenter__next-label">Next</div>
                     <div class="presenter__next">
@@ -366,8 +393,8 @@ export function App(): JSX.Element {
                     <div class="presenter__notes-label">Notes</div>
                     <div class="presenter__notes">{slide.notes ?? "—"}</div>
                     <div class="presenter__hint">
-                        ← → navigate · O overview · P projection · T timer · F fullscreen · or use
-                        the bottom-left toolbar
+                        ← → navigate · O overview · P projection · T pause/resume · R reset · F
+                        fullscreen · or use the bottom-left toolbar
                     </div>
                 </aside>
                 <ViewerNav />

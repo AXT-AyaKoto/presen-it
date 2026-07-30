@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+- Presenter timer: Pause/Resume and Reset buttons (`T` / `R` shortcuts)
+
 ## 0.8.0 — 2026-07-31
 
 ### Features

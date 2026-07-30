@@ -143,6 +143,7 @@ graph LR
 - `F`: fullscreen
 - `P`: open presenter in a separate tab/window (projection tab unchanged)
 - `T`: timer pause/resume (presenter)
+- `R`: timer reset (presenter)
 - URL hash `#N` (1-based) syncs the current page (kept across markdown reload in `dev`)
 - `?presenter` query: open presenter directly in that tab
 - Projection and presenter tabs stay in sync via `BroadcastChannel` (hash + index broadcast)
