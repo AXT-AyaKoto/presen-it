@@ -218,12 +218,12 @@ body,
 
 .projection__layer.is-fade-out-forward,
 .projection__layer.is-fade-out-back {
-    animation: presenit-fade-out var(--presenit-page-duration, 0.2s) ease both;
+    animation: presenit-fade-out var(--presenit-page-duration, 0.2s) linear both;
 }
 
 .projection__layer.is-fade-in-forward,
 .projection__layer.is-fade-in-back {
-    animation: presenit-fade-in var(--presenit-page-duration, 0.2s) ease both;
+    animation: presenit-fade-in var(--presenit-page-duration, 0.2s) linear both;
 }
 
 .projection__layer.is-scroll-out-forward {

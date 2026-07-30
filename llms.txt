@@ -141,7 +141,7 @@ graph LR
 - `←` `→` / Space: navigate
 - `Home` `End`: first/last
 - Projection short-press zones: left/right slide-edge bands (padding width) = previous/next (ignores drag / text selection; hover shows a chevron affordance)
-- Bottom-left hover toolbar: Overview / Presenter / Fullscreen
+- Bottom-left hover toolbar: Overview / Presenter / Fullscreen / Laser (`L`)
 - `O`: overview grid
 - `F`: fullscreen
 - `P`: open presenter in a separate tab/window (projection tab unchanged)

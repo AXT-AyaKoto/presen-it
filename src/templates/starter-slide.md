@@ -34,7 +34,7 @@ src/<slug>/assets/...
 
 `<!-- presen-it! slide-break -->` で新しいスライドに進みます。
 
-- ファイル先頭の leading `slide-break` は 1 枚目のレイアウト指定に使えます（空ページは作りません）
+- frontmatter 直後の `slide-break` は 1 枚目のレイアウト指定に使えます（空ページは作りません）
 - 区切り直後の先頭 `##` はページヘッダーになります
 
 <!-- presen-it! slide-break (center-x=true&center-y=true) -->
@@ -107,7 +107,7 @@ flowchart LR
 ## アラート（GitHub alerts）
 
 > [!NOTE]
-> 補足情報。スキimming しても伝えたいこと。
+> 補足情報。斜め読みでも伝えたいこと。
 
 > [!TIP]
 > もっと楽に書くためのヒント。
@@ -125,8 +125,9 @@ flowchart LR
 | `O`                     | オーバービュー（グリッド） |
 | `P`                     | プレゼンターを別タブで開く |
 | `F`                     | フルスクリーン             |
+| `L`                     | レーザーポインター         |
 
-左右スライド端（パディング幅）の短押しでも前後に移動できます。左下にマウスを置くとツールバーが出ます。
+左右スライド端（パディング幅）の短押しでも前後に移動できます。左下にマウスを置くと Overview・Presenter・Fullscreen・Laser のツールバーが出ます。
 
 <!-- presen-it! slide-break (center-x=true) -->
 
