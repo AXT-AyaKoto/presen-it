@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0 — 2026-07-31
+
+### Features
+
+- Presenter opens in a separate tab/window (`P` or toolbar from projection); projection stays in the original tab
+- Slide index syncs across projection and presenter tabs via `BroadcastChannel` (hash + broadcast on open)
+
 ## 0.7.7 — 2026-07-31
 
 ### Fixes

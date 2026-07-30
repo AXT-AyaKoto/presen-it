@@ -2,12 +2,13 @@ import type { JSX } from "preact";
 import {
     broadcastIndex,
     currentIndex,
+    leavePresenter,
     mode,
     next,
+    openPresenterWindow,
     prev,
     slideCount,
     toggleOverview,
-    togglePresenter,
 } from "./store";
 
 function toggleFullscreen(): void {
@@ -16,16 +17,6 @@ function toggleFullscreen(): void {
     } else {
         void document.exitFullscreen();
     }
-}
-
-function setPresenterQuery(enabled: boolean): void {
-    const url = new URL(window.location.href);
-    if (enabled) {
-        url.searchParams.set("presenter", "");
-    } else {
-        url.searchParams.delete("presenter");
-    }
-    history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 export function ViewerNav(): JSX.Element {
@@ -77,9 +68,11 @@ export function ViewerNav(): JSX.Element {
                     class={`viewer-nav__btn${viewerMode === "presenter" ? " is-active" : ""}`}
                     aria-pressed={viewerMode === "presenter"}
                     onClick={() => {
-                        const nextMode = viewerMode === "presenter" ? "projection" : "presenter";
-                        togglePresenter();
-                        setPresenterQuery(nextMode === "presenter");
+                        if (viewerMode === "presenter") {
+                            leavePresenter();
+                        } else {
+                            openPresenterWindow();
+                        }
                     }}
                 >
                     Presenter

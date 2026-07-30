@@ -32,7 +32,7 @@ pnpm exec presenit export my-talk  # → dist/my-talk/resume.pdf
 pnpm install
 pnpm build
 pnpm presenit dev demo
-# Presenter: ?presenter を付けて開く
+# Presenter: P またはツールバーで別タブに開く（?presenter でも直接起動可）
 pnpm presenit build demo
 pnpm presenit export demo
 ```
@@ -138,12 +138,12 @@ fontFamily:
 
 | `O` | オーバービュー（グリッド） |
 | `F` | フルスクリーン |
-| `P` | プレゼンターモード |
+| `P` | プレゼンターを別タブで開く（投影タブはそのまま） |
 | `T` | タイマー一時停止（プレゼンター） |
 
-左下にマウスを置くと、前後移動・Overview・Presenter・Fullscreen のツールバーが出ます。
+左下にマウスを置くと、前後移動・Overview・Presenter・Fullscreen のツールバーが出ます。Presenter は別タブで開き、投影タブとスライド位置は BroadcastChannel で同期します。
 
-URL ハッシュは 1 始まり（`#3` = 3 枚目）。プレゼンターは `?presenter` を付ける。機能一覧サンプルは `pnpm presenit dev kitchen-sink`。
+URL ハッシュは 1 始まり（`#3` = 3 枚目）。`?presenter` を付けて直接プレゼンターを開くこともできます。機能一覧サンプルは `pnpm presenit dev kitchen-sink`。
 
 ## Releasing
 

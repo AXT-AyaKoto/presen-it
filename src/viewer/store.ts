@@ -64,8 +64,28 @@ export function prev(): void {
     goTo(currentIndex.value - 1);
 }
 
-export function togglePresenter(): void {
-    mode.value = mode.value === "presenter" ? "projection" : "presenter";
+const PRESENTER_WINDOW_NAME = "presenit-presenter";
+
+/** Open or focus the presenter view in a separate tab/window (call from a user gesture). */
+export function openPresenterWindow(): void {
+    const url = new URL(window.location.href);
+    url.searchParams.set("presenter", "");
+    window.open(url.toString(), PRESENTER_WINDOW_NAME);
+    broadcastIndex(currentIndex.value);
+}
+
+export function leavePresenter(): void {
+    mode.value = "projection";
+    stripPresenterQuery();
+}
+
+export function stripPresenterQuery(): void {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("presenter")) {
+        return;
+    }
+    url.searchParams.delete("presenter");
+    history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 export function toggleOverview(): void {
