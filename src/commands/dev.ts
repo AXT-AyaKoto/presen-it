@@ -51,9 +51,11 @@ export async function runDev(slug: string, cwd = process.cwd()): Promise<void> {
     consola.success(`Presen'it! dev server ready for "${slug}"`);
     if (urls?.local[0]) {
         consola.info(urls.local[0]);
-        consola.info(`Presenter: ${urls.local[0]}?presenter`);
         consola.info(
-            "Keys: ← → · short-press L/R slide edges · O overview · P presenter · F fullscreen · bottom-left toolbar",
+            `Presenter: ${urls.local[0]}?presenter (or press P / toolbar — opens a separate tab)`,
+        );
+        consola.info(
+            "Keys: ← → · short-press L/R slide edges · O overview · P presenter (separate tab) · F fullscreen · bottom-left toolbar",
         );
     }
     server.printUrls();

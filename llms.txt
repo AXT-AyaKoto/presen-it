@@ -141,8 +141,9 @@ graph LR
 - Bottom-left hover toolbar: Overview / Presenter / Fullscreen
 - `O`: overview grid
 - `F`: fullscreen
-- `P`: presenter mode
+- `P`: open presenter in a separate tab/window (projection tab unchanged)
 - `T`: timer pause/resume (presenter)
 - URL hash `#N` (1-based) syncs the current page (kept across markdown reload in `dev`)
-- `?presenter` query: open presenter directly
+- `?presenter` query: open presenter directly in that tab
+- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash + index broadcast)
 - Sample gallery: `pnpm presenit dev kitchen-sink`

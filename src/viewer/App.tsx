@@ -20,8 +20,9 @@ import {
     readHashIndex,
     slideCount,
     timerRunning,
+    leavePresenter,
+    openPresenterWindow,
     toggleOverview,
-    togglePresenter,
 } from "./store";
 
 function formatTime(ms: number): string {
@@ -169,7 +170,11 @@ export function App(): JSX.Element {
                 case "p":
                 case "P":
                     event.preventDefault();
-                    togglePresenter();
+                    if (viewerMode === "presenter") {
+                        leavePresenter();
+                    } else {
+                        openPresenterWindow();
+                    }
                     break;
                 case "o":
                 case "O":
@@ -184,7 +189,7 @@ export function App(): JSX.Element {
                 case "Escape":
                     if (viewerMode === "presenter") {
                         event.preventDefault();
-                        mode.value = "projection";
+                        leavePresenter();
                     }
                     break;
                 default:
