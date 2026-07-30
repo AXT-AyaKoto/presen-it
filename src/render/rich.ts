@@ -1,3 +1,6 @@
+import { createRequire } from "node:module";
+import path from "node:path";
+import { readFile } from "node:fs/promises";
 import { renderMermaidSVG } from "beautiful-mermaid";
 import katex from "katex";
 import type { Code, Html, RootContent } from "mdast";
@@ -13,6 +16,45 @@ export type EnrichResult = {
 /** Must match the `katex` package we depend on (not rehype-katex’s nested copy). */
 export const KATEX_VERSION = "0.18.1" as const;
 export const KATEX_CSS_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/katex.min.css`;
+export const KATEX_FONTS_BASE_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/fonts/`;
+
+/** Hide KaTeX MathML in print/PDF; Puppeteer does not apply upstream clip-path hide rules reliably. */
+export const KATEX_PRINT_CSS = `.katex .katex-mathml { display: none; }\n`;
+
+let inlineKatexCssCache: string | null = null;
+
+function resolveKatexCssPath(): string {
+    const require = createRequire(import.meta.url);
+    return path.join(path.dirname(require.resolve("katex/package.json")), "dist/katex.min.css");
+}
+
+function rewriteKatexFontUrls(css: string): string {
+    return css.replace(/url\(fonts\//g, `url(${KATEX_FONTS_BASE_URL}`);
+}
+
+export async function loadInlineKatexCss(): Promise<string> {
+    if (inlineKatexCssCache === null) {
+        const raw = await readFile(resolveKatexCssPath(), "utf8");
+        inlineKatexCssCache = rewriteKatexFontUrls(raw);
+    }
+    return inlineKatexCssCache;
+}
+
+export function stripKatexCssImport(css: string): string {
+    return css.replace(/@import\s+url\(["']?[^"']*katex[^"']*["']?\);\s*/i, "");
+}
+
+export function cssIncludesKatexImport(css: string): boolean {
+    return /@import\s+url\(["']?[^"']*katex/i.test(css);
+}
+
+export async function buildExportCss(css: string): Promise<string> {
+    if (!cssIncludesKatexImport(css)) {
+        return css;
+    }
+    const katexCss = await loadInlineKatexCss();
+    return `${katexCss}\n${KATEX_PRINT_CSS}${stripKatexCssImport(css)}`;
+}
 
 function containsMath(nodes: RootContent[]): boolean {
     for (const node of nodes) {

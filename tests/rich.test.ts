@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseSlideMarkdown } from "../src/parse/index";
 import { renderDeckAsync } from "../src/render/index";
+import { buildExportCss, KATEX_FONTS_BASE_URL, loadInlineKatexCss } from "../src/render/rich";
 
 describe("rich content rendering", () => {
     it("renders mermaid code fences as SVG diagrams", async () => {
@@ -45,5 +46,23 @@ $$
         expect(result.html).toContain("katex-sizing");
         expect(result.html).not.toMatch(/class="sizing /);
         expect(result.css).toContain("katex@0.18.1");
+    });
+
+    it("inlines local KaTeX CSS with CDN font URLs for export", async () => {
+        const css = await loadInlineKatexCss();
+        expect(css).toContain(".katex");
+        expect(css).toContain(KATEX_FONTS_BASE_URL);
+        expect(css).not.toMatch(/url\(fonts\//);
+    });
+
+    it("buildExportCss replaces @import with inline KaTeX and print overrides", async () => {
+        const deck = parseSlideMarkdown(`Inline $x$ math.`);
+        const result = await renderDeckAsync(deck);
+        const exportCss = await buildExportCss(result.css);
+
+        expect(exportCss).not.toMatch(/@import\s+url\(["']?[^"']*katex/i);
+        expect(exportCss).toContain(".katex .katex-mathml");
+        expect(exportCss).toContain("display: none");
+        expect(exportCss).toContain(KATEX_FONTS_BASE_URL);
     });
 });

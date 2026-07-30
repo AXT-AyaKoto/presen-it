@@ -5,6 +5,7 @@ import { consola } from "consola";
 import { loadDeck } from "../project/load";
 import { detectOverflow, logOverflowWarnings } from "../project/overflow";
 import { launchPresenitBrowser } from "../project/chrome";
+import { buildExportCss } from "../render/rich";
 
 function absolutizeAssets(html: string, slideDir: string): string {
     return html.replace(
@@ -65,9 +66,10 @@ export async function runExport(slug: string, cwd = process.cwd()): Promise<stri
     const { width, height, theme } = loaded.config;
 
     const slidesHtml = loaded.slides.map((slide) => absolutizeAssets(slide.html, loaded.slideDir));
+    const printCss = await buildExportCss(loaded.css);
 
     const documentHtml = buildPrintDocument({
-        css: loaded.css,
+        css: printCss,
         slidesHtml,
         width,
         height,

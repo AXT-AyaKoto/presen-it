@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.7 — 2026-07-31
+
+### Fixes
+
+- PDF export: hide KaTeX MathML layer so inline and display math render once (Puppeteer ignores upstream clip-path hide rules)
+- PDF export: inline KaTeX CSS from the installed package with CDN font URLs instead of relying on `@import` in print HTML
+
 ## 0.7.6 — 2026-07-31
 
 ### Fixes
