@@ -1,5 +1,6 @@
 import type { Deck } from "../types";
 import { renderDeckHtml, renderDeckSlides, type RenderedSlide } from "./html";
+import { KATEX_CSS_URL } from "./rich";
 import { buildThemeCss } from "./theme";
 
 export type RenderDeckResult = {
@@ -16,8 +17,9 @@ export type RenderDeckResult = {
  * Render a parsed deck into HTML + CSS.
  */
 export async function renderDeckAsync(deck: Deck): Promise<RenderDeckResult> {
-    const css = buildThemeCss(deck.config);
+    const baseCss = buildThemeCss(deck.config);
     const { slides, hasMath } = await renderDeckSlides(deck);
+    const css = hasMath ? `@import url("${KATEX_CSS_URL}");\n${baseCss}` : baseCss;
     const slidesHtml = slides.map((slide) => slide.html).join("\n");
     return {
         html: renderDeckHtml(deck, css, slidesHtml, hasMath),

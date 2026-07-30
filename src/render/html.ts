@@ -1,7 +1,6 @@
 import type { Html, Root, RootContent } from "mdast";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
-import type { Root as HastRoot } from "hast";
 import type { Column, Deck, DeckConfig, Slide } from "../types";
 import { applyKatex, enrichRichContent, KATEX_CSS_URL } from "./rich";
 
