@@ -5,6 +5,8 @@ width: 1920
 height: 1080
 ---
 
+<!-- presen-it! slide-break (center-x=true) -->
+
 # Presen'it!
 
 Markdown から、美しいスライドを。

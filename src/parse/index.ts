@@ -106,6 +106,20 @@ export function parseSlideMarkdown(source: string): Deck {
             const directive = parseDirectiveComment(node.value, diagnostics, positionLine(node));
 
             if (directive?.command === "slide-break") {
+                const isLeadingEmpty =
+                    slides.length === 1 &&
+                    current.header === null &&
+                    current.columns.length === 1 &&
+                    current.columns[0]!.children.length === 0 &&
+                    current.awaitingHeader;
+
+                if (isLeadingEmpty) {
+                    // File-leading slide-break applies options to page 1
+                    // instead of creating an empty page.
+                    current.align = alignFromDirective(directive.options);
+                    continue;
+                }
+
                 slides.push(createSlide(directive.options));
                 current = slides[slides.length - 1]!;
                 continue;

@@ -63,6 +63,7 @@ src/<slug>/assets/...
 ```
 
 - Leading `h2` after a slide-break → page header
+- A **leading** `slide-break` at the top of the file applies options to page 1 (no empty page)
 - Trailing HTML comment (not a directive) → speaker notes
 - Defaults: horizontal left, vertical center
 
