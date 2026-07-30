@@ -108,6 +108,14 @@ body,
     opacity: 1;
 }
 
+.projection__blackout {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    background: #000;
+    pointer-events: none;
+}
+
 .projection__stage {
     position: relative;
     width: 100%;
@@ -372,6 +380,30 @@ body,
 .presenter__timer-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.22);
+}
+
+.presenter__blackout {
+    appearance: none;
+    align-self: flex-start;
+    border: 1px solid var(--viewer-border);
+    border-radius: 7px;
+    background: var(--viewer-panel);
+    color: var(--viewer-text);
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.presenter__blackout:hover {
+    border-color: var(--viewer-accent);
+}
+
+.presenter__blackout.is-active {
+    background: rgba(106, 166, 216, 0.22);
+    border-color: var(--viewer-accent);
+    color: #d7ebf8;
 }
 
 .presenter__next-label,

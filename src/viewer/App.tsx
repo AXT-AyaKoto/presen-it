@@ -5,6 +5,7 @@ import { SlideFrame } from "./SlideFrame";
 import { ViewerNav } from "./ViewerNav";
 import { clickZoneWidthRatio } from "../shared/slide-padding";
 import {
+    blackout,
     broadcastIndex,
     currentIndex,
     currentSlide,
@@ -19,8 +20,10 @@ import {
     prev,
     readHashIndex,
     resetTimer,
+    setBlackout,
     slideCount,
     timerRunning,
+    toggleBlackout,
     toggleTimer,
     leavePresenter,
     openPresenterWindow,
@@ -87,6 +90,7 @@ export function App(): JSX.Element {
     const running = timerRunning.value;
     const elapsed = elapsedMs.value;
     const upcoming = nextSlide.value;
+    const isBlackout = blackout.value;
     const pressRef = useRef<PressOrigin | null>(null);
     const [hoverZone, setHoverZone] = useState<ClickZone | null>(null);
 
@@ -100,6 +104,12 @@ export function App(): JSX.Element {
         const onKey = (event: KeyboardEvent) => {
             const target = event.target as HTMLElement | null;
             if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+                return;
+            }
+
+            if (event.key === "Escape" && blackout.value) {
+                event.preventDefault();
+                setBlackout(false);
                 return;
             }
 
@@ -183,6 +193,11 @@ export function App(): JSX.Element {
                     event.preventDefault();
                     toggleOverview();
                     break;
+                case "b":
+                case "B":
+                    event.preventDefault();
+                    toggleBlackout();
+                    break;
                 case "t":
                 case "T":
                     event.preventDefault();
@@ -210,7 +225,7 @@ export function App(): JSX.Element {
         return () => window.removeEventListener("keydown", onKey);
     }, [viewerMode]);
 
-    useEffect(() => listenSync((nextIndex) => goTo(nextIndex)), []);
+    useEffect(() => listenSync({ onIndex: goTo }), []);
 
     useEffect(() => {
         if (viewerMode !== "presenter" || !running) {
@@ -392,9 +407,17 @@ export function App(): JSX.Element {
                     </div>
                     <div class="presenter__notes-label">Notes</div>
                     <div class="presenter__notes">{slide.notes ?? "—"}</div>
+                    <button
+                        type="button"
+                        class={`presenter__blackout${isBlackout ? " is-active" : ""}`}
+                        aria-pressed={isBlackout}
+                        onClick={() => toggleBlackout()}
+                    >
+                        Blackout
+                    </button>
                     <div class="presenter__hint">
-                        ← → navigate · O overview · P projection · T pause/resume · R reset · F
-                        fullscreen · or use the bottom-left toolbar
+                        ← → navigate · B blackout · O overview · P projection · T pause/resume · R
+                        reset · F fullscreen · or use the bottom-left toolbar
                     </div>
                 </aside>
                 <ViewerNav />
@@ -431,6 +454,7 @@ export function App(): JSX.Element {
                 class={`projection__affordance projection__affordance--next${hoverZone === "next" ? " is-visible" : ""}`}
                 aria-hidden="true"
             />
+            {isBlackout ? <div class="projection__blackout" aria-hidden="true" /> : null}
             <ViewerNav />
             <style>{deck.css}</style>
         </div>
