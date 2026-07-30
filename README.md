@@ -19,8 +19,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 
 ```bash
 pnpm add -D @axt_ayakoto/presenit
-mkdir -p src/my-talk
-# edit src/my-talk/slide.md
+pnpm exec presenit init my-talk   # → src/my-talk/slide.md（使い方入りスタート用デッキ）
 pnpm exec presenit dev my-talk
 pnpm exec presenit build my-talk   # → dist/my-talk/view.html
 pnpm exec presenit export my-talk  # → dist/my-talk/resume.pdf
