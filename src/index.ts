@@ -1,7 +1,15 @@
 /**
  * Presen'it! — turn readable Markdown into beautiful presentation slides.
- *
- * Public API will grow as features land. For now this is a package entry stub.
  */
-export const name = "presenit" as const;
-export const version = "0.0.0" as const;
+export { parseSlideMarkdown } from "./parse/index";
+export type {
+    AlignOptions,
+    Column,
+    Deck,
+    DeckConfig,
+    Diagnostic,
+    FontFamilyConfig,
+    Slide,
+    ThemeName,
+} from "./types";
+export { DEFAULT_CONFIG, DEFAULT_SLIDE_ALIGN, name, version } from "./pkg";
