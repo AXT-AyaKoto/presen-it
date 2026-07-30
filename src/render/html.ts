@@ -1,7 +1,9 @@
 import type { Html, Root, RootContent } from "mdast";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
+import type { Root as HastRoot } from "hast";
 import type { Column, Deck, DeckConfig, Slide } from "../types";
+import { applyKatex, enrichRichContent, KATEX_CSS_URL } from "./rich";
 
 export type RenderedSlide = {
     html: string;
@@ -12,6 +14,7 @@ export type RenderResult = {
     slides: RenderedSlide[];
     css: string;
     config: DeckConfig;
+    hasMath: boolean;
 };
 
 function escapeHtml(text: string): string {
@@ -44,24 +47,46 @@ function sanitizeNodes(nodes: RootContent[], rawHTML: boolean): RootContent[] {
     });
 }
 
-function mdastToHtml(nodes: RootContent[], rawHTML: boolean): string {
+async function mdastToHtml(
+    nodes: RootContent[],
+    rawHTML: boolean,
+    theme: DeckConfig["theme"],
+    mathState: { hasMath: boolean },
+): Promise<string> {
     if (nodes.length === 0) {
         return "";
     }
 
-    const root: Root = { type: "root", children: sanitizeNodes(nodes, rawHTML) };
+    const sanitized = sanitizeNodes(nodes, rawHTML);
+    const enriched = await enrichRichContent(sanitized, theme);
+    if (enriched.hasMath) {
+        mathState.hasMath = true;
+    }
+
+    const root: Root = { type: "root", children: enriched.nodes };
+    const allowDangerousHtml = rawHTML || enriched.hasEnrichedHtml || enriched.hasMath;
     const hast = toHast(root, {
-        allowDangerousHtml: rawHTML,
+        allowDangerousHtml,
     });
-    if (!hast) {
+    if (!hast || hast.type !== "root") {
         return "";
     }
+
+    if (enriched.hasMath) {
+        applyKatex(hast);
+    }
+
     return toHtml(hast, {
-        allowDangerousHtml: rawHTML,
+        allowDangerousHtml,
     });
 }
 
-function renderColumn(column: Column, rawHTML: boolean): string {
+async function renderColumn(
+    column: Column,
+    rawHTML: boolean,
+    theme: DeckConfig["theme"],
+    mathState: { hasMath: boolean },
+): Promise<string> {
     const classes = ["presenit-column"];
     if (column.align.centerX) {
         classes.push("presenit-column--center-x");
@@ -70,26 +95,37 @@ function renderColumn(column: Column, rawHTML: boolean): string {
         classes.push("presenit-column--center-y");
     }
 
-    const content = mdastToHtml(column.children, rawHTML);
+    const content = await mdastToHtml(column.children, rawHTML, theme, mathState);
     return `<div class="${classes.join(" ")}">${content}</div>`;
 }
 
-function renderHeader(slide: Slide, rawHTML: boolean): string {
+async function renderHeader(
+    slide: Slide,
+    rawHTML: boolean,
+    theme: DeckConfig["theme"],
+    mathState: { hasMath: boolean },
+): Promise<string> {
     if (!slide.header) {
         return "";
     }
-    const html = mdastToHtml([slide.header], rawHTML);
+    const html = await mdastToHtml([slide.header], rawHTML, theme, mathState);
     return `<header class="presenit-slide-header">${html}</header>`;
 }
 
-export function renderSlideHtml(
+export async function renderSlideHtml(
     slide: Slide,
     index: number,
     total: number,
     rawHTML: boolean,
-): string {
-    const header = renderHeader(slide, rawHTML);
-    const columns = slide.columns.map((column) => renderColumn(column, rawHTML)).join("");
+    theme: DeckConfig["theme"],
+    mathState: { hasMath: boolean },
+): Promise<string> {
+    const header = await renderHeader(slide, rawHTML, theme, mathState);
+    const columns = (
+        await Promise.all(
+            slide.columns.map((column) => renderColumn(column, rawHTML, theme, mathState)),
+        )
+    ).join("");
     const number = `<div class="presenit-slide-number">${index + 1} / ${total}</div>`;
 
     return [
@@ -101,24 +137,43 @@ export function renderSlideHtml(
     ].join("");
 }
 
-export function renderDeckHtml(deck: Deck, css: string): string {
-    const slides = deck.slides
-        .map((slide, index) =>
-            renderSlideHtml(slide, index, deck.slides.length, deck.config.rawHTML),
-        )
-        .join("\n");
+export function renderDeckHtml(
+    deck: Deck,
+    css: string,
+    slidesHtml: string,
+    hasMath: boolean,
+): string {
+    const katexLink = hasMath
+        ? `<link rel="stylesheet" href="${KATEX_CSS_URL}" crossorigin="anonymous">`
+        : "";
 
     return [
         `<div class="presenit-deck" data-theme="${escapeHtml(deck.config.theme)}" style="--presenit-slide-width:${deck.config.width}px;--presenit-slide-height:${deck.config.height}px;">`,
+        katexLink,
         `<style>${css}</style>`,
-        slides,
+        slidesHtml,
         `</div>`,
     ].join("\n");
 }
 
-export function renderDeckSlides(deck: Deck): RenderedSlide[] {
-    return deck.slides.map((slide, index) => ({
-        html: renderSlideHtml(slide, index, deck.slides.length, deck.config.rawHTML),
-        notes: slide.notes,
-    }));
+export async function renderDeckSlides(deck: Deck): Promise<{
+    slides: RenderedSlide[];
+    hasMath: boolean;
+}> {
+    const mathState = { hasMath: false };
+    const slides = await Promise.all(
+        deck.slides.map(async (slide, index) => ({
+            html: await renderSlideHtml(
+                slide,
+                index,
+                deck.slides.length,
+                deck.config.rawHTML,
+                deck.config.theme,
+                mathState,
+            ),
+            notes: slide.notes,
+        })),
+    );
+
+    return { slides, hasMath: mathState.hasMath };
 }

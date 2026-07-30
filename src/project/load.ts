@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { consola } from "consola";
 import { parseSlideMarkdown } from "../parse/index";
-import { renderDeck } from "../render/index";
+import { renderDeckAsync } from "../render/index";
 import type { Deck, DeckConfig, Diagnostic } from "../types";
 import type { RenderedSlide } from "../render/index";
 
@@ -48,7 +48,7 @@ export async function loadDeck(cwd: string, slug: string): Promise<LoadedDeck> {
     const deck = parseSlideMarkdown(source);
     logDiagnostics(deck.diagnostics);
 
-    const rendered = renderDeck(deck);
+    const rendered = await renderDeckAsync(deck);
     const slides = rendered.slides.map((slide) => ({
         ...slide,
         html: rewriteAssetUrls(slide.html),
