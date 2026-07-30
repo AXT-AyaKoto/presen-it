@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.1 — 2026-07-31
+
+### Improvements
+
+- Custom read-only task-list checkboxes (no browser-default control), text aligned with other lists
+- Icons on GitHub alert labels (NOTE / TIP / IMPORTANT / WARNING / CAUTION)
+- kitchen-sink: alert examples slide
+
 ## 0.7.0 — 2026-07-30
 
 ### Features

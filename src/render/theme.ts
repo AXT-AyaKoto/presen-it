@@ -236,26 +236,59 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 }
 
 .presenit-column ul.contains-task-list {
-    padding-left: 0;
+    /* Match ordinary ul so task text starts on the same left edge. */
+    padding-left: 1.45em;
     list-style: none;
 }
 
 .presenit-column li.task-list-item {
-    padding-left: 0;
+    position: relative;
+    padding-left: 0.15em;
     list-style: none;
 }
 
-.presenit-column li.task-list-item input[type="checkbox"] {
-    width: 0.9em;
-    height: 0.9em;
-    margin: 0 0.45em 0 0;
-    vertical-align: -0.08em;
-    accent-color: var(--presenit-accent);
-    opacity: 1;
+.presenit-column li.task-list-item > input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    position: absolute;
+    left: calc(-1.3em + 0.05em);
+    top: 0.32em;
+    box-sizing: border-box;
+    width: 0.82em;
+    height: 0.82em;
+    margin: 0;
+    padding: 0;
+    border: 0.11em solid var(--presenit-accent);
+    border-radius: 0.18em;
+    background: color-mix(in oklch, var(--presenit-accent) 8%, var(--presenit-surface));
+    color: var(--presenit-surface);
     cursor: default;
+    pointer-events: none;
 }
 
-.presenit-column li.task-list-item:has(input[type="checkbox"]:checked) {
+.presenit-column li.task-list-item > input[type="checkbox"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: currentColor;
+    /* Checkmark via mask so it scales cleanly with font-size. */
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E")
+        center / 0.72em 0.72em no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E")
+        center / 0.72em 0.72em no-repeat;
+}
+
+.presenit-column li.task-list-item > input[type="checkbox"]:checked {
+    background: var(--presenit-accent);
+    border-color: var(--presenit-accent);
+}
+
+.presenit-column li.task-list-item > input[type="checkbox"]:checked::after {
+    opacity: 1;
+}
+
+.presenit-column li.task-list-item:has(> input[type="checkbox"]:checked) {
     color: var(--presenit-text-muted);
 }
 
@@ -283,6 +316,7 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 /* GitHub-style Markdown alerts */
 .presenit-column .presenit-alert {
     --presenit-alert-tone: var(--presenit-accent);
+    --presenit-alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
     margin: 0.6em 0;
     padding: 0.7em 1em 0.75em;
     border-left: 0.3em solid var(--presenit-alert-tone);
@@ -293,27 +327,44 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 
 .presenit-column .presenit-alert--tip {
     --presenit-alert-tone: oklch(0.64 0.15 calc(var(--presenit-hue) + 105));
+    --presenit-alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .674.197 1.306.52 1.857C5.107 8.029 5.5 8.934 5.5 9.5v.25c0 .516.42.935.935.935h3.13a.935.935 0 0 0 .935-.935V9.5c0-.566.393-1.471.98-2.393.323-.55.52-1.183.52-1.857 0-2.06-1.637-3.75-4-3.75ZM5.75 13.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H7.25a.75.75 0 0 1-.75-.75Z'/%3E%3C/svg%3E");
 }
 
 .presenit-column .presenit-alert--important {
     --presenit-alert-tone: oklch(0.62 0.16 calc(var(--presenit-hue) + 35));
+    --presenit-alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
 }
 
 .presenit-column .presenit-alert--warning {
     --presenit-alert-tone: oklch(0.7 0.15 calc(var(--presenit-hue) + 75));
+    --presenit-alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E");
 }
 
 .presenit-column .presenit-alert--caution {
     --presenit-alert-tone: oklch(0.6 0.18 calc(var(--presenit-hue) - 25));
+    --presenit-alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
 }
 
 .presenit-column .presenit-alert__label {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
     margin: 0 0 0.2em;
     color: var(--presenit-alert-tone);
     font-size: 0.82em;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+}
+
+.presenit-column .presenit-alert__label::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 1em;
+    height: 1em;
+    background: currentColor;
+    -webkit-mask: var(--presenit-alert-icon) center / contain no-repeat;
+    mask: var(--presenit-alert-icon) center / contain no-repeat;
 }
 
 .presenit-column .presenit-alert p {

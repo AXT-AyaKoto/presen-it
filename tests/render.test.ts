@@ -94,8 +94,9 @@ fontFamily:
         expect(result.html).toContain("disabled");
         expect(result.html).toContain("checked");
         expect(result.css).toContain("ul.contains-task-list");
-        expect(result.css).toContain('li.task-list-item input[type="checkbox"]');
-        expect(result.css).toContain("accent-color: var(--presenit-accent)");
+        expect(result.css).toContain('li.task-list-item > input[type="checkbox"]');
+        expect(result.css).toContain("appearance: none");
+        expect(result.css).toContain("pointer-events: none");
     });
 
     it("escapes HTML by default and allows rawHTML when enabled", async () => {
@@ -147,6 +148,8 @@ rawHTML: true
         expect(result.html).toContain("Useful context.");
         expect(result.html).not.toContain("[!NOTE]");
         expect(result.css).toContain(".presenit-column .presenit-alert");
+        expect(result.css).toContain("--presenit-alert-icon");
+        expect(result.css).toContain(".presenit-alert__label::before");
     });
 
     it("keeps non-alert blockquotes unchanged", async () => {
