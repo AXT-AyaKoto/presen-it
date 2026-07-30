@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0 — 2026-07-30
+
+### Features
+
+- `fontFamily.sans` / `.mono` accept YAML string arrays (auto-quote spaced names into CSS)
+- Projection zone affordance uses chevron arrows (white + dark shadow) readable on light and dark
+
+### Fixes
+
+- Zone `w-resize` / `e-resize` cursors now apply over slide content (not only the projection root)
+
 ## 0.4.0 — 2026-07-30
 
 ### Features

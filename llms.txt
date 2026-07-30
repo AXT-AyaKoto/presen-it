@@ -48,7 +48,8 @@ rawHTML: false       # true only if you intentionally embed HTML
 
 Unknown keys are ignored. Wrong types fall back to defaults with warnings.
 
-`fontFamily.sans` / `.mono` accept normal CSS stacks, e.g. `Ubuntu, "M PLUS 1", system-ui, sans-serif`.
+`fontFamily.sans` / `.mono` accept a CSS stack string **or** a YAML/JSON array of family names
+(e.g. `sans: ["Edu VIC WA NT Hand", "Zen Kurenaido", cursive]`). Spaced names are quoted in CSS automatically.
 Named families (not generics like `serif` / `system-ui`) are requested from Google Fonts automatically;
 locally installed fonts still take priority in the browser.
 
@@ -130,7 +131,7 @@ graph LR
 
 - `←` `→` / Space: navigate
 - `Home` `End`: first/last
-- Projection short-press zones: left 10% = previous, right 10% = next (ignores drag / text selection; hover shows a translucent affordance)
+- Projection short-press zones: left 10% = previous, right 10% = next (ignores drag / text selection; hover shows a chevron affordance)
 - Bottom-left hover toolbar: Overview / Presenter / Fullscreen
 - `O`: overview grid
 - `F`: fullscreen

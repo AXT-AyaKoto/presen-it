@@ -1,5 +1,6 @@
 import type { DeckConfig, Diagnostic, FontFamilyConfig, ThemeName } from "../types";
 import { DEFAULT_CONFIG } from "../types";
+import { fontFamilyListToCss } from "../font-family";
 import { parse as parseYaml } from "yaml";
 
 export type FrontmatterResult = {
@@ -86,6 +87,47 @@ function normalizeBoolean(
     return fallback;
 }
 
+function normalizeFontFamilyEntry(
+    value: unknown,
+    key: "sans" | "mono",
+    fallback: string,
+    diagnostics: Diagnostic[],
+): string {
+    if (value === undefined) {
+        return fallback;
+    }
+    if (typeof value === "string") {
+        return value;
+    }
+    if (Array.isArray(value)) {
+        const names: string[] = [];
+        let invalid = false;
+        for (const entry of value) {
+            if (typeof entry === "string" && entry.trim()) {
+                names.push(entry.trim());
+            } else {
+                invalid = true;
+            }
+        }
+        if (invalid) {
+            warn(
+                diagnostics,
+                `frontmatter.fontFamily.${key} array entries must be non-empty strings`,
+            );
+        }
+        if (names.length === 0) {
+            warn(diagnostics, `frontmatter.fontFamily.${key} array was empty; using default`);
+            return fallback;
+        }
+        return fontFamilyListToCss(names);
+    }
+    warn(
+        diagnostics,
+        `frontmatter.fontFamily.${key} must be a string or string array, got ${JSON.stringify(value)}`,
+    );
+    return fallback;
+}
+
 function normalizeFontFamily(value: unknown, diagnostics: Diagnostic[]): FontFamilyConfig {
     if (value === undefined) {
         return { ...DEFAULT_CONFIG.fontFamily };
@@ -95,23 +137,20 @@ function normalizeFontFamily(value: unknown, diagnostics: Diagnostic[]): FontFam
         return { ...DEFAULT_CONFIG.fontFamily };
     }
 
-    const sans = typeof value.sans === "string" ? value.sans : DEFAULT_CONFIG.fontFamily.sans;
-    const mono = typeof value.mono === "string" ? value.mono : DEFAULT_CONFIG.fontFamily.mono;
-
-    if (value.sans !== undefined && typeof value.sans !== "string") {
-        warn(
+    return {
+        sans: normalizeFontFamilyEntry(
+            value.sans,
+            "sans",
+            DEFAULT_CONFIG.fontFamily.sans,
             diagnostics,
-            `frontmatter.fontFamily.sans must be a string, got ${JSON.stringify(value.sans)}`,
-        );
-    }
-    if (value.mono !== undefined && typeof value.mono !== "string") {
-        warn(
+        ),
+        mono: normalizeFontFamilyEntry(
+            value.mono,
+            "mono",
+            DEFAULT_CONFIG.fontFamily.mono,
             diagnostics,
-            `frontmatter.fontFamily.mono must be a string, got ${JSON.stringify(value.mono)}`,
-        );
-    }
-
-    return { sans, mono };
+        ),
+    };
 }
 
 export function normalizeConfig(raw: unknown): {

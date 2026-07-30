@@ -4,7 +4,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 
 通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
 
-パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.4.0** プレリリース）
+パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.5.0** プレリリース）
 
 [![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
 [![CI](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml)
@@ -62,22 +62,33 @@ rawHTML: false # true で生 HTML を描画（既定: false）
 ---
 ```
 
-| Key                         | Default                                              | Notes                                                    |
-| --------------------------- | ---------------------------------------------------- | -------------------------------------------------------- |
-| `theme`                     | `light`                                              | `light` \| `dark`                                        |
-| `hue`                       | `210`                                                | アクセント色相（mod 360）                                |
-| `width` / `height`          | `1920` / `1080`                                      | スライドサイズ（px）                                     |
-| `fontSize`                  | `32`                                                 | 基準フォントサイズ                                       |
-| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code（上記 YAML の既定スタック） | CSS `font-family` 文字列。カンマ区切りのフォールバック可 |
-| `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する                          |
+| Key                         | Default                                              | Notes                              |
+| --------------------------- | ---------------------------------------------------- | ---------------------------------- |
+| `theme`                     | `light`                                              | `light` \| `dark`                  |
+| `hue`                       | `210`                                                | アクセント色相（mod 360）          |
+| `width` / `height`          | `1920` / `1080`                                      | スライドサイズ（px）               |
+| `fontSize`                  | `32`                                                 | 基準フォントサイズ                 |
+| `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code（上記 YAML の既定スタック） | CSS 文字列、またはフォント名の配列 |
+| `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する    |
 
-`fontFamily` は通常の CSS と同様に書けます。
+`fontFamily` は通常の CSS 文字列のほか、**配列**でも書けます（空白入りの名前に便利）。
 
 ```yaml
 fontFamily:
     sans: Ubuntu, "M PLUS 1", system-ui, sans-serif
     mono: "JetBrains Mono", "M PLUS 1 Code", ui-monospace, monospace
 ```
+
+```yaml
+fontFamily:
+    sans:
+        - Edu VIC WA NT Hand
+        - Zen Kurenaido
+        - cursive
+    mono: ["JetBrains Mono", ui-monospace, monospace]
+```
+
+配列は CSS の `font-family` リストに展開され、空白を含む名前は自動で引用符が付きます。
 
 名前付きフォント（`serif` / `sans-serif` / `system-ui` などの総称ファミリ以外）は、**Google Fonts からの読み込みを試みます**（ローカルにあればそれが優先されます）。Google Fonts に無い名前は無視され、スタックの次の候補にフォールバックします。
 
@@ -102,11 +113,11 @@ fontFamily:
 
 ## Viewer shortcuts
 
-| Key                     | Action                                                    |
-| ----------------------- | --------------------------------------------------------- |
-| `←` `→` / Space / Enter | 前後のスライド                                            |
-| `Home` / `End`          | 最初 / 最後                                               |
-| 左 10% / 右 10% 短押し  | 前へ / 次へ（投影・選択は無視。ホバーで半透明ゾーン表示） |
+| Key                     | Action                                            |
+| ----------------------- | ------------------------------------------------- |
+| `←` `→` / Space / Enter | 前後のスライド                                    |
+| `Home` / `End`          | 最初 / 最後                                       |
+| 左 10% / 右 10% 短押し  | 前へ / 次へ（投影・選択は無視。ホバーで矢印表示） |
 
 | `O` | オーバービュー（グリッド） |
 | `F` | フルスクリーン |

@@ -43,6 +43,25 @@ fontFamily:
         expect(result.diagnostics).toEqual([]);
     });
 
+    it("accepts fontFamily.sans/mono as string arrays", () => {
+        const result = parseFrontmatter(`---
+fontFamily:
+  sans:
+    - Edu VIC WA NT Hand
+    - Zen Kurenaido
+    - cursive
+  mono: ["JetBrains Mono", ui-monospace, monospace]
+---
+
+# Title
+`);
+        expect(result.config.fontFamily.sans).toBe(
+            '"Edu VIC WA NT Hand", "Zen Kurenaido", cursive',
+        );
+        expect(result.config.fontFamily.mono).toBe('"JetBrains Mono", ui-monospace, monospace');
+        expect(result.diagnostics).toEqual([]);
+    });
+
     it("falls back and warns on type errors; ignores unknown keys", () => {
         const result = parseFrontmatter(`---
 theme: neon
