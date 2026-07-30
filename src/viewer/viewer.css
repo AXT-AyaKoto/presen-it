@@ -59,32 +59,6 @@ body,
     background: #000;
 }
 
-.projection__zone {
-    appearance: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 20%;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    z-index: 5;
-}
-
-.projection__zone:disabled {
-    cursor: default;
-}
-
-.projection__zone--prev {
-    left: 0;
-}
-
-.projection__zone--next {
-    right: 0;
-}
-
 .viewer-nav {
     position: fixed;
     left: 0;

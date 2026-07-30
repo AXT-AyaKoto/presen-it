@@ -40,5 +40,8 @@ $$
         expect(result.html).toContain("katex.min.css");
         expect(result.html).toContain('class="katex"');
         expect(result.html).toContain("katex-display");
+        // KaTeX 0.18+ emits katex-sizing; CSS 0.18 only styles that class (not legacy "sizing").
+        expect(result.html).toContain("katex-sizing");
+        expect(result.css).toContain("katex@0.18");
     });
 });

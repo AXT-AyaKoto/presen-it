@@ -126,7 +126,7 @@ graph LR
 
 - `←` `→` / Space: navigate
 - `Home` `End`: first/last
-- Projection click zones: left 20% = previous, right 20% = next
+- Projection short-press zones: left 10% = previous, right 10% = next (ignores drag / text selection)
 - Bottom-left hover toolbar: Overview / Presenter / Fullscreen
 - `O`: overview grid
 - `F`: fullscreen

@@ -36,9 +36,11 @@ async function enrichCodeBlock(node: Code, theme: ThemeName): Promise<Html> {
                 fg: "var(--presenit-text)",
                 transparent: true,
             });
+            // Drop fixed width/height so theme CSS can scale the diagram up.
+            const scalable = svg.replace(/\swidth="[^"]*"/i, "").replace(/\sheight="[^"]*"/i, "");
             return {
                 type: "html",
-                value: `<div class="presenit-mermaid">${svg}</div>`,
+                value: `<div class="presenit-mermaid">${scalable}</div>`,
             };
         } catch {
             const highlighted = await highlightCode(node.value, "text", theme);
