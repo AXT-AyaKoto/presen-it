@@ -1,16 +1,17 @@
 # Presen'it!
 
-Markdown から美しいプレゼンスライドを作るツール。
+Turn readable Markdown into beautiful presentation slides and PDFs — with as few declarations as possible.
 
-通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
+Package: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit) (**v0.1.0** prerelease)
 
-パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.1.0** プレリリース）
+[![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
+[![CI](https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/experiment-md-slide-vibed/actions/workflows/ci.yml)
 
 ## Why
 
-- Marp より組版を丁寧に
-- Slidev / Quarto より「普通の Markdown」を優先
-- 設定ファイルや JSX を増やさない
+- More careful typesetting than Marp defaults
+- Prefer “normal Markdown” over Slidev / Quarto-style project complexity
+- No extra config files or JSX required
 
 ## Quick start
 
@@ -23,7 +24,7 @@ pnpm exec presenit build my-talk   # → dist/my-talk/view.html
 pnpm exec presenit export my-talk  # → dist/my-talk/resume.pdf
 ```
 
-### Try the bundled demo
+### Try the bundled demo (this repo)
 
 ```bash
 pnpm install
@@ -86,6 +87,15 @@ src/<slug>/assets/...
 | `T`                     | Timer pause (presenter) |
 
 URL hash is 1-based (`#3` = slide 3). Presenter: append `?presenter`.
+
+## Releasing
+
+1. Bump `package.json` and `src/pkg.ts` to the next version (keep them in sync)
+2. Update `CHANGELOG.md`
+3. Merge to `main`
+4. Create a GitHub Release tagged `vX.Y.Z` (must match `package.json`)
+
+Publishing to npm runs automatically from [`.github/workflows/release.yml`](./.github/workflows/release.yml) when the Release is published. Requires the `NPM_TOKEN` repository secret — see [docs/publishing.md](./docs/publishing.md).
 
 ## Development (this repo)
 
