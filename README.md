@@ -4,7 +4,7 @@ Markdown から美しいプレゼンスライドを作るツール。
 
 通常の Markdown 文書としても読める単一ファイルを、少ない宣言だけで読みやすいスライドと PDF に組版します。
 
-パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit)（**v0.7.6** プレリリース）
+パッケージ: [`@axt_ayakoto/presenit`](https://www.npmjs.com/package/@axt_ayakoto/presenit) · サイト: [axt-ayakoto.github.io/presen-it](https://axt-ayakoto.github.io/presen-it/)
 
 [![npm](https://img.shields.io/npm/v/@axt_ayakoto/presenit)](https://www.npmjs.com/package/@axt_ayakoto/presenit)
 [![CI](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml/badge.svg)](https://github.com/AXT-AyaKoto/presen-it/actions/workflows/ci.yml)
@@ -93,34 +93,33 @@ fontFamily:
 
 ```yaml
 fontFamily:
-    sans:
-        - Edu VIC WA NT Hand
-        - Zen Kurenaido
-        - cursive
-    mono: ["JetBrains Mono", ui-monospace, monospace]
+    sans: [Edu VIC WA NT Hand, Zen Kurenaido, cursive]
 ```
 
-配列は CSS の `font-family` リストに展開され、空白を含む名前は自動で引用符が付きます。
-
-名前付きフォント（`serif` / `sans-serif` / `system-ui` などの総称ファミリ以外）は、**Google Fonts からの読み込みを試みます**（ローカルにあればそれが優先されます）。Google Fonts に無い名前は無視され、スタックの次の候補にフォールバックします。
+名前付きファミリー（`serif` / `system-ui` などの総称以外）は Google Fonts から自動取得を試みます（端末に入っているフォントが優先）。
 
 ### Directives
+
+ブロックのあいだに、次の HTML コメントだけを単独で置きます。
 
 ```html
 <!-- presen-it! slide-break -->
 <!-- presen-it! column-break -->
-<!-- presen-it! slide-break (center-x=true&center-y=false) -->
+<!-- presen-it! slide-break (center-x=true) -->
+<!-- presen-it! column-break (center-x=true&center-y=false) -->
 ```
 
-- スライド区切り直後の先頭 `h2` → ページヘッダー
-- ファイル先頭の **leading** `slide-break` は 1 ページ目にオプションを適用する（空ページは作らない）
-- ディレクティブでない末尾の HTML コメント → スピーカーノート
-- 既定の配置: 横は左寄せ、縦は中央
+- コマンド: `slide-break`, `column-break`
+- オプション: `center-x=true|false`, `center-y=true|false`（`=` / `&` の前後に空白なし）
+- 既定: `center-x=false`, `center-y=true`
+- カラムの指定がスライド指定より優先
+- frontmatter 直後の `slide-break` は 1 枚目のレイアウト指定に使えます（空ページは作りません）
 
-### Extras
+スピーカーノートは HTML コメント（投影には出ず、Presenter に表示）。
 
-- GFM タスクリスト（`- [ ]` / `- [x]`）→ 読み取り専用のチェックボックス
-- フェンスコード → **Shiki**
+### Rich content
+
+- コードフェンス → **Shiki**
 - `$...$` / `$$...$$` → **KaTeX**
 - ` ```mermaid ` → **beautiful-mermaid**
 - GitHub alerts → スライド向けの `aside`（`NOTE` / `TIP` / `IMPORTANT` / `WARNING` / `CAUTION`）
@@ -153,6 +152,10 @@ fontFamily:
 
 URL ハッシュは 1 始まり（`#3` = 3 枚目）。`?presenter` を付けて直接プレゼンターを開くこともできます。機能一覧サンプルは `pnpm presenit dev kitchen-sink`。
 
+## 1.0 compatibility
+
+CLI・documented frontmatter・directives・Markdown 方言は SemVer で安定させます。詳細と「1.0 でやらないこと」は [docs/1.0-scope.md](./docs/1.0-scope.md)。
+
 ## Releasing
 
 1. `package.json` と `src/pkg.ts` を同じ次バージョンに上げる
@@ -161,6 +164,8 @@ URL ハッシュは 1 始まり（`#3` = 3 枚目）。`?presenter` を付けて
 4. GitHub Release を作成し、タグを `vX.Y.Z` にする（`package.json` と一致必須）
 
 Release 公開時、[`.github/workflows/release.yml`](./.github/workflows/release.yml) が npm Trusted Publishing（OIDC）で自動 publish する。詳細は [docs/publishing.md](./docs/publishing.md)。
+
+公式サイト（GitHub Pages）は [`site/`](./site/) を [`.github/workflows/pages.yml`](./.github/workflows/pages.yml) がデプロイする。
 
 ## Development（このリポジトリ）
 

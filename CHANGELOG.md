@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 — 2026-07-31
+
+### Features
+
+- Stable **1.0.0** release: CLI, documented frontmatter, directives, and Markdown dialect follow SemVer (see `docs/1.0-scope.md`)
+- Official site on GitHub Pages (`site/`, https://axt-ayakoto.github.io/presen-it/)
+- README / `llms.txt` updated for 1.0 (prerelease wording removed; site + scope links)
+
 ## 0.9.1 — 2026-07-31
 
 ### Improvements

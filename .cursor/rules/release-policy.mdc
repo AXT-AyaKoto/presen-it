@@ -1,0 +1,14 @@
+---
+description: After 1.0.0, do not auto-merge-and-release unless the user explicitly asks
+alwaysApply: true
+---
+
+# Release policy (post-1.0)
+
+`@axt_ayakoto/presenit` has published **1.0.0**.
+
+1. **Do not** automatically merge + create GitHub Releases / npm publishes just because a PR is green.
+2. Only cut a release when the user **explicitly** asks (or a user rule / issue clearly requests a numbered release).
+3. When releasing, still keep `package.json`, `src/pkg.ts`, the git tag, and the GitHub Release name in sync (`vX.Y.Z`).
+
+Until 1.0 this repo auto-released so the maintainer could dogfood from npm; that phase is over. Prefer opening a PR and waiting for confirmation before tagging.

@@ -1,6 +1,6 @@
 {
     "name": "@axt_ayakoto/presenit",
-    "version": "0.9.1",
+    "version": "1.0.0",
     "description": "Turn readable Markdown into beautiful presentation slides and PDFs.",
     "keywords": [
         "markdown",
@@ -11,7 +11,7 @@
         "slides",
         "slidev"
     ],
-    "homepage": "https://github.com/AXT-AyaKoto/presen-it#readme",
+    "homepage": "https://axt-ayakoto.github.io/presen-it/",
     "bugs": {
         "url": "https://github.com/AXT-AyaKoto/presen-it/issues"
     },
