@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1 — 2026-07-30
+
+### Features
+
+- Style GFM task lists as read-only checkboxes with completed items subtly muted
+
 ## 0.6.0 — 2026-07-30
 
 ### Features
