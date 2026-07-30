@@ -336,11 +336,42 @@ body,
     padding: 0 2px;
 }
 
+.presenter__timer-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
 .presenter__timer {
     color: var(--viewer-accent);
     font-weight: 700;
     font-size: 22px;
     letter-spacing: 0.04em;
+}
+
+.presenter__timer-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.presenter__timer-btn {
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--viewer-text);
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    padding: 4px 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.presenter__timer-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.22);
 }
 
 .presenter__next-label,

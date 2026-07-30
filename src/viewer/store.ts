@@ -10,6 +10,15 @@ export const mode = signal<ViewerMode>("projection");
 export const elapsedMs = signal(0);
 export const timerRunning = signal(true);
 
+export function toggleTimer(): void {
+    timerRunning.value = !timerRunning.value;
+}
+
+/** Clear elapsed time; running state is unchanged. */
+export function resetTimer(): void {
+    elapsedMs.value = 0;
+}
+
 function readHashIndexOnBoot(): number {
     if (typeof window === "undefined") {
         return 0;
