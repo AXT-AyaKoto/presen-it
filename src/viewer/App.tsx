@@ -1,6 +1,7 @@
 import type { JSX } from "preact";
 import { useEffect } from "preact/hooks";
 import { SlideFrame } from "./SlideFrame";
+import { ViewerNav } from "./ViewerNav";
 import {
     broadcastIndex,
     currentIndex,
@@ -220,6 +221,7 @@ export function App(): JSX.Element {
                         </button>
                     ))}
                 </div>
+                <ViewerNav />
                 <style>{deck.css}</style>
             </div>
         );
@@ -249,31 +251,45 @@ export function App(): JSX.Element {
                     <div class="presenter__notes-label">Notes</div>
                     <div class="presenter__notes">{slide.notes ?? "—"}</div>
                     <div class="presenter__hint">
-                        ← → navigate · O overview · P projection · T timer · F fullscreen
+                        ← → navigate · O overview · P projection · T timer · F fullscreen · or use
+                        the bottom-left toolbar
                     </div>
                 </aside>
+                <ViewerNav />
                 <style>{deck.css}</style>
             </div>
         );
     }
 
     return (
-        <div
-            class="projection"
-            onClick={() => {
-                next();
-                broadcastIndex(currentIndex.value);
-            }}
-        >
+        <div class="projection">
             <SlideFrame
                 html={slide.html}
                 width={width}
                 height={height}
                 className="projection__slide"
             />
-            <div class="projection__hud">
-                {index + 1} / {total}
-            </div>
+            <button
+                type="button"
+                class="projection__zone projection__zone--prev"
+                aria-label="Previous slide"
+                disabled={index <= 0}
+                onClick={() => {
+                    prev();
+                    broadcastIndex(currentIndex.value);
+                }}
+            />
+            <button
+                type="button"
+                class="projection__zone projection__zone--next"
+                aria-label="Next slide"
+                disabled={index >= total - 1}
+                onClick={() => {
+                    next();
+                    broadcastIndex(currentIndex.value);
+                }}
+            />
+            <ViewerNav />
             <style>{deck.css}</style>
         </div>
     );

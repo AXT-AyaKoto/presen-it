@@ -4,10 +4,26 @@ import type { DeckClientData } from "../project/load";
 export type ViewerMode = "projection" | "presenter" | "overview";
 
 export const deckData = signal<DeckClientData | null>(null);
-export const currentIndex = signal(0);
+/** Prefer URL hash so Vite full-reload after markdown edits keeps the current slide. */
+export const currentIndex = signal(readHashIndexOnBoot());
 export const mode = signal<ViewerMode>("projection");
 export const elapsedMs = signal(0);
 export const timerRunning = signal(true);
+
+function readHashIndexOnBoot(): number {
+    if (typeof window === "undefined") {
+        return 0;
+    }
+    const raw = window.location.hash.replace(/^#/, "");
+    if (!raw) {
+        return 0;
+    }
+    const value = Number.parseInt(raw, 10);
+    if (!Number.isFinite(value) || value < 1) {
+        return 0;
+    }
+    return value - 1;
+}
 
 export const slideCount = computed(() => deckData.value?.slides.length ?? 0);
 

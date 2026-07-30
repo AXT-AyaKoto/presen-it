@@ -60,6 +60,8 @@ theme: dark
         );
         expect(dark.css).toContain("letter-spacing: 0.03em");
         expect(dark.css).toMatch(/--presenit-slide-bg:\s*oklch\(0\.2 0\.01 /);
+        expect(dark.css).toContain("--presenit-slide-bg-top:");
+        expect(dark.css).toContain("linear-gradient(165deg");
     });
 
     it("escapes HTML by default and allows rawHTML when enabled", async () => {

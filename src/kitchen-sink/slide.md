@@ -9,20 +9,44 @@ height: 1080
 
 # Kitchen Sink
 
-Presen'it! の主要機能を一枚ずつ確認するサンプル
+機能・レイアウト・デザインを一通り確認するサンプル
+
+左下にマウスを置くとナビが出ます（Overview / Presenter / Fullscreen）
+
+<!-- tip: also try ?presenter and the O / P keys -->
+
+<!-- presen-it! slide-break (center-x=true&center-y=true) -->
+
+## Section divider
+
+大きな見出しだけの区切りページ
+
+<!-- section break example -->
 
 <!-- presen-it! slide-break -->
 
 ## Markdown basics
 
 - 箇条書き
-- **強調** と `inline code`
+- **強調** と _斜体_ と `inline code`
 - [リンク](https://example.com)
 
 1. 順序付き
 2. リストも OK
 
 <!-- keep notes short -->
+
+<!-- presen-it! slide-break -->
+
+## Typography ladder
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+本文は読みやすさ優先。長い一文でも行間を確保して、スライドとしての密度を保ちます。
 
 <!-- presen-it! slide-break -->
 
@@ -42,6 +66,8 @@ export function greet(name: string): string {
 }
 ```
 
+<!-- code + columns -->
+
 <!-- presen-it! slide-break -->
 
 ## Math
@@ -51,6 +77,8 @@ export function greet(name: string): string {
 $$
 \sum_{n=1}^{N} n = \frac{N(N+1)}{2}
 $$
+
+<!-- katex -->
 
 <!-- presen-it! slide-break (center-x=true) -->
 
@@ -64,11 +92,16 @@ flowchart TD
     C --> E[resume.pdf]
 ```
 
+<!-- diagram -->
+
 <!-- presen-it! slide-break -->
 
-## Columns
+## Two columns
 
-左カラムは説明。
+左カラムは説明文。長めの段落でもカラム内で折り返します。
+
+- ポイント A
+- ポイント B
 
 <!-- presen-it! column-break (center-x=true) -->
 
@@ -76,8 +109,37 @@ flowchart TD
 
 > Tip: `center-x` / `center-y` は column 側が優先されます
 
+<!-- columns -->
+
+<!-- presen-it! slide-break -->
+
+## Quote & table
+
+> スライドは「読む文書」から切り出す。宣言は最小限に。
+
+| Feature  | Tool              |
+| -------- | ----------------- |
+| Code     | Shiki             |
+| Math     | KaTeX             |
+| Diagrams | beautiful-mermaid |
+
+<!-- mixed blocks -->
+
+<!-- presen-it! slide-break (center-x=true&center-y=false) -->
+
+## Top-centered title
+
+`center-y=false` なので縦は上寄せ、横だけ中央
+
+<!-- alignment -->
+
 <!-- presen-it! slide-break (center-x=true) -->
 
 ## Done
 
-`pnpm presenit dev kitchen-sink`
+```bash
+pnpm presenit dev kitchen-sink
+pnpm presenit export kitchen-sink
+```
+
+投影ビューは **左 20% / 右 20%** クリックで前後移動
