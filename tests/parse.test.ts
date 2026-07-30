@@ -221,7 +221,7 @@ height: 1080
 
 # 等幅フォントを指定した要素にletter-spacingを使うな
 
-2026-07-29 ― Ayasaka-Koto (@AXT_AyaKoto)
+2026-07-29 ― AyaExpTech (@AyaExpTech)
 
 <!-- presen-it! slide-break -->
 

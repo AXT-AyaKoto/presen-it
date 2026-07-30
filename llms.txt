@@ -2,8 +2,8 @@
 
 > Turn a normal Markdown document into polished presentation slides and PDF with minimal directives.
 
-Package: `@axt_ayakoto/presenit` (npm)
-Site: https://axt-ayakoto.github.io/presen-it/
+Package: `@ayaexptech/presenit` (npm)
+Site: https://axt-studio.github.io/presen-it/
 CLI: `presenit`
 Human docs: README.md · Scope/SemVer: docs/1.0-scope.md
 
@@ -26,7 +26,7 @@ dist/<slug>/resume.pdf  # from `presenit export`
 ## Commands
 
 ```bash
-pnpm add -D @axt_ayakoto/presenit
+pnpm add -D @ayaexptech/presenit
 pnpm exec presenit init <slug>   # writes src/<slug>/slide.md (starter deck); --force to overwrite
 pnpm exec presenit dev <slug>
 pnpm exec presenit build <slug>

@@ -1,6 +1,6 @@
 {
-    "name": "@axt_ayakoto/presenit",
-    "version": "1.0.0",
+    "name": "@ayaexptech/presenit",
+    "version": "1.0.1",
     "description": "Turn readable Markdown into beautiful presentation slides and PDFs.",
     "keywords": [
         "markdown",
@@ -11,15 +11,15 @@
         "slides",
         "slidev"
     ],
-    "homepage": "https://axt-ayakoto.github.io/presen-it/",
+    "homepage": "https://axt-studio.github.io/presen-it/",
     "bugs": {
-        "url": "https://github.com/AXT-AyaKoto/presen-it/issues"
+        "url": "https://github.com/AXT-Studio/presen-it/issues"
     },
     "license": "MIT",
-    "author": "Ayasaka-Koto (@AXT_AyaKoto)",
+    "author": "AyaExpTech (@AyaExpTech)",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/AXT-AyaKoto/presen-it.git"
+        "url": "git+https://github.com/AXT-Studio/presen-it.git"
     },
     "bin": {
         "presenit": "./dist/cli.js"

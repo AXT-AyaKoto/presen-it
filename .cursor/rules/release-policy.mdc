@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Release policy (post-1.0)
 
-`@axt_ayakoto/presenit` has published **1.0.0**.
+`@ayaexptech/presenit` has published **1.0.0** (formerly `@axt_ayakoto/presenit`).
 
 1. **Do not** automatically merge + create GitHub Releases / npm publishes just because a PR is green.
 2. Only cut a release when the user **explicitly** asks (or a user rule / issue clearly requests a numbered release).
