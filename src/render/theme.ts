@@ -51,7 +51,8 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     const fontImport = needsMPlusImport(fontFamily) ? `${GOOGLE_FONTS_MPLUS_IMPORT}\n` : "";
 
     return `${fontImport}
-.presenit-deck {
+.presenit-deck,
+.presenit-slide {
     ${paletteVars}
     --presenit-width: ${width}px;
     --presenit-height: ${height}px;
@@ -59,35 +60,41 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     --presenit-font-sans: ${fontFamily.sans};
     --presenit-font-mono: ${fontFamily.mono};
     --presenit-slide-padding: ${slidePadding}px;
+    --presenit-slide-width: ${width}px;
+    --presenit-slide-height: ${height}px;
     box-sizing: border-box;
     font-family: var(--presenit-font-sans);
     font-size: var(--presenit-font-size);
     line-height: 1.55;
     color: var(--presenit-text);
-    background: var(--presenit-bg);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
 
+.presenit-deck {
+    background: var(--presenit-bg);
+}
+
 .presenit-deck *,
 .presenit-deck *::before,
-.presenit-deck *::after {
+.presenit-deck *::after,
+.presenit-slide *,
+.presenit-slide *::before,
+.presenit-slide *::after {
     box-sizing: border-box;
 }
 
 .presenit-slide {
-    --presenit-slide-width: var(--presenit-width);
-    --presenit-slide-height: var(--presenit-height);
     width: var(--presenit-slide-width);
     height: var(--presenit-slide-height);
     position: relative;
     overflow: hidden;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     padding: var(--presenit-slide-padding);
     background: var(--presenit-slide-bg);
     border: 1px solid var(--presenit-border);
+
     color: var(--presenit-text);
 }
 
