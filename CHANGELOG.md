@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 — 2026-07-31
+
+### Fixes
+
+- KaTeX display math: increase `.katex-display` vertical padding so integral/sum limits are not clipped by `overflow-y: hidden` (e.g. `\int_0^1`)
+
 ## 1.0.2 — 2026-07-31
 
 ### Changed
