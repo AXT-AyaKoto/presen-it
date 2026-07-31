@@ -576,8 +576,9 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
     /* overflow-x: auto forces overflow-y off visible (spec); hidden avoids stray vertical scroll */
     overflow-x: auto;
     overflow-y: hidden;
-    padding-top: 0.15em;
-    padding-bottom: 0.15em;
+    /* Extra room so integral/sum limits are not clipped by overflow-y: hidden */
+    padding-top: 0.4em;
+    padding-bottom: 0.5em;
     scrollbar-width: none;
 }
 
