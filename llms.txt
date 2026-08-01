@@ -1,69 +1,64 @@
-# AyaExpTech Presen'it! — guide for LLMs
+# AyaExpTech Presen'it!
 
-> Turn a normal Markdown document into polished presentation slides and PDF with minimal directives.
+> A tool for turning a normal Markdown document into tidy presentation slides with minimal directives.
+
+## Specs
 
 Package: `@ayaexptech/presenit` (npm)
-Site: https://axt-studio.github.io/presen-it/
 CLI: `presenit`
-Human docs: README.md · Scope/SemVer: docs/1.0-scope.md
 
-## Mental model
+### Project Directory Layout
 
-1. Author **one** Markdown file: `src/<slug>/slide.md`
-2. It should remain readable as a normal Markdown document
-3. Split pages/columns with HTML comment directives only
-4. Do **not** invent JSX, custom HTML layouts, or extra config files
-
-## Project layout
-
-```text
+```txt
+package.json
 src/<slug>/slide.md
-src/<slug>/assets/...   # optional images
+src/<slug>/assets/...   # optional assets
 dist/<slug>/view.html   # from `presenit build`
 dist/<slug>/resume.pdf  # from `presenit export`
 ```
 
-## Commands
+### Commands
 
 ```bash
 pnpm add -D @ayaexptech/presenit
-pnpm exec presenit init <slug>   # writes src/<slug>/slide.md (starter deck); --force to overwrite
+pnpm exec presenit init <slug> # writes src/<slug>/slide.md (starter deck)
+pnpm exec presenit init <slug> --force # to overwrite
 pnpm exec presenit dev <slug>
 pnpm exec presenit build <slug>
 pnpm exec presenit export <slug>
 ```
 
-## Frontmatter (YAML)
+### slide.md YAML frontmatter (slide's settings)
+
+The values ​​in the following examples represent default values.
 
 ```yaml
----
-title: My Talk       # viewer HTML <title> / og:title (default: AyaExpTech Presen'it! — <slug>)
-description: Blurb   # meta description / og:description (omitted when unset)
-theme: dark          # light | dark (default: light)
-hue: 210             # number, mod 360 (default: 210)
-width: 1920          # px (default: 1920)
-height: 1080         # px (default: 1080)
-fontSize: 32         # px
+title: AyaExpTech Presen'it! — <slug>
+description: ""
+theme: light        # light | dark
+hue: 210            # number, mod 360
+width: 1920         # px
+height: 1080        # px
+fontSize: 32        # px
 fontFamily:
   sans: '"M PLUS 1", system-ui, sans-serif'
   mono: '"M PLUS 1 Code", ui-monospace, monospace'
 pageTransition:
-  type: fade             # none | fade | scroll (default: fade; ignored in PDF)
-  duration: 0.2          # seconds (default: 0.2)
+  type: fade             # none | fade | scroll (ignored in PDF)
+  duration: 0.2          # seconds
 rawHTML: false       # true only if you intentionally embed HTML
-break: soft          # soft | hard (default: soft). soft turns single newlines into <br>
-footer: ""           # bottom-left text on every slide (default: empty = hidden)
----
+break: soft          # soft | hard
+footer: ""           # bottom-left text on every slide
 ```
 
-Unknown keys are ignored. Wrong types fall back to defaults with warnings.
+Unknown keys are ignored.
+Wrong types fall back to defaults with warnings.
 
-`fontFamily.sans` / `.mono` accept a CSS stack string **or** a YAML/JSON array of family names
-(e.g. `sans: ["Edu VIC WA NT Hand", "Zen Kurenaido", cursive]`). Spaced names are quoted in CSS automatically.
-Named families (not generics like `serif` / `system-ui`) are requested from Google Fonts automatically;
-locally installed fonts still take priority in the browser.
+`fontFamily.sans` / `.mono` accept a CSS stack string **or** a YAML/JSON array of family names (e.g. `sans: ["Edu VIC WA NT Hand", "Zen Kurenaido", cursive]`).
+Spaced names are quoted in CSS automatically.
+Named families (not generics like `serif` / `system-ui`) are requested from Google Fonts automatically; locally installed fonts still take priority in the browser.
 
-## Directives
+### Directives
 
 Only these HTML comments, alone between blocks:
 
@@ -87,59 +82,19 @@ Rules:
 - Content before the first `slide-break` is page 1
 - A `slide-break` immediately after frontmatter applies options to page 1 (no empty page)
 - Leading `h2` after a slide-break becomes the page header
-- To keep an `h2` in the body, put `column-break` immediately after `slide-break`
+    - To keep an `h2` in the body, put `column-break` immediately after `slide-break`
 - Empty columns are removed
 - Trailing non-directive HTML comment = speaker notes (presenter only)
 
-## Supported Markdown extras
+### Supported Markdown extras
 
 - GFM (tables, strikethrough, task lists, etc.); task lists (`- [ ]` / `- [x]`) render as read-only checkboxes
 - Code fences → Shiki highlight
 - ` ```mermaid ` → SVG via beautiful-mermaid
 - `$inline$` and `$$ block $$` math → KaTeX
-- GitHub alerts use blockquotes: `> [!NOTE]`, `TIP`, `IMPORTANT`, `WARNING`, or `CAUTION`;
-  they render as labelled, slide-friendly alert asides
+- GitHub alerts use blockquotes: `> [!NOTE]`, `TIP`, `IMPORTANT`, `WARNING`, or `CAUTION`; they render as labelled, slide-friendly alert asides
 
-## Writing tips for high-quality slides
-
-- Prefer short bullets; one idea per slide
-- Use `center-x=true` for title / quote / single figure slides
-- Use columns for text + figure
-- Keep speaker notes factual and short
-- Avoid raw HTML unless `rawHTML: true` is intentional
-
-## Example
-
-```md
----
-theme: dark
-hue: 210
----
-
-# Title
-
-Subtitle
-
-<!-- presen-it! slide-break -->
-
-## Section
-
-- Point A
-- Point B
-
-<!-- note for the speaker -->
-
-<!-- presen-it! slide-break (center-x=true) -->
-
-## Diagram
-
-\`\`\`mermaid
-graph LR
-  A --> B
-\`\`\`
-```
-
-## Viewer keys
+### Viewer keys
 
 - `←` `→` / Space: navigate
 - `Home` `End`: first/last
@@ -155,9 +110,15 @@ graph LR
 - URL hash `#N` (1-based) syncs the current page (kept across markdown reload in `dev`)
 - `?presenter` query: open presenter directly in that tab
 - Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, blackout, and laser)
-- Sample gallery: `pnpm presenit dev kitchen-sink`
 
-## Compatibility (from 1.0)
+## Tips for Creating Better Slides
 
-Treat CLI commands/flags, documented frontmatter, directives, and the Markdown dialect in this file as the SemVer public contract.
-See `docs/1.0-scope.md` for explicit non-goals (fragments, video embeds, PPTX, remotes, etc.).
+- Use `center-x=true` for title / quote / single figure slides
+- Use `column-break` for text + figure
+- Keep speaker notes factual and short
+- Avoid raw HTML unless `rawHTML: true` is intentional
+
+## Optional
+
+- [README.md](./README.md)
+- [Starter Slide](./src/templates/starter-slide.md)
