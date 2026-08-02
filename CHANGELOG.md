@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 — 2026-08-03
+
+### Features
+
+- Same-slide click reveals via `<!-- presen-it! reveal (at=N) -->` (sticky `at`, inline/list/emphasis support)
+- Frontmatter `animation.duration` (default `0.3s`) for fragment fade in/out
+- Viewer step navigation (empty clicks for gaps), BroadcastChannel step sync, presenter Next previews the next step
+
 ## 1.0.3 — 2026-07-31
 
 ### Fixes

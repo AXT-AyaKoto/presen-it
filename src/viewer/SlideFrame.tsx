@@ -1,5 +1,6 @@
 import type { JSX } from "preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useLayoutEffect, useEffect, useRef, useState } from "preact/hooks";
+import { applyRevealVisibility } from "./store";
 
 export type SlideFrameLaser = {
     active: boolean;
@@ -15,14 +16,30 @@ type Props = {
     height: number;
     className?: string;
     laser?: SlideFrameLaser;
+    /** Current reveal counter; fragments with at<=step are shown. */
+    revealStep?: number;
+    /** Overview / PDF: show every fragment. */
+    revealShowAll?: boolean;
+    /** CSS var for fragment fade duration (seconds). */
+    animDuration?: number;
 };
 
 /**
  * Scale a fixed-size slide to fit its container (contain).
  */
-export function SlideFrame({ html, width, height, className, laser }: Props): JSX.Element {
+export function SlideFrame({
+    html,
+    width,
+    height,
+    className,
+    laser,
+    revealStep = 0,
+    revealShowAll = false,
+    animDuration,
+}: Props): JSX.Element {
     const viewportRef = useRef<HTMLDivElement>(null);
     const scalerRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(1);
 
     const onLaserPointerMove = (event: PointerEvent) => {
@@ -70,8 +87,17 @@ export function SlideFrame({ html, width, height, className, laser }: Props): JS
         return () => observer.disconnect();
     }, [width, height]);
 
+    useLayoutEffect(() => {
+        applyRevealVisibility(canvasRef.current, revealStep, revealShowAll);
+    }, [html, revealStep, revealShowAll]);
+
+    const animStyle =
+        animDuration !== undefined
+            ? ({ "--presenit-anim-duration": `${animDuration}s` } as Record<string, string>)
+            : undefined;
+
     return (
-        <div ref={viewportRef} class={`slide-frame ${className ?? ""}`}>
+        <div ref={viewportRef} class={`slide-frame ${className ?? ""}`} style={animStyle}>
             <div
                 ref={scalerRef}
                 class={`slide-frame__scaler${laser?.active && laser.hideCursor ? " slide-frame__scaler--laser" : ""}`}
@@ -83,6 +109,7 @@ export function SlideFrame({ html, width, height, className, laser }: Props): JS
                 onPointerLeave={onLaserPointerLeave}
             >
                 <div
+                    ref={canvasRef}
                     class="slide-frame__canvas"
                     style={{
                         width: `${width}px`,

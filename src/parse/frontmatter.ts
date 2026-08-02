@@ -1,4 +1,5 @@
 import type {
+    AnimationConfig,
     BreakMode,
     DeckConfig,
     Diagnostic,
@@ -206,6 +207,34 @@ function normalizePageTransition(value: unknown, diagnostics: Diagnostic[]): Pag
     return { type, duration };
 }
 
+function normalizeAnimation(value: unknown, diagnostics: Diagnostic[]): AnimationConfig {
+    if (value === undefined) {
+        return { ...DEFAULT_CONFIG.animation };
+    }
+    if (!isPlainObject(value)) {
+        warn(diagnostics, `frontmatter.animation must be an object, got ${JSON.stringify(value)}`);
+        return { ...DEFAULT_CONFIG.animation };
+    }
+
+    let duration = DEFAULT_CONFIG.animation.duration;
+    if (value.duration !== undefined) {
+        if (
+            typeof value.duration === "number" &&
+            Number.isFinite(value.duration) &&
+            value.duration >= 0
+        ) {
+            duration = value.duration;
+        } else {
+            warn(
+                diagnostics,
+                `frontmatter.animation.duration must be a non-negative number (seconds), got ${JSON.stringify(value.duration)}`,
+            );
+        }
+    }
+
+    return { duration };
+}
+
 function normalizeFontFamily(value: unknown, diagnostics: Diagnostic[]): FontFamilyConfig {
     if (value === undefined) {
         return { ...DEFAULT_CONFIG.fontFamily };
@@ -244,6 +273,7 @@ export function normalizeConfig(raw: unknown): {
                 ...DEFAULT_CONFIG,
                 fontFamily: { ...DEFAULT_CONFIG.fontFamily },
                 pageTransition: { ...DEFAULT_CONFIG.pageTransition },
+                animation: { ...DEFAULT_CONFIG.animation },
             },
             diagnostics,
         };
@@ -256,6 +286,7 @@ export function normalizeConfig(raw: unknown): {
                 ...DEFAULT_CONFIG,
                 fontFamily: { ...DEFAULT_CONFIG.fontFamily },
                 pageTransition: { ...DEFAULT_CONFIG.pageTransition },
+                animation: { ...DEFAULT_CONFIG.animation },
             },
             diagnostics,
         };
@@ -281,6 +312,7 @@ export function normalizeConfig(raw: unknown): {
         ),
         fontFamily: normalizeFontFamily(raw.fontFamily, diagnostics),
         pageTransition: normalizePageTransition(raw.pageTransition, diagnostics),
+        animation: normalizeAnimation(raw.animation, diagnostics),
         rawHTML: normalizeBoolean(raw.rawHTML, "rawHTML", DEFAULT_CONFIG.rawHTML, diagnostics),
         break: normalizeBreak(raw.break, diagnostics),
         footer: normalizeString(raw.footer, "footer", DEFAULT_CONFIG.footer, diagnostics),

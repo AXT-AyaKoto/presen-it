@@ -46,6 +46,8 @@ fontFamily:
 pageTransition:
   type: fade             # none | fade | scroll (ignored in PDF)
   duration: 0.2          # seconds
+animation:
+  duration: 0.3          # fragment fade seconds (viewer)
 rawHTML: false       # true only if you intentionally embed HTML
 break: soft          # soft | hard
 footer: ""           # bottom-left text on every slide
@@ -60,22 +62,46 @@ Named families (not generics like `serif` / `system-ui`) are requested from Goog
 
 ### Directives
 
-Only these HTML comments, alone between blocks:
+`slide-break` / `column-break` must be alone between blocks. `reveal` may also appear inline (e.g. end of a list item or mid-paragraph).
 
 ```html
 <!-- presen-it! slide-break -->
 <!-- presen-it! column-break -->
 <!-- presen-it! slide-break (center-x=true) -->
 <!-- presen-it! column-break (center-x=true&center-y=false) -->
+<!-- presen-it! reveal -->
+<!-- presen-it! reveal (at=2) -->
 ```
 
 Rules:
-- Commands: `slide-break`, `column-break`
-- Options: `center-x=true|false`, `center-y=true|false`
+- Commands: `slide-break`, `column-break`, `reveal`
+- Align options (breaks only): `center-x=true|false`, `center-y=true|false`
+- Reveal option: `at=N` (non-negative integer). Omitted → `at=0`
 - No spaces around `=` or `&`
 - Defaults: `center-x=false`, `center-y=true`
 - Column options override slide options
 - Unknown command/option → warning and ignore directive
+
+#### Reveal (click fragments)
+
+- Sticky `at` walks document order within a slide (left→right columns, nested lists, phrasing including inside `strong` / `emphasis`)
+- Content before a `reveal` uses the current sticky `at`; the directive updates sticky for what follows
+- Visible when `at <= step` (entrance step is `0`)
+- Counter advances `0..max(at)` one by one (unused numbers are empty clicks)
+- `slide-break` resets sticky to `0`; columns do not
+- Leading page `h2` header is always visible
+- PDF / overview show all fragments; projection↔presenter sync step via BroadcastChannel
+- Hash stays slide-only (`#N`)
+
+Example:
+
+```md
+<!-- presen-it! reveal (at=1) -->
+- one <!-- presen-it! reveal (at=2) -->
+- two
+
+**abc<!-- presen-it! reveal (at=3) -->def**
+```
 
 ### Page structure
 
@@ -96,21 +122,21 @@ Rules:
 
 ### Viewer keys
 
-- `←` `→` / Space: navigate
-- `Home` `End`: first/last
+- `←` `→` / Space: navigate (within-slide reveal steps first, then slides)
+- `Home` `End`: first/last slide (step resets to entrance)
 - Projection short-press zones: left/right slide-edge bands (padding width) = previous/next (ignores drag / text selection; hover shows a chevron affordance)
 - Bottom-left hover toolbar: Overview / Presenter / Fullscreen / Laser (`L`)
-- `O`: overview grid
+- `O`: overview grid (all fragments visible)
 - `F`: fullscreen
 - `P`: open presenter in a separate tab/window (projection tab unchanged)
 - `B`: blackout projection (opaque black overlay; syncs across tabs; `Esc` clears blackout first)
 - `T`: timer pause/resume (presenter)
 - `R`: timer reset (presenter)
 - `L`: laser pointer (red dot on current slide; presenter mouse syncs to projection)
-- URL hash `#N` (1-based) syncs the current page (kept across markdown reload in `dev`)
+- URL hash `#N` (1-based) syncs the current page (kept across markdown reload in `dev`); step is not in the hash
 - `?presenter` query: open presenter directly in that tab
-- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, blackout, and laser)
-
+- Projection and presenter tabs stay in sync via `BroadcastChannel` (hash, index, step, blackout, and laser)
+- Presenter “Next” preview: next reveal step on the current slide when available; otherwise the next slide
 ## Tips for Creating Better Slides
 
 - Use `center-x=true` for title / quote / single figure slides

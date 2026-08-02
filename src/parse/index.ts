@@ -15,6 +15,7 @@ import {
     type DirectiveOptions,
 } from "./directive";
 import { parseFrontmatter } from "./frontmatter";
+import { applyRevealToSlide } from "./reveal";
 
 type MutableColumn = {
     optionOverride: DirectiveOptions;
@@ -79,12 +80,15 @@ function finalizeSlide(slide: MutableSlide, diagnostics: Diagnostic[]): Slide {
         });
     }
 
-    return {
+    const finalized: Slide = {
         align: slide.align,
         header: slide.header,
         columns,
         notes: slide.notes,
+        maxStep: 0,
     };
+    applyRevealToSlide(finalized, diagnostics);
+    return finalized;
 }
 
 function parseMarkdownRoot(body: string, breakMode: BreakMode): Root {

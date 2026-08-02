@@ -97,6 +97,13 @@ export function transformAlertBlockquotes(nodes: RootContent[]): RootContent[] {
                 ? [bodyFirstParagraph, ...node.children.slice(1)]
                 : node.children.slice(1);
 
+        const at =
+            typeof node.data === "object" &&
+            node.data !== null &&
+            typeof (node.data as { presenitAt?: unknown }).presenitAt === "number"
+                ? (node.data as { presenitAt: number }).presenitAt
+                : undefined;
+
         const alert: Blockquote = {
             ...node,
             data: {
@@ -105,6 +112,7 @@ export function transformAlertBlockquotes(nodes: RootContent[]): RootContent[] {
                 hProperties: {
                     className: ["presenit-alert", `presenit-alert--${marker.kind.toLowerCase()}`],
                     dataAlert: marker.kind,
+                    ...(at !== undefined ? { "data-presenit-at": String(at) } : {}),
                 },
             },
             children: [createAlertLabel(marker.kind), ...body],

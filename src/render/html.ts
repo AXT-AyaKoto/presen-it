@@ -8,6 +8,7 @@ import { enrichRichContent, KATEX_CSS_URL } from "./rich";
 export type RenderedSlide = {
     html: string;
     notes: string | null;
+    maxStep: number;
 };
 
 export type RenderResult = {
@@ -129,7 +130,7 @@ export async function renderSlideHtml(
         : "";
 
     return [
-        `<section class="presenit-slide" data-slide-index="${index}" aria-label="Slide ${index + 1} of ${total}">`,
+        `<section class="presenit-slide" data-slide-index="${index}" data-presenit-max-step="${slide.maxStep}" aria-label="Slide ${index + 1} of ${total}">`,
         header,
         `<div class="presenit-slide-body">${columns}</div>`,
         footerHtml,
@@ -174,6 +175,7 @@ export async function renderDeckSlides(deck: Deck): Promise<{
                 mathState,
             ),
             notes: slide.notes,
+            maxStep: slide.maxStep,
         })),
     );
 

@@ -26,6 +26,41 @@ footer: "presen-it! kitchen sink"
 
 <!-- presen-it! slide-break -->
 
+## クリックで順に表示（reveal）
+
+`<!-- presen-it! reveal (at=N) -->` で、同一スライド内をステップ表示できます。`→` / Space で進めてみてください。
+
+この文章は最初から表示されている
+
+<!-- presen-it! reveal (at=1) -->
+
+この文章は一回クリックすると表示される
+
+<!-- presen-it! column-break -->
+
+この文章も一回クリック時点で表示される (reveal宣言はcolumnをまたぐ)
+
+<!-- presen-it! reveal (at=2) -->
+
+- 2回目のクリックで表示される<!-- presen-it! reveal (at=3) -->
+- 3回目のクリックで表示される<!-- presen-it! reveal (at=4) -->
+- 4回目のクリックで表示される<!-- presen-it! reveal (at=3) -->
+- 3回目のクリックで表示される
+
+<!-- presen-it! reveal -->
+
+この文章は最初から表示されている (atの指定がない場合は0とみなす)
+
+<!-- presen-it! reveal (at=5) -->
+
+この部分は5回目のクリックで表示され、<!-- presen-it! reveal (at=6) --> この部分は6回目のクリックで表示される。
+
+<!-- presen-it! reveal (at=7) -->
+
+7<!-- presen-it! reveal (at=8) -->, 8<!-- presen-it! reveal (at=9) -->, 9<!-- presen-it! reveal (at=10) -->, 10!
+
+<!-- presen-it! slide-break -->
+
 ## Markdown basics
 
 - 箇条書き

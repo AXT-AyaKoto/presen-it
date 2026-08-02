@@ -585,5 +585,26 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 .presenit-column .katex-display::-webkit-scrollbar {
     display: none;
 }
+
+/* Reveal fragments: layout kept; viewer toggles .is-concealed */
+[data-presenit-at] {
+    transition:
+        opacity var(--presenit-anim-duration, 0.3s) linear,
+        visibility var(--presenit-anim-duration, 0.3s) linear;
+}
+
+[data-presenit-at].is-concealed {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+@media print {
+    [data-presenit-at].is-concealed {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+}
 `.trim();
 }
