@@ -6,7 +6,7 @@ height: 1080
 fontSize: 32
 break: soft
 animation:
-  duration: 0.3 # reveal フェード（秒）
+    duration: 0.3 # reveal フェード（秒）
 ---
 
 <!-- presen-it! slide-break (center-x=true) -->
