@@ -5,6 +5,7 @@ import { renderMermaidSVG } from "beautiful-mermaid";
 import katex from "katex";
 import type { Code, Html, RootContent } from "mdast";
 import type { ThemeName } from "../types";
+import { getPresenitAt } from "../parse/reveal";
 import { highlightCode } from "./highlighter";
 
 export type EnrichResult = {
@@ -77,11 +78,29 @@ function renderMathHtml(node: Extract<RootContent, { type: "math" | "inlineMath"
         throwOnError: false,
         strict: "ignore",
     });
-    return { type: "html", value };
+    const at = getPresenitAt(node);
+    if (at === undefined) {
+        return { type: "html", value };
+    }
+    return {
+        type: "html",
+        value: `<span class="presenit-fragment" data-presenit-at="${at}">${value}</span>`,
+    };
 }
 
 async function enrichCodeBlock(node: Code, theme: ThemeName): Promise<Html> {
     const lang = node.lang?.toLowerCase();
+    const at = getPresenitAt(node);
+
+    const wrap = (inner: string): Html => {
+        if (at === undefined) {
+            return { type: "html", value: inner };
+        }
+        return {
+            type: "html",
+            value: `<div class="presenit-fragment" data-presenit-at="${at}">${inner}</div>`,
+        };
+    };
 
     if (lang === "mermaid") {
         try {
@@ -92,18 +111,15 @@ async function enrichCodeBlock(node: Code, theme: ThemeName): Promise<Html> {
             });
             // Drop fixed width/height so theme CSS can scale the diagram up.
             const scalable = svg.replace(/\swidth="[^"]*"/i, "").replace(/\sheight="[^"]*"/i, "");
-            return {
-                type: "html",
-                value: `<div class="presenit-mermaid">${scalable}</div>`,
-            };
+            return wrap(`<div class="presenit-mermaid">${scalable}</div>`);
         } catch {
             const highlighted = await highlightCode(node.value, "text", theme);
-            return { type: "html", value: highlighted };
+            return wrap(highlighted);
         }
     }
 
     const highlighted = await highlightCode(node.value, lang, theme);
-    return { type: "html", value: highlighted };
+    return wrap(highlighted);
 }
 
 async function enrichNodes(nodes: RootContent[], theme: ThemeName): Promise<RootContent[]> {
@@ -134,6 +150,20 @@ async function enrichNodes(nodes: RootContent[], theme: ThemeName): Promise<Root
     return result;
 }
 
+function containsHtml(nodes: RootContent[]): boolean {
+    for (const node of nodes) {
+        if (node.type === "html") {
+            return true;
+        }
+        if ("children" in node && Array.isArray(node.children)) {
+            if (containsHtml(node.children as RootContent[])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 export async function enrichRichContent(
     nodes: RootContent[],
     theme: ThemeName,
@@ -142,7 +172,7 @@ export async function enrichRichContent(
     const enriched = await enrichNodes(nodes, theme);
     return {
         nodes: enriched,
-        hasEnrichedHtml: enriched.some((node) => node.type === "html"),
+        hasEnrichedHtml: containsHtml(enriched),
         hasMath,
     };
 }

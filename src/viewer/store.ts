@@ -6,6 +6,8 @@ export type ViewerMode = "projection" | "presenter" | "overview";
 export const deckData = signal<DeckClientData | null>(null);
 /** Prefer URL hash so Vite full-reload after markdown edits keeps the current slide. */
 export const currentIndex = signal(readHashIndexOnBoot());
+/** Reveal counter for the current slide (0 = entrance; only at<=0 visible). */
+export const currentStep = signal(0);
 export const mode = signal<ViewerMode>("projection");
 export const elapsedMs = signal(0);
 export const timerRunning = signal(true);
@@ -61,6 +63,29 @@ export const currentSlide = computed(() => {
     return deck.slides[currentIndex.value] ?? null;
 });
 
+export const currentMaxStep = computed(() => currentSlide.value?.maxStep ?? 0);
+
+/** Preview target for presenter "Next": same slide at next step, or following slide at 0. */
+export const presenterNextPreview = computed(() => {
+    const deck = deckData.value;
+    if (!deck) {
+        return null;
+    }
+    const index = currentIndex.value;
+    const slide = deck.slides[index];
+    if (!slide) {
+        return null;
+    }
+    if (currentStep.value < slide.maxStep) {
+        return { html: slide.html, step: currentStep.value + 1, kind: "step" as const };
+    }
+    const upcoming = deck.slides[index + 1];
+    if (!upcoming) {
+        return null;
+    }
+    return { html: upcoming.html, step: 0, kind: "slide" as const };
+});
+
 export const nextSlide = computed(() => {
     const deck = deckData.value;
     if (!deck) {
@@ -69,25 +94,51 @@ export const nextSlide = computed(() => {
     return deck.slides[currentIndex.value + 1] ?? null;
 });
 
+function maxStepAt(index: number): number {
+    return deckData.value?.slides[index]?.maxStep ?? 0;
+}
+
 export function setDeck(data: DeckClientData): void {
     deckData.value = data;
     currentIndex.value = Math.min(currentIndex.value, Math.max(0, data.slides.length - 1));
+    currentStep.value = Math.min(currentStep.value, maxStepAt(currentIndex.value));
 }
 
-export function goTo(index: number): void {
+export function goTo(index: number, step = 0): void {
     const max = slideCount.value - 1;
     if (max < 0) {
         return;
     }
-    currentIndex.value = Math.max(0, Math.min(max, index));
+    const nextIndex = Math.max(0, Math.min(max, index));
+    currentIndex.value = nextIndex;
+    currentStep.value = Math.max(0, Math.min(maxStepAt(nextIndex), step));
 }
 
 export function next(): void {
-    goTo(currentIndex.value + 1);
+    const maxStep = currentMaxStep.value;
+    if (currentStep.value < maxStep) {
+        currentStep.value += 1;
+        return;
+    }
+    const max = slideCount.value - 1;
+    if (currentIndex.value >= max) {
+        return;
+    }
+    currentIndex.value += 1;
+    currentStep.value = 0;
 }
 
 export function prev(): void {
-    goTo(currentIndex.value - 1);
+    if (currentStep.value > 0) {
+        currentStep.value -= 1;
+        return;
+    }
+    if (currentIndex.value <= 0) {
+        return;
+    }
+    const prevIndex = currentIndex.value - 1;
+    currentIndex.value = prevIndex;
+    currentStep.value = maxStepAt(prevIndex);
 }
 
 const PRESENTER_WINDOW_NAME = "presenit-presenter";
@@ -97,7 +148,7 @@ export function openPresenterWindow(): void {
     const url = new URL(window.location.href);
     url.searchParams.set("presenter", "");
     window.open(url.toString(), PRESENTER_WINDOW_NAME);
-    broadcastIndex(currentIndex.value);
+    broadcastIndex(currentIndex.value, currentStep.value);
 }
 
 export function leavePresenter(): void {
@@ -119,9 +170,9 @@ export function toggleOverview(): void {
 }
 
 export function exitOverviewTo(index: number): void {
-    goTo(index);
+    goTo(index, 0);
     mode.value = "projection";
-    broadcastIndex(index);
+    broadcastIndex(index, 0);
 }
 
 const CHANNEL = "presenit-sync";
@@ -136,8 +187,8 @@ function postSyncMessage(message: Record<string, unknown>): void {
     }
 }
 
-export function broadcastIndex(index: number): void {
-    postSyncMessage({ type: "index", index });
+export function broadcastIndex(index: number, step = currentStep.value): void {
+    postSyncMessage({ type: "index", index, step });
 }
 
 export function broadcastBlackout(on: boolean): void {
@@ -187,13 +238,13 @@ export function applyLaserMessage(msg: LaserMessage): void {
 }
 
 export type SyncHandlers = {
-    onIndex?: (index: number) => void;
+    onIndex?: (index: number, step: number) => void;
     onBlackout?: (on: boolean) => void;
 };
 
 /** Accepts either a legacy index callback or a handlers object. */
 export function listenSync(
-    onIndexOrHandlers: ((index: number) => void) | SyncHandlers,
+    onIndexOrHandlers: ((index: number, step: number) => void) | SyncHandlers,
 ): () => void {
     const handlers: SyncHandlers =
         typeof onIndexOrHandlers === "function"
@@ -203,7 +254,8 @@ export function listenSync(
         const channel = new BroadcastChannel(CHANNEL);
         channel.onmessage = (event: MessageEvent) => {
             if (event.data?.type === "index" && typeof event.data.index === "number") {
-                handlers.onIndex?.(event.data.index);
+                const step = typeof event.data.step === "number" ? event.data.step : 0;
+                handlers.onIndex?.(event.data.index, step);
             }
             if (event.data?.type === "blackout" && typeof event.data.on === "boolean") {
                 blackout.value = event.data.on;
@@ -241,6 +293,28 @@ export function writeHashIndex(index: number): void {
         "",
         `${window.location.pathname}${window.location.search}${nextHash}`,
     );
+}
+
+/**
+ * Apply reveal visibility inside a slide root element.
+ * When `showAll` is true (overview / PDF), every fragment is shown.
+ */
+export function applyRevealVisibility(
+    root: ParentNode | null | undefined,
+    step: number,
+    showAll = false,
+): void {
+    if (!root) {
+        return;
+    }
+    const nodes = root.querySelectorAll<HTMLElement>("[data-presenit-at]");
+    for (const el of nodes) {
+        const raw = el.getAttribute("data-presenit-at");
+        const at = raw === null ? 0 : Number.parseInt(raw, 10);
+        const visible = showAll || !Number.isFinite(at) || at <= step;
+        el.classList.toggle("is-revealed", visible);
+        el.classList.toggle("is-concealed", !visible);
+    }
 }
 
 // Hide laser dot when the slide changes.

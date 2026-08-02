@@ -79,7 +79,7 @@ export type DeckClientData = {
     slug: string;
     config: DeckConfig;
     css: string;
-    slides: Array<{ html: string; notes: string | null }>;
+    slides: Array<{ html: string; notes: string | null; maxStep: number }>;
 };
 
 export function toClientData(loaded: LoadedDeck): DeckClientData {
@@ -90,6 +90,7 @@ export function toClientData(loaded: LoadedDeck): DeckClientData {
         slides: loaded.slides.map((slide) => ({
             html: slide.html,
             notes: slide.notes,
+            maxStep: slide.maxStep,
         })),
     };
 }

@@ -5,6 +5,8 @@ width: 1920
 height: 1080
 fontSize: 32
 break: soft
+animation:
+  duration: 0.3 # reveal フェード（秒）
 ---
 
 <!-- presen-it! slide-break (center-x=true) -->
@@ -117,17 +119,38 @@ flowchart LR
 
 <!-- presen-it! slide-break -->
 
+## クリックで順に表示（reveal）
+
+`<!-- presen-it! reveal (at=N) -->` で、同一スライド内をステップ表示できます。`→` / Space で進めてみてください。
+
+この文は最初から見えます。
+
+<!-- presen-it! reveal (at=1) -->
+
+- 1 回クリックで出る <!-- presen-it! reveal (at=2) -->
+- 2 回で出る
+- これも 2 回で出る <!-- presen-it! reveal (at=3) -->
+- 3 回で出る
+
+<!-- presen-it! reveal (at=4) -->
+
+段落の途中でも切れます。ここまでが 4 回目<!-- presen-it! reveal (at=5) -->で、ここはもう 1 回クリックが必要です。
+
+`at` を省略した `<!-- presen-it! reveal -->` は `at=0`（入場時から表示）です。フェード時間は frontmatter の `animation.duration` で変えられます。
+
+<!-- presen-it! slide-break -->
+
 ## 投影ビューの操作
 
-| キー                    | 動作                       |
-| ----------------------- | -------------------------- |
-| `←` `→` / Space / Enter | 前後のスライド             |
-| `O`                     | オーバービュー（グリッド） |
-| `P`                     | プレゼンターを別タブで開く |
-| `F`                     | フルスクリーン             |
-| `L`                     | レーザーポインター         |
+| キー                    | 動作                                         |
+| ----------------------- | -------------------------------------------- |
+| `←` `→` / Space / Enter | 前後（同一スライドの reveal → スライド切替） |
+| `O`                     | オーバービュー（グリッド）                   |
+| `P`                     | プレゼンターを別タブで開く                   |
+| `F`                     | フルスクリーン                               |
+| `L`                     | レーザーポインター                           |
 
-左右スライド端（パディング幅）の短押しでも前後に移動できます。左下にマウスを置くと Overview・Presenter・Fullscreen・Laser のツールバーが出ます。
+左右スライド端（パディング幅）の短押しでも前後に移動できます。左下にマウスを置くと Overview・Presenter・Fullscreen・Laser のツールバーが出ます。Presenter の Next は次の reveal ステップ（無ければ次スライド）をプレビューします。
 
 <!-- presen-it! slide-break (center-x=true) -->
 

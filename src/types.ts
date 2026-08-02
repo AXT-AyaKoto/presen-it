@@ -13,6 +13,11 @@ export type PageTransitionConfig = {
     duration: number;
 };
 
+export type AnimationConfig = {
+    /** Fragment fade duration in seconds. */
+    duration: number;
+};
+
 export type BreakMode = "soft" | "hard";
 
 export type DeckConfig = {
@@ -27,6 +32,7 @@ export type DeckConfig = {
     fontSize: number;
     fontFamily: FontFamilyConfig;
     pageTransition: PageTransitionConfig;
+    animation: AnimationConfig;
     rawHTML: boolean;
     /** `soft`: single newlines become `<br>`; `hard`: CommonMark default. */
     break: BreakMode;
@@ -53,6 +59,8 @@ export type Slide = {
     columns: Column[];
     /** Speaker notes text (trimmed), if any. */
     notes: string | null;
+    /** Max `reveal (at=N)` on this slide (0 when none). */
+    maxStep: number;
 };
 
 export type DiagnosticSeverity = "warning" | "error";
@@ -84,6 +92,9 @@ export const DEFAULT_CONFIG: DeckConfig = {
     pageTransition: {
         type: "fade",
         duration: 0.2,
+    },
+    animation: {
+        duration: 0.3,
     },
     rawHTML: false,
     break: "soft",

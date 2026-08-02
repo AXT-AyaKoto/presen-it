@@ -241,4 +241,23 @@ footer: "© 2026 Example Co. <internal>"
         expect(withFooter.slides).toHaveLength(2);
         expect(withFooter.slides.every((s) => s.html.includes("presenit-slide-footer"))).toBe(true);
     });
+
+    it("emits data-presenit-at for reveal fragments and strips reveal comments", async () => {
+        const deck = parseSlideMarkdown(`<!-- presen-it! reveal (at=1) -->
+- item one <!-- presen-it! reveal (at=2) -->
+- item two
+
+Hello <!-- presen-it! reveal (at=3) -->world
+`);
+        const result = await renderDeckAsync(deck);
+        const html = result.slides[0]!.html;
+        expect(result.slides[0]!.maxStep).toBe(3);
+        expect(html).toContain('data-presenit-max-step="3"');
+        expect(html).toContain('data-presenit-at="1"');
+        expect(html).toContain('data-presenit-at="2"');
+        expect(html).toContain('data-presenit-at="3"');
+        expect(html).toContain("presenit-fragment");
+        expect(html).not.toContain("presen-it! reveal");
+        expect(result.css).toContain("is-concealed");
+    });
 });

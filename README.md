@@ -66,6 +66,8 @@ fontFamily:
 pageTransition:
     type: fade # none | fade | scroll（既定: fade）
     duration: 0.2 # 秒（既定: 0.2）。PDF export では無視
+animation:
+    duration: 0.3 # 秒（既定: 0.3）。同一スライド内 reveal のフェード
 rawHTML: false # true で生 HTML を描画（既定: false）
 break: soft # soft | hard（既定: soft）。soft で段落内の単改行を <br> に
 footer: "" # 全スライド左下に表示するテキスト（既定: 空 = 非表示）
@@ -83,6 +85,7 @@ footer: "" # 全スライド左下に表示するテキスト（既定: 空 = �
 | `fontFamily.sans` / `.mono` | M PLUS 1 / M PLUS 1 Code（上記 YAML の既定スタック） | CSS 文字列、またはフォント名の配列             |
 | `pageTransition.type`       | `fade`                                               | `none` \| `fade` \| `scroll`（PDF では無視）   |
 | `pageTransition.duration`   | `0.2`                                                | 秒。`0` で実質オフ                             |
+| `animation.duration`        | `0.3`                                                | 同一スライド内 reveal のフェード秒数           |
 | `rawHTML`                   | `false`                                              | `true` のとき生 HTML を描画する                |
 | `break`                     | `soft`                                               | `soft` \| `hard`（段落内の改行の扱い）         |
 | `footer`                    | `""`                                                 | 全スライド左下に表示するテキスト（空で非表示） |
@@ -104,20 +107,70 @@ fontFamily:
 
 ### Directives
 
-ブロックのあいだに、次の HTML コメントだけを単独で置きます。
+`slide-break` / `column-break` はブロックのあいだに単独で置きます。`reveal` はインライン（リスト行末・段落途中・強調の内側など）にも置けます。
 
 ```html
 <!-- presen-it! slide-break -->
 <!-- presen-it! column-break -->
 <!-- presen-it! slide-break (center-x=true) -->
 <!-- presen-it! column-break (center-x=true&center-y=false) -->
+<!-- presen-it! reveal -->
+<!-- presen-it! reveal (at=2) -->
 ```
 
-- コマンド: `slide-break`, `column-break`
-- オプション: `center-x=true|false`, `center-y=true|false`（`=` / `&` の前後に空白なし）
+- コマンド: `slide-break`, `column-break`, `reveal`
+- 整列オプション（break 系）: `center-x=true|false`, `center-y=true|false`（`=` / `&` の前後に空白なし）
+- reveal: `at=N`（非負整数）。省略時は `at=0`
 - 既定: `center-x=false`, `center-y=true`
 - カラムの指定がスライド指定より優先
 - frontmatter 直後の `slide-break` は 1 枚目のレイアウト指定に使えます（空ページは作りません）
+
+#### Reveal詳細
+
+同一スライド内でクリックのたびに順次(ステップ)表示することができます。
+
+- (ほとんど)すべての要素は、同じページ内で直前に書かれた`reveal`宣言の`at`の回数クリックしたときに表示されます。
+    - 飛び番号は空クリックとして処理されます。
+    - 次のスライドから戻ってきた場合は最終ステップの状態に戻ります。
+    - PDFやOverviewではステップ表示は無視されてすべて表示されます。
+    - プレゼンタービューのNextは次ステップをプレビューします。
+    - スライドのタイトルとなったh2は指定にかかわらず常に表示されます。
+    - 行頭の`<!-- ... -->` の**同じ行に**本文を続けないでください。
+        - Markdown が行全体を HTML ブロックとして扱ってしまうため。
+        - ブロックの `reveal` は単独行にし、インラインは段落やリストの途中／末尾に置きます。
+
+```md
+<!-- presen-it! slide-break -->
+
+この文章は最初から表示されている
+
+<!-- presen-it! reveal (at=1) -->
+
+この文章は一回クリックすると表示される
+
+<!-- presen-it! column-break -->
+
+この文章も一回クリック時点で表示される (reveal宣言はcolumnをまたぐ)
+
+<!-- presen-it! reveal (at=2) -->
+
+- 2回目のクリックで表示される<!-- presen-it! reveal (at=3) -->
+- 3回目のクリックで表示される<!-- presen-it! reveal (at=4) -->
+- 4回目のクリックで表示される<!-- presen-it! reveal (at=3) -->
+- 3回目のクリックで表示される
+
+<!-- presen-it! reveal -->
+
+この文章は最初から表示されている (atの指定がない場合は0とみなす)
+
+<!-- presen-it! reveal (at=5) -->
+
+この部分は5回目のクリックで表示され、<!-- presen-it! reveal (at=6) --> この部分は6回目のクリックで表示される。
+
+<!-- presen-it! reveal (at=7) -->
+
+7<!-- presen-it! reveal (at=8) -->, 8<!-- presen-it! reveal (at=9) -->, 9<!-- presen-it! reveal (at=10) -->, 10!
+```
 
 スピーカーノートは HTML コメント（投影には出ず、Presenter に表示）。
 
@@ -140,10 +193,10 @@ fontFamily:
 
 | Key                                  | Action                                                                 |
 | ------------------------------------ | ---------------------------------------------------------------------- |
-| `←` `→` / Space / Enter              | 前後のスライド                                                         |
-| `Home` / `End`                       | 最初 / 最後                                                            |
+| `←` `→` / Space / Enter              | 前後（同一スライドの reveal ステップ → スライド）                      |
+| `Home` / `End`                       | 最初 / 最後のスライド（ステップは入場状態）                            |
 | 左右スライド端（パディング幅）短押し | 前へ / 次へ（投影・選択は無視。ホバーで矢印表示）                      |
-| `O`                                  | オーバービュー（グリッド）                                             |
+| `O`                                  | オーバービュー（グリッド・フラグメント全表示）                         |
 | `F`                                  | フルスクリーン                                                         |
 | `P`                                  | プレゼンターを別タブで開く（投影タブはそのまま）                       |
 | `B`                                  | ブラックアウト（投影を黒画面に。Presenter トグルでも可。`Esc` で解除） |
@@ -151,9 +204,9 @@ fontFamily:
 | `R`                                  | タイマーリセット（プレゼンター）                                       |
 | `L`                                  | レーザーポインター（投影・プレゼンター。プレゼンターから投影へ同期）   |
 
-左下にマウスを置くと、前後移動・Overview・Presenter・Fullscreen・Laser のツールバーが出ます。Presenter は別タブで開き、投影タブとスライド位置・レーザーは BroadcastChannel で同期します。
+左下にマウスを置くと、前後移動・Overview・Presenter・Fullscreen・Laser のツールバーが出ます。Presenter は別タブで開き、投影タブとスライド位置・reveal ステップ・レーザーは BroadcastChannel で同期します。
 
-URL ハッシュは 1 始まり（`#3` = 3 枚目）。`?presenter` を付けて直接プレゼンターを開くこともできます。機能一覧サンプルは `pnpm presenit dev kitchen-sink`。
+URL ハッシュは 1 始まり（`#3` = 3 枚目）。ステップはハッシュに含めません。`?presenter` を付けて直接プレゼンターを開くこともできます。機能一覧サンプルは `pnpm presenit dev kitchen-sink`。
 
 ## 1.0 compatibility
 

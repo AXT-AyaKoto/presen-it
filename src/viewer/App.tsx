@@ -9,7 +9,9 @@ import {
     broadcastIndex,
     clearLaserDot,
     currentIndex,
+    currentMaxStep,
     currentSlide,
+    currentStep,
     deckData,
     elapsedMs,
     exitOverviewTo,
@@ -19,7 +21,7 @@ import {
     listenSync,
     mode,
     next,
-    nextSlide,
+    presenterNextPreview,
     prev,
     readHashIndex,
     resetTimer,
@@ -94,7 +96,9 @@ export function App(): JSX.Element {
     const viewerMode = mode.value;
     const running = timerRunning.value;
     const elapsed = elapsedMs.value;
-    const upcoming = nextSlide.value;
+    const upcoming = presenterNextPreview.value;
+    const step = currentStep.value;
+    const maxStep = currentMaxStep.value;
     const isBlackout = blackout.value;
     const isLaserOn = laserOn.value;
     const laserPosition = laserDot.value;
@@ -132,13 +136,13 @@ export function App(): JSX.Element {
                     case "ArrowDown":
                         event.preventDefault();
                         next();
-                        broadcastIndex(currentIndex.value);
+                        broadcastIndex(currentIndex.value, currentStep.value);
                         break;
                     case "ArrowLeft":
                     case "ArrowUp":
                         event.preventDefault();
                         prev();
-                        broadcastIndex(currentIndex.value);
+                        broadcastIndex(currentIndex.value, currentStep.value);
                         break;
                     case "Enter":
                     case " ":
@@ -158,24 +162,24 @@ export function App(): JSX.Element {
                 case "Enter":
                     event.preventDefault();
                     next();
-                    broadcastIndex(currentIndex.value);
+                    broadcastIndex(currentIndex.value, currentStep.value);
                     break;
                 case "ArrowLeft":
                 case "PageUp":
                 case "Backspace":
                     event.preventDefault();
                     prev();
-                    broadcastIndex(currentIndex.value);
+                    broadcastIndex(currentIndex.value, currentStep.value);
                     break;
                 case "Home":
                     event.preventDefault();
-                    goTo(0);
-                    broadcastIndex(0);
+                    goTo(0, 0);
+                    broadcastIndex(0, 0);
                     break;
                 case "End":
                     event.preventDefault();
-                    goTo(slideCount.value - 1);
-                    broadcastIndex(slideCount.value - 1);
+                    goTo(slideCount.value - 1, 0);
+                    broadcastIndex(slideCount.value - 1, 0);
                     break;
                 case "f":
                 case "F":
@@ -237,7 +241,7 @@ export function App(): JSX.Element {
         return () => window.removeEventListener("keydown", onKey);
     }, [viewerMode]);
 
-    useEffect(() => listenSync({ onIndex: goTo }), []);
+    useEffect(() => listenSync({ onIndex: (index, step) => goTo(index, step) }), []);
 
     useEffect(() => {
         if (viewerMode !== "presenter" || !running) {
@@ -327,10 +331,10 @@ export function App(): JSX.Element {
         const zone = zoneFromClientX(el, event.clientX, width, height);
         if (zone === "prev") {
             prev();
-            broadcastIndex(currentIndex.value);
+            broadcastIndex(currentIndex.value, currentStep.value);
         } else if (zone === "next") {
             next();
-            broadcastIndex(currentIndex.value);
+            broadcastIndex(currentIndex.value, currentStep.value);
         }
     };
 
@@ -382,7 +386,13 @@ export function App(): JSX.Element {
                             onClick={() => exitOverviewTo(slideIndex)}
                         >
                             <div class="overview__frame">
-                                <SlideFrame html={entry.html} width={width} height={height} />
+                                <SlideFrame
+                                    html={entry.html}
+                                    width={width}
+                                    height={height}
+                                    revealShowAll
+                                    animDuration={deck.config.animation.duration}
+                                />
                             </div>
                             <div class="overview__label">{slideIndex + 1}</div>
                         </button>
@@ -403,12 +413,15 @@ export function App(): JSX.Element {
                         width={width}
                         height={height}
                         laser={presenterLaser}
+                        revealStep={step}
+                        animDuration={deck.config.animation.duration}
                     />
                 </div>
                 <aside class="presenter__side">
                     <div class="presenter__meta">
                         <span>
                             {index + 1} / {total}
+                            {maxStep > 0 ? ` · step ${step}/${maxStep}` : ""}
                         </span>
                         <div class="presenter__timer-row">
                             <span class="presenter__timer">{formatTime(elapsed)}</span>
@@ -433,7 +446,13 @@ export function App(): JSX.Element {
                     <div class="presenter__next-label">Next</div>
                     <div class="presenter__next">
                         {upcoming ? (
-                            <SlideFrame html={upcoming.html} width={width} height={height} />
+                            <SlideFrame
+                                html={upcoming.html}
+                                width={width}
+                                height={height}
+                                revealStep={upcoming.step}
+                                animDuration={deck.config.animation.duration}
+                            />
                         ) : (
                             <div class="presenter__end">End</div>
                         )}
@@ -478,6 +497,8 @@ export function App(): JSX.Element {
                 index={index}
                 transitionType={deck.config.pageTransition.type}
                 duration={deck.config.pageTransition.duration}
+                animDuration={deck.config.animation.duration}
+                revealStep={step}
                 laser={projectionLaser}
             />
             <div

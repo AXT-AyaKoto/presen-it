@@ -5,7 +5,7 @@ declare module "virtual:presenit-deck" {
         slug: string;
         config: DeckConfig;
         css: string;
-        slides: Array<{ html: string; notes: string | null }>;
+        slides: Array<{ html: string; notes: string | null; maxStep: number }>;
     };
 
     export const deck: DeckClientData;

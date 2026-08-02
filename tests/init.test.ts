@@ -32,6 +32,8 @@ describe("presenit init", () => {
 
         expect(content).toContain("# はじめに");
         expect(content).toContain("<!-- presen-it! slide-break");
+        expect(content).toContain("<!-- presen-it! reveal");
+        expect(content).toContain("animation:");
         expect(content).toContain("pnpm exec presenit dev my-talk");
         expect(content).toContain("```mermaid");
         expect(content).toContain("[!NOTE]");

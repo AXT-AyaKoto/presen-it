@@ -1,11 +1,13 @@
 import type { AlignOptions, Diagnostic } from "../types";
 import { DEFAULT_SLIDE_ALIGN } from "../types";
 
-export type DirectiveCommand = "slide-break" | "column-break";
+export type DirectiveCommand = "slide-break" | "column-break" | "reveal";
 
 export type DirectiveOptions = {
     centerX?: boolean;
     centerY?: boolean;
+    /** Reveal step index (non-negative). Only set for `reveal`. */
+    at?: number;
 };
 
 export type ParsedDirective = {
@@ -15,8 +17,9 @@ export type ParsedDirective = {
 
 const COMMENT_BODY_RE = /^<!--([\s\S]*?)-->$/;
 const DIRECTIVE_RE = /^presen-it!\s+(\S+)(?:\s+\((.*)\))?$/;
-const KNOWN_COMMANDS = new Set<DirectiveCommand>(["slide-break", "column-break"]);
-const KNOWN_OPTIONS = new Set(["center-x", "center-y"]);
+const KNOWN_COMMANDS = new Set<DirectiveCommand>(["slide-break", "column-break", "reveal"]);
+const BOOL_OPTIONS = new Set(["center-x", "center-y"]);
+const INT_OPTIONS = new Set(["at"]);
 
 /**
  * Try to parse an HTML comment as an AXT Presen'it! directive.
@@ -61,6 +64,11 @@ export function parseDirectiveComment(
 
     const options: DirectiveOptions = {};
 
+    if (command === "reveal" && (optionsRaw === undefined || optionsRaw.length === 0)) {
+        options.at = 0;
+        return { command, options };
+    }
+
     if (optionsRaw !== undefined && optionsRaw.length > 0) {
         const parts = optionsRaw.split("&");
         for (const part of parts) {
@@ -77,30 +85,63 @@ export function parseDirectiveComment(
             const key = part.slice(0, eq);
             const value = part.slice(eq + 1);
 
-            if (!KNOWN_OPTIONS.has(key)) {
-                diagnostics.push({
-                    severity: "warning",
-                    message: `Unknown directive option "${key}"; directive ignored`,
-                    line,
-                });
-                return null;
+            if (BOOL_OPTIONS.has(key)) {
+                if (command === "reveal") {
+                    diagnostics.push({
+                        severity: "warning",
+                        message: `Directive option "${key}" is not valid on reveal; directive ignored`,
+                        line,
+                    });
+                    return null;
+                }
+                if (value !== "true" && value !== "false") {
+                    diagnostics.push({
+                        severity: "warning",
+                        message: `Directive option "${key}" must be true|false, got "${value}"; directive ignored`,
+                        line,
+                    });
+                    return null;
+                }
+                if (key === "center-x") {
+                    options.centerX = value === "true";
+                } else if (key === "center-y") {
+                    options.centerY = value === "true";
+                }
+                continue;
             }
 
-            if (value !== "true" && value !== "false") {
-                diagnostics.push({
-                    severity: "warning",
-                    message: `Directive option "${key}" must be true|false, got "${value}"; directive ignored`,
-                    line,
-                });
-                return null;
+            if (INT_OPTIONS.has(key)) {
+                if (command !== "reveal") {
+                    diagnostics.push({
+                        severity: "warning",
+                        message: `Directive option "${key}" is only valid on reveal; directive ignored`,
+                        line,
+                    });
+                    return null;
+                }
+                if (!/^\d+$/.test(value)) {
+                    diagnostics.push({
+                        severity: "warning",
+                        message: `Directive option "at" must be a non-negative integer, got "${value}"; directive ignored`,
+                        line,
+                    });
+                    return null;
+                }
+                options.at = Number.parseInt(value, 10);
+                continue;
             }
 
-            if (key === "center-x") {
-                options.centerX = value === "true";
-            } else if (key === "center-y") {
-                options.centerY = value === "true";
-            }
+            diagnostics.push({
+                severity: "warning",
+                message: `Unknown directive option "${key}"; directive ignored`,
+                line,
+            });
+            return null;
         }
+    }
+
+    if (command === "reveal" && options.at === undefined) {
+        options.at = 0;
     }
 
     return {
