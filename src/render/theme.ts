@@ -533,7 +533,6 @@ export function buildThemeCss(config: ThemeBuildConfig): string {
 .presenit-mermaid svg {
     display: block;
     width: auto;
-    height: calc(var(--presenit-slide-height) * 2 / 3);
     max-width: 100%;
     max-height: calc(var(--presenit-slide-height) * 2 / 3);
 }
