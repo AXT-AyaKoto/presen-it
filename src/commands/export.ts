@@ -1,18 +1,11 @@
 import path from "node:path";
-import { pathToFileURL } from "node:url";
 import { mkdir, writeFile } from "node:fs/promises";
 import { consola } from "consola";
+import { inlineLocalAssets } from "../project/assets";
 import { loadDeck } from "../project/load";
 import { detectOverflow, logOverflowWarnings } from "../project/overflow";
 import { launchPresenitBrowser } from "../project/chrome";
 import { buildExportCss } from "../render/rich";
-
-function absolutizeAssets(html: string, slideDir: string): string {
-    return html.replace(
-        /\/__presenit_assets__\/([^"']+)/g,
-        (_match, rel: string) => pathToFileURL(path.resolve(slideDir, rel)).href,
-    );
-}
 
 function buildPrintDocument(options: {
     css: string;
@@ -65,7 +58,9 @@ export async function runExport(slug: string, cwd = process.cwd()): Promise<stri
     const loaded = await loadDeck(cwd, slug);
     const { width, height, theme } = loaded.config;
 
-    const slidesHtml = loaded.slides.map((slide) => absolutizeAssets(slide.html, loaded.slideDir));
+    const slidesHtml = await Promise.all(
+        loaded.slides.map((slide) => inlineLocalAssets(slide.html, loaded.slideDir)),
+    );
     const printCss = await buildExportCss(loaded.css);
 
     const documentHtml = buildPrintDocument({
