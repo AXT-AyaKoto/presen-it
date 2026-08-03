@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 — 2026-08-03
+
+### Fixes
+
+- Mermaid diagrams: drop fixed `height` on `.presenit-mermaid svg` so wide flowcharts no longer reserve excess vertical space (`max-height` still caps size)
+
 ## 1.1.0 — 2026-08-03
 
 ### Features
