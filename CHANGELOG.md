@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2 — 2026-08-03
+
+### Fixes
+
+- Projection: mid page-transition reveal advances no longer freeze the incoming slide (keyboard repeat / double-press during fade/scroll; #106)
+
 ## 1.1.1 — 2026-08-03
 
 ### Fixes
