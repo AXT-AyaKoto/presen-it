@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.3 — 2026-08-03
+
+### Fixes
+
+- PDF export: inline local images as data URIs so Puppeteer `setContent` can embed them (local WebP/PNG no longer blank in the PDF; #108)
+
 ## 1.1.2 — 2026-08-03
 
 ### Fixes
